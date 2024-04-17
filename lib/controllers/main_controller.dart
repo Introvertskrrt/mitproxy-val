@@ -2,8 +2,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mitproxy_val/views/home_view.dart';
+import 'package:mitproxy_val/views/live_view.dart';
 
 class MainController extends GetxController {
-  int currentIndex = 0;
-  List<Widget> pages = [HomeView()];
+  RxInt currentIndex = 0.obs;
+  List<Widget> pages = [HomeView(), LiveView()];
 }

@@ -2,6 +2,7 @@
 
 import 'package:flutter/widgets.dart';
 import 'package:mitproxy_val/models/account_model.dart';
+import 'package:mitproxy_val/models/party_model.dart';
 import 'package:mitproxy_val/models/store_model.dart';
 import 'package:mitproxy_val/utils/cache.dart';
 import 'dart:convert';
@@ -9,6 +10,16 @@ import 'package:http/http.dart' as http;
 import 'package:mitproxy_val/utils/exceptions.dart';
 
 class ValorantServices {
+  static String GLZ_URL = "https://glz-${Cache.accountToken!.region}-1.${Cache.accountToken!.shard}.a.pvp.net";
+  static String PD_URL = "https://pd.${Cache.accountToken!.shard}.a.pvp.net";
+  static dynamic RIOT_HEADERS = {
+    'X-Riot-ClientPlatform': Cache.accountToken!.clientPlatform,
+    'X-Riot-ClientVersion': Cache.accountToken!.clientVersion,
+    'X-Riot-Entitlements-JWT': Cache.accountToken!.entitlementsToken,
+    'Authorization': 'Bearer ${Cache.accountToken!.authToken}'
+  };
+
+  // used for home page
   Future<void> getUserProfileData() async {
     final String playername;
     final int valorantPoint;
@@ -31,14 +42,8 @@ class ValorantServices {
     final Color rankColor;
 
     // get playername and tagline
-    final nameService_api =
-        "https://pd.${Cache.accountToken!.shard}.a.pvp.net/name-service/v2/players";
-    final nameService_headers = {
-      'X-Riot-ClientPlatform': Cache.accountToken!.clientPlatform,
-      'X-Riot-ClientVersion': Cache.accountToken!.clientVersion,
-      'X-Riot-Entitlements-JWT': Cache.accountToken!.entitlementsToken,
-      'Authorization': 'Bearer ${Cache.accountToken!.authToken}'
-    };
+    final nameService_api = "$PD_URL/name-service/v2/players";
+    final nameService_headers = RIOT_HEADERS;
     final List<String> nameService_body = [Cache.accountToken!.puuid];
     final nameService_body_json = json.encode(nameService_body);
     final nameService_response = await http.put(Uri.parse(nameService_api),
@@ -55,13 +60,8 @@ class ValorantServices {
 
     // get player currencies (vp, radianite, kingdom credits)
     final wallet_api =
-        "https://pd.${Cache.accountToken!.shard}.a.pvp.net/store/v1/wallet/${Cache.accountToken!.puuid}";
-    final wallet_headers = {
-      'X-Riot-ClientPlatform': Cache.accountToken!.clientPlatform,
-      'X-Riot-ClientVersion': Cache.accountToken!.clientVersion,
-      'X-Riot-Entitlements-JWT': Cache.accountToken!.entitlementsToken,
-      'Authorization': 'Bearer ${Cache.accountToken!.authToken}'
-    };
+        "$PD_URL/store/v1/wallet/${Cache.accountToken!.puuid}";
+    final wallet_headers = RIOT_HEADERS;
     final wallet_response =
         await http.get(Uri.parse(wallet_api), headers: wallet_headers);
     if (wallet_response.statusCode == 200) {
@@ -80,13 +80,8 @@ class ValorantServices {
 
     // get player xp and levels
     final accountXp_api =
-        "https://pd.${Cache.accountToken!.shard}.a.pvp.net/account-xp/v1/players/${Cache.accountToken!.puuid}";
-    final accountXp_headers = {
-      'X-Riot-ClientPlatform': Cache.accountToken!.clientPlatform,
-      'X-Riot-ClientVersion': Cache.accountToken!.clientVersion,
-      'X-Riot-Entitlements-JWT': Cache.accountToken!.entitlementsToken,
-      'Authorization': 'Bearer ${Cache.accountToken!.authToken}'
-    };
+        "$PD_URL/account-xp/v1/players/${Cache.accountToken!.puuid}";
+    final accountXp_headers = RIOT_HEADERS;
     final accountXp_response =
         await http.get(Uri.parse(accountXp_api), headers: accountXp_headers);
     if (accountXp_response.statusCode == 200) {
@@ -101,13 +96,8 @@ class ValorantServices {
 
     // get player mmr
     final playerMmr_api =
-        "https://pd.${Cache.accountToken!.shard}.a.pvp.net/mmr/v1/players/${Cache.accountToken!.puuid}";
-    final playerMmr_headers = {
-      'X-Riot-ClientPlatform': Cache.accountToken!.clientPlatform,
-      'X-Riot-ClientVersion': Cache.accountToken!.clientVersion,
-      'X-Riot-Entitlements-JWT': Cache.accountToken!.entitlementsToken,
-      'Authorization': 'Bearer ${Cache.accountToken!.authToken}'
-    };
+        "$PD_URL/mmr/v1/players/${Cache.accountToken!.puuid}";
+    final playerMmr_headers = RIOT_HEADERS;
     final playerMmr_response =
         await http.get(Uri.parse(playerMmr_api), headers: playerMmr_headers);
     if (playerMmr_response.statusCode == 200) {
@@ -178,13 +168,8 @@ class ValorantServices {
 
     // get player card, banner and title id
     final playerLoadout_api =
-        "https://pd.${Cache.accountToken!.shard}.a.pvp.net/personalization/v2/players/${Cache.accountToken!.puuid}/playerloadout";
-    final playerLoadout_haders = {
-      'X-Riot-ClientPlatform': Cache.accountToken!.clientPlatform,
-      'X-Riot-ClientVersion': Cache.accountToken!.clientVersion,
-      'X-Riot-Entitlements-JWT': Cache.accountToken!.entitlementsToken,
-      'Authorization': 'Bearer ${Cache.accountToken!.authToken}'
-    };
+        "$PD_URL/personalization/v2/players/${Cache.accountToken!.puuid}/playerloadout";
+    final playerLoadout_haders = RIOT_HEADERS;
     final playerLoadout_response = await http.get(Uri.parse(playerLoadout_api),
         headers: playerLoadout_haders);
     if (playerLoadout_response.statusCode == 200) {
@@ -200,13 +185,8 @@ class ValorantServices {
 
     // get player mission (daily/weekly)
     final playerContract_api =
-        "https://pd.${Cache.accountToken!.shard}.a.pvp.net/contracts/v1/contracts/${Cache.accountToken!.puuid}";
-    final playerContract_headers = {
-      'X-Riot-ClientPlatform': Cache.accountToken!.clientPlatform,
-      'X-Riot-ClientVersion': Cache.accountToken!.clientVersion,
-      'X-Riot-Entitlements-JWT': Cache.accountToken!.entitlementsToken,
-      'Authorization': 'Bearer ${Cache.accountToken!.authToken}'
-    };
+        "$PD_URL/contracts/v1/contracts/${Cache.accountToken!.puuid}";
+    final playerContract_headers = RIOT_HEADERS;
     final playerContract_response = await http
         .get(Uri.parse(playerContract_api), headers: playerContract_headers);
     if (playerContract_response.statusCode == 200) {
@@ -399,13 +379,8 @@ class ValorantServices {
     List<Color> weaponRarityColor = [];
     int dailyOffersRemainingTime;
 
-    final storeFront_api = 'https://pd.${Cache.accountToken!.shard}.a.pvp.net/store/v2/storefront/${Cache.accountToken!.puuid}';
-    final storeFront_headers = {
-      'X-Riot-ClientPlatform': Cache.accountToken!.clientPlatform,
-      'X-Riot-ClientVersion': Cache.accountToken!.clientVersion,
-      'X-Riot-Entitlements-JWT': Cache.accountToken!.entitlementsToken,
-      'Authorization': 'Bearer ${Cache.accountToken!.authToken}'
-    };
+    final storeFront_api = '$PD_URL/store/v2/storefront/${Cache.accountToken!.puuid}';
+    final storeFront_headers = RIOT_HEADERS;
     final storeFront_response = await http.get(Uri.parse(storeFront_api), headers: storeFront_headers);
     if (storeFront_response.statusCode == 200) {
       var storeFront_data = json.decode(storeFront_response.body);
@@ -490,5 +465,116 @@ class ValorantServices {
     );
   }
 
-  
+  // used for live page
+  Future<void> getPartyData() async {
+    final String partyId;
+    final List<String> playerNames = [];
+    final List<String> playerCards = [];
+    final List<int> playerLevels = [];
+    final List<String> playerRanks = [];
+
+    final partyPlayer_api = "$GLZ_URL/parties/v1/players/${Cache.accountToken!.puuid}";
+    final partyPlayer_headers = RIOT_HEADERS;
+    final partyPlayer_response = await http.get(Uri.parse(partyPlayer_api), headers: partyPlayer_headers);
+    if (partyPlayer_response.statusCode == 200) {
+      var partyPlayer_data = json.decode(partyPlayer_response.body);
+      partyId = partyPlayer_data['CurrentPartyID'];
+    }
+    else{
+      throw ExceptionPlayerNotInGame("Error getting party ID: ${partyPlayer_response.statusCode}");
+    }
+
+    final party_api = "$GLZ_URL/parties/v1/parties/$partyId";
+    final party_headers = RIOT_HEADERS;
+    final party_response = await http.get(Uri.parse(party_api), headers: party_headers);
+    if (party_response.statusCode == 200) {
+      var party_data = json.decode(party_response.body);
+      var party_member_list = party_data['Members'];
+      
+      var playerUuids = [];
+      for (var member in party_member_list) {
+        playerUuids.add(member['Subject']);
+        playerCards.add("https://media.valorant-api.com/playercards/${member['PlayerIdentity']['PlayerCardID']}/displayicon.png");
+        playerLevels.add(member['PlayerIdentity']['AccountLevel']);
+      }
+
+      // translate uuid to name
+      final nameService_api = "$PD_URL/name-service/v2/players";
+      final nameService_headers = RIOT_HEADERS;
+      final nameService_body = json.encode(playerUuids);
+      final nameService_response = await http.put(Uri.parse(nameService_api), headers: nameService_headers, body: nameService_body);
+      if (nameService_response.statusCode == 200) {
+        var nameService_data = json.decode(nameService_response.body);
+        for (var pName in nameService_data) {
+          playerNames.add('${pName['GameName']} #${pName['TagLine']}');
+        }
+      }
+      else{
+        throw ExceptionValApi("Error while getting player names: ${nameService_response.statusCode}");
+      }
+
+      // get each player's rank
+      for (var puuid in playerUuids) {
+        final playerMmr_api = "$PD_URL/mmr/v1/players/$puuid";
+        final playerMmr_headers = RIOT_HEADERS;
+        final playerMmr_response = await http.get(Uri.parse(playerMmr_api), headers: playerMmr_headers);
+        if (playerMmr_response.statusCode == 200) {
+          var playerMmr_data = json.decode(playerMmr_response.body);
+          // uuid
+          var _currentCompetitiveRank = playerMmr_data['LatestCompetitiveUpdate']['TierAfterUpdate'];
+
+          // temp string
+          var rankImage;
+
+          const competitiveTier_api =
+              "https://valorant-api.com/v1/competitivetiers";
+          final competitiveTier_response =
+              await http.get(Uri.parse(competitiveTier_api));
+          if (competitiveTier_response.statusCode == 200) {
+            var competitiveTier_data = json.decode(competitiveTier_response.body);
+            List<dynamic> competitiveTier_list = competitiveTier_data['data'];
+            var latestCompetitiveTier = competitiveTier_list.last;
+
+            for (var tier in latestCompetitiveTier['tiers']) {
+              if (tier['tier'] == _currentCompetitiveRank) {
+                rankImage = tier['largeIcon'];
+                playerRanks.add(rankImage);
+              }
+            }
+          }
+        } else {
+          throw ExceptionValApi(
+            "Error: Valorant API return code ${playerMmr_response.statusCode}");
+        }
+      }
+    }
+    Cache.partyMembers = PartyMembers(
+      partyId: partyId,
+      playerNames: playerNames, 
+      playerCards: playerCards, 
+      playerLevels: playerLevels, 
+      playerRanks: playerRanks,
+    );
+  }
+
+  Future<void>postPartyReadyState(String partyId, bool readyState) async {
+    final partySetReady_api = "$GLZ_URL/parties/v1/parties/$partyId/members/${Cache.accountToken!.puuid}/setReady";
+    final partySetReady_headers = RIOT_HEADERS;
+    final partySetReady_body = {
+      "ready": readyState
+    };
+
+    final body = json.encode(partySetReady_body);
+
+    final partySetReady_response = await http.post(Uri.parse(partySetReady_api), headers: partySetReady_headers, body: body);
+    if (partySetReady_response.statusCode == 200) {
+      
+    }
+    else{
+      print(partySetReady_response.body);
+      throw ExceptionValApi("Error set party ready state: ${partySetReady_response.statusCode}");
+    }
+  }
+
+
 }

@@ -8,6 +8,7 @@ class AccountToken {
   String puuid;
   String clientVersion;
   String clientPlatform;
+  String region;
 
   AccountToken({
     required this.accessTokenType,
@@ -17,6 +18,7 @@ class AccountToken {
     required this.puuid,
     required this.clientVersion,
     required this.clientPlatform,
+    required this.region,
   });
 }
 

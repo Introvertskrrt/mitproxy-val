@@ -16,8 +16,9 @@ class LoginController extends GetxController {
   RxString? errorLoginMessage;
 
   Future<bool> fetchLogin() async {
-    final url =
-        Uri.parse('https://api.1ntrovertval.my.id/api/riot/authenticate');
+    // http://127.0.0.1:5000/api/riot/authenticate || Local development API
+    // https://api.1ntrovertval.my.id/api/riot/authenticate || Hosted API
+    final url = Uri.parse('https://api.1ntrovertval.my.id/api/riot/authenticate');
     final response = await http.post(
       url,
       headers: {'Content-Type': 'application/json'},
@@ -30,13 +31,14 @@ class LoginController extends GetxController {
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
       Cache.accountToken = AccountToken(
-        authToken: data['Access-Token'],
+        authToken: data['Auth-Token'],
         accessTokenType: data['Access-Token-Type'],
         entitlementsToken: data['Entitlements-Token'],
         puuid: data['User-ID'],
         clientVersion: data['Client-Version'],
         shard: data['Shard'],
         clientPlatform: data['Client-Platform'],
+        region: data['Region'],
       );
 
       // Call the callback function in Controller on successful login
