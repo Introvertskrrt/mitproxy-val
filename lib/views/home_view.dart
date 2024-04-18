@@ -28,6 +28,7 @@ class HomeView extends StatelessWidget {
             ),
           ),
           body: const SingleChildScrollView(
+            physics: NeverScrollableScrollPhysics(),
             child: SafeArea(child: HomeSkeleton()),
           ),
         );
