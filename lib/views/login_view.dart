@@ -110,6 +110,9 @@ class LoginView extends StatelessWidget {
                 child: ElevatedButton(
                   onPressed: () async {
                     loginController.showLoadingDialog(context);
+                    loginController.staticUsername.value = loginController.username.text;
+                    loginController.staticPassword.value = loginController.password.text;
+                    
                     bool isLoginSuccess = await loginController.fetchLogin();
                     if (isLoginSuccess) {
                       Navigator.of(context).pop(); // Hide loading dialog

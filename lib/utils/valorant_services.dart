@@ -1,7 +1,8 @@
-// ignore_for_file: non_constant_identifier_names, unused_local_variable, constant_identifier_names, no_leading_underscores_for_local_identifiers, prefer_typing_uninitialized_variables
+// ignore_for_file: non_constant_identifier_names, unused_local_variable, constant_identifier_names, no_leading_underscores_for_local_identifiers, prefer_typing_uninitialized_variables, unnecessary_null_comparison
 
 import 'package:flutter/widgets.dart';
 import 'package:mitproxy_val/models/account_model.dart';
+import 'package:mitproxy_val/models/match_model.dart';
 import 'package:mitproxy_val/models/party_model.dart';
 import 'package:mitproxy_val/models/store_model.dart';
 import 'package:mitproxy_val/utils/cache.dart';
@@ -661,6 +662,172 @@ class ValorantServices {
 
     if (leaveMatchmaking_response.statusCode == 200) {
       return;
+    }
+  }
+
+  Future<void> getPreGameMatch() async {
+    // match data
+    String matchId;
+    String mapBanner;
+    String mapName;
+    String gameMode;
+
+    // ally team players data
+    String allyTeamId;
+    List<String> allyPlayerNames = [];
+    List<String> allyAgentImages = [];
+    List<bool> allySelectionStates = [];
+    List<String> allyRanks = [];
+    
+    // enemy team players data
+    String enemyTeamId;
+    List<String> enemyPlayerNames = [];
+    List<String> enemyAgentImages = [];
+    List<bool> enemySelectionStates = [];
+    List<String> enemyRanks = [];
+
+    // get pregame player first
+    final preGamePlayer_api = "$GLZ_URL/pregame/v1/players/${Cache.accountToken!.puuid}";
+    final preGamePlayer_headers = RIOT_HEADERS;
+    final preGamePlayer_response = await http.get(Uri.parse(preGamePlayer_api), headers: preGamePlayer_headers);
+
+    if (preGamePlayer_response.statusCode == 200) {
+      var preGamePlayer_data = json.decode(preGamePlayer_response.body);
+      matchId = preGamePlayer_data['MatchID'];
+    }
+    else{
+      return;
+    }
+
+    // get match info
+    final preGameMatch_api = "$GLZ_URL/pregame/v1/matches/$matchId";
+    final preGameMatch_headers = RIOT_HEADERS;
+    final preGameMatch_response = await http.get(Uri.parse(preGameMatch_api), headers: preGameMatch_headers);
+
+    if (preGameMatch_response.statusCode == 200) {
+      var preGameMatch_data = json.decode(preGameMatch_response.body);
+      mapBanner = "https://media.valorant-api.com/maps/${preGameMatch_data['MapID']}/listviewicon.png";
+      gameMode = preGameMatch_data['Mode'];
+
+      // get map data
+      final maps_api = "https://valorant-api.com/v1/maps/${preGameMatch_data['MapID']}";
+      final maps_response = await http.get(Uri.parse(maps_api));
+
+      if (maps_response.statusCode == 200) {
+        var maps_data = json.decode(maps_response.body);
+        mapName = maps_data['displayName'];
+      }
+
+      Cache.currentMatch = CurrentMatch(
+        mapBanner: mapBanner, 
+        gameMode: gameMode,
+      );
+
+      // get ally team players info
+      allyTeamId = preGameMatch_data['AllyTeam']['TeamID'];
+      
+      var allyPlayers = preGameMatch_data['AllyTeam']['Players']; // List
+
+      for (var player in allyPlayers) {
+        if (player['CharacterID'] != null && player['CharacterID'] != ""){
+          allyAgentImages.add("https:/media.valorant-api.com/agents/${player['CharacterID']}/displayicon.png");
+        }
+        else{
+          allyAgentImages.add("https://cdn.discordapp.com/attachments/1127494450030051349/1230609946920615996/image.png?ex=6633f1d2&is=66217cd2&hm=a516f2012a6689fac0e4d21ddeff4f000f414ae1ab9a749bbe7aa714367140c8&");
+        }
+        var playerId = player['Subject'];
+
+        final nameService_api ="$PD_URL/name-service/v2/players";
+        final nameService_headers = RIOT_HEADERS;
+        final nameService_body = [playerId];
+        final body = json.encode(nameService_body);
+
+        final nameService_response = await http.put(Uri.parse(nameService_api), headers: nameService_headers, body: body);
+
+        if (nameService_response.statusCode == 200) {
+          var nameService_data = json.decode(nameService_response.body);
+          var playerName = nameService_data[0]['GameName'] + " #" + nameService_data[0]['TagLine'];
+          allyPlayerNames.add(playerName);
+        }
+
+        var pSelectionState = player['CharacterSelectionState'];
+        if (pSelectionState == "" || pSelectionState == "selected") {
+          allySelectionStates.add(false);
+        }
+        else if (pSelectionState == "locked"){
+          allySelectionStates.add(true);
+        }
+        
+        final rank_api = "https://api.henrikdev.xyz/valorant/v1/by-puuid/mmr/${Cache.accountToken!.region}/$playerId";
+        final rank_response = await http.get(Uri.parse(rank_api));
+
+        if (rank_response.statusCode == 200) {
+          var rank_data = json.decode(rank_response.body);
+          allyRanks.add(rank_data['data']['images']['large']);
+        }
+      }
+
+      Cache.allyTeam = AllyTeam(
+        allyTeamId: allyTeamId, 
+        allyPlayerNames: allyPlayerNames, 
+        allyAgentImages: allyAgentImages, 
+        allySelectionStates: allySelectionStates, 
+        allyRanks: allyRanks,
+      );
+
+      // get enemy team players info
+      enemyTeamId = preGameMatch_data['EnemyTeam']?['TeamID'] ?? "";
+
+      if (enemyTeamId != null && enemyTeamId != "") {
+        var enemyPlayers = preGameMatch_data['EnemyTeam']['Players'];
+
+        for (var player in enemyPlayers) {
+          if (player['CharacterID'] != null && player['CharacterID'] != ""){
+          enemyAgentImages.add("https:/media.valorant-api.com/agents/${player['CharacterID']}/displayicon.png");
+        }
+        else{
+          enemyAgentImages.add("https://cdn.discordapp.com/attachments/1127494450030051349/1230609946920615996/image.png?ex=6633f1d2&is=66217cd2&hm=a516f2012a6689fac0e4d21ddeff4f000f414ae1ab9a749bbe7aa714367140c8&");
+        }
+          var playerId = player['Subject'];
+
+          final nameService_api ="$PD_URL/name-service/v2/players";
+          final nameService_headers = RIOT_HEADERS;
+          final nameService_body = [playerId];
+          final body = json.encode(nameService_body);
+
+          final nameService_response = await http.put(Uri.parse(nameService_api), headers: nameService_headers, body: body);
+
+          if (nameService_response.statusCode == 200) {
+            var nameService_data = json.decode(nameService_response.body);
+            var playerName = nameService_data[0]['GameName'] + " #" + nameService_data[0]['TagLine'];
+            enemyPlayerNames.add(playerName);
+          }
+
+          var pSelectionState = player['CharacterSelectionState'];
+          if (pSelectionState == "" || pSelectionState == "selected") {
+            enemySelectionStates.add(false);
+          }
+          else if (pSelectionState == "locked"){
+            enemySelectionStates.add(true);
+          }
+          
+          final rank_api = "https://api.henrikdev.xyz/valorant/v1/by-puuid/mmr/${Cache.accountToken!.region}/$playerId";
+          final rank_response = await http.get(Uri.parse(rank_api));
+
+          if (rank_response.statusCode == 200) {
+            var rank_data = json.decode(rank_response.body);
+            enemyRanks.add(rank_data['data']['images']['large']);
+          }
+        }
+
+        Cache.enemyTeam = EnemyTeam(
+          enemyTeamId: enemyTeamId, 
+          enemyPlayerNames: enemyPlayerNames, 
+          enemyAgentImages: enemyAgentImages, 
+          enemySelectionStates: enemySelectionStates, 
+          enemyRanks: enemyRanks,
+        );
+      }
     }
   }
 

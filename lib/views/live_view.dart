@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mitproxy_val/components/live/matches_widget.dart';
 import 'package:mitproxy_val/components/live/party_widget.dart';
 import 'package:mitproxy_val/components/live/waiting_page.dart';
 import 'package:mitproxy_val/constants/color_constant.dart';
@@ -34,7 +35,7 @@ class LiveView extends StatelessWidget {
           appBar: AppBar(
             automaticallyImplyLeading: false,
             title: Text(
-              "Home",
+              "Live",
               style: textStyleConstant.TextStyleInterBold(Colors.black, 18),
             ),
           ),
@@ -45,6 +46,8 @@ class LiveView extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   PartyWidget(),
+                  const SizedBox(height: 20),
+                  MatchesWidget(),
                 ],
               ),
             ),

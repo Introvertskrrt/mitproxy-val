@@ -35,6 +35,7 @@ class LiveController extends GetxController {
     while (true) {
       try {
         await valorantServices.getPartyData();
+        await valorantServices.getPreGameMatch();
         isPlayerInGame.value = true;
         await Future.delayed(const Duration(seconds: 3));
       } on ExceptionPlayerNotInGame {

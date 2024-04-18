@@ -12,10 +12,14 @@ class LoginController extends GetxController {
   final TextEditingController username = TextEditingController();
   final TextEditingController password = TextEditingController();
 
+  RxString staticUsername = "".obs;
+  RxString staticPassword = "".obs;
   RxBool isRememberMe = false.obs;
   RxString? errorLoginMessage;
 
+
   Future<bool> fetchLogin() async {
+    print("Authenticating to login server");
     // http://127.0.0.1:5000/api/riot/authenticate || Local development API
     // https://api.1ntrovertval.my.id/api/riot/authenticate || Hosted API
     final url = Uri.parse('https://api.1ntrovertval.my.id/api/riot/authenticate');
@@ -23,8 +27,8 @@ class LoginController extends GetxController {
       url,
       headers: {'Content-Type': 'application/json'},
       body: json.encode({
-        'username': username.text,
-        'password': password.text,
+        'username': staticUsername.value,
+        'password': staticPassword.value,
       }),
     );
 
