@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:get/get.dart';
-import 'package:get/get_rx/get_rx.dart';
+import 'package:mitproxy_val/controllers/login_controller.dart';
 import 'package:mitproxy_val/utils/cache.dart';
 import 'package:mitproxy_val/utils/exceptions.dart';
 import 'package:mitproxy_val/utils/valorant_services.dart';
@@ -12,6 +12,8 @@ class HomeController extends GetxController {
   RxString bundleRemainingTime = ''.obs;
   RxString dailyOffersRemainingTime = ''.obs;
   Timer? countdownTimer;
+
+  final loginController = Get.put(LoginController());
 
   void startCountdownTimer() {
     if (countdownTimer != null) {
@@ -66,7 +68,7 @@ class HomeController extends GetxController {
       startCountdownTimer();
       isPageLoading(false);
     } on ExceptionValApi {
-      // show error dialog and ask the user to re-authenticate
+      loginController.fetchLogin();
     }
   }
 }

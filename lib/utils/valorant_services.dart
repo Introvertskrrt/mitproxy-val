@@ -557,7 +557,7 @@ class ValorantServices {
     );
   }
 
-  Future<void>postPartyReadyState(String partyId, bool readyState) async {
+  Future<void> postPartyReadyState(String partyId, bool readyState) async {
     final partySetReady_api = "$GLZ_URL/parties/v1/parties/$partyId/members/${Cache.accountToken!.puuid}/setReady";
     final partySetReady_headers = RIOT_HEADERS;
     final partySetReady_body = {
@@ -568,13 +568,100 @@ class ValorantServices {
 
     final partySetReady_response = await http.post(Uri.parse(partySetReady_api), headers: partySetReady_headers, body: body);
     if (partySetReady_response.statusCode == 200) {
-      
+      return;
     }
     else{
-      print(partySetReady_response.body);
       throw ExceptionValApi("Error set party ready state: ${partySetReady_response.statusCode}");
     }
   }
 
+  Future<String> postGeneratePartyCode(String partyId) async {
+    final generatePartyCode_api = "$GLZ_URL/parties/v1/parties/$partyId/invitecode";
+    final generatePartyCode_headers = RIOT_HEADERS;
+    final genereatePartyCode_response = await http.post(Uri.parse(generatePartyCode_api), headers: generatePartyCode_headers);
+    
+    if (genereatePartyCode_response.statusCode == 200) {
+      var response_data = json.decode(genereatePartyCode_response.body);
+      var partyCode = response_data['InviteCode'];
+      return partyCode;
+    }
+    else{
+      print(genereatePartyCode_response.statusCode);
+      return "error";
+    }
+  }
+
+  Future<String> postDeletePartyCode(String partyId) async {
+    final deletePartyCode_api = "$GLZ_URL/parties/v1/parties/$partyId/invitecode";
+    final deletePartyCode_headers = RIOT_HEADERS;
+    final deletePartyCode_response = await http.delete(Uri.parse(deletePartyCode_api), headers: deletePartyCode_headers);
+
+    if (deletePartyCode_response.statusCode == 200) {
+      return "******";
+    }
+    else{
+      return "******";
+    }
+  }
+
+  Future<void> postJoinPartyByCode(String partyCode) async {
+    final joinParty_api = "$GLZ_URL/parties/v1/players/joinbycode/$partyCode";
+    final joinParty_headers = RIOT_HEADERS;
+    final joinParty_response = await http.get(Uri.parse(joinParty_api), headers: joinParty_headers);
+
+    if (joinParty_response.statusCode == 200) {
+      return;
+    }
+  }
+
+  Future<void> postPartyAccessibility(String partyId, String partyStatus) async {
+    final partyAccessibility_api = "$GLZ_URL/parties/v1/parties/$partyId/accessibility";
+    final partyAccessibility_headers = RIOT_HEADERS;
+    final partyAccessibility_body = {
+      "accessibility": partyStatus 
+    };
+    final body = json.encode(partyAccessibility_body);
+
+    final partyAccessibility_response = await http.post(Uri.parse(partyAccessibility_api), headers: partyAccessibility_headers, body: body);
+
+    if (partyAccessibility_response.statusCode == 200) {
+      return;
+    }
+  }
+
+  Future<void> postSetGameMode(String partyId, String gameMode) async{
+    final setGameMode_api = "$GLZ_URL/parties/v1/parties/$partyId/queue";
+    final setGameMode_headers = RIOT_HEADERS;
+    final setGameMode_body = {
+      'queueId': gameMode
+    };
+    final body = json.encode(setGameMode_body);
+
+    final setGameMode_response = await http.post(Uri.parse(setGameMode_api), headers: setGameMode_headers, body: body);
+
+    if (setGameMode_response.statusCode == 200) {
+      return;
+    }
+  }
+
+  Future<void> postEntermatchmaking(String partyId) async {
+    final joinMatchmaking_api = "$GLZ_URL/parties/v1/parties/$partyId/matchmaking/join";
+    final joinMatchmaking_headers = RIOT_HEADERS;
+    final joinMatchmaking_response = await http.post(Uri.parse(joinMatchmaking_api), headers: joinMatchmaking_headers);
+
+    if (joinMatchmaking_response.statusCode == 200) {
+      return;
+    }
+  }
+
+  Future<void> postLeavematchmaking(String partyId) async {
+    final leaveMatchmaking_api = "$GLZ_URL/parties/v1/parties/$partyId/matchmaking/leave";
+    final leaveMatchmaking_headers = RIOT_HEADERS;
+    final leaveMatchmaking_response = await http.post(Uri.parse(leaveMatchmaking_api), headers: leaveMatchmaking_headers);
+
+    if (leaveMatchmaking_response.statusCode == 200) {
+      return;
+    }
+  }
 
 }
