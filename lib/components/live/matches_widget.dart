@@ -61,14 +61,15 @@ class MatchesWidget extends StatelessWidget {
                       Center(
                         child: Text(
                           liveController.gameMode.value,
-                          style: textStyleConstant.TextStyleInterNormal(
-                              Colors.white, 16),
+                          style: textStyleConstant.TextStyleInterBold(
+                              Colors.white70, 18),
                         ),
                       ),
                     ],
                   ),
                 ),
                 const SizedBox(height: 20),
+                
                 // ally/team widget
                 Visibility(
                   visible: liveController.allyPlayerNames.isNotEmpty,
@@ -142,7 +143,10 @@ class MatchesWidget extends StatelessWidget {
                     ),
                   ),
                 ),
-
+                const Padding(
+                  padding: EdgeInsets.all(16.0),
+                  child: Divider(),
+                ),
                 Visibility(
                   visible: liveController.enemyPlayerNames.isNotEmpty,
                   child: Padding(

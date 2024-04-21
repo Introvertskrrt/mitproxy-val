@@ -386,7 +386,7 @@ class ValorantLiveServices {
                 for (var tier in tierList) {
                   if (tier['tier'] == competitiveTier) {
                     allyRanks.add(tier['largeIcon']);
-                    await Future.delayed(const Duration(seconds: 2));
+                    await Future.delayed(const Duration(seconds: 1));
                   }
                 }
                 liveController.allyRanks.value = allyRanks;
