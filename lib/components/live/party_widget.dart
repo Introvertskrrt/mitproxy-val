@@ -3,9 +3,7 @@ import 'package:get/get.dart';
 import 'package:mitproxy_val/constants/color_constant.dart';
 import 'package:mitproxy_val/constants/textstyle_constant.dart';
 import 'package:mitproxy_val/controllers/live_controller.dart';
-import 'package:mitproxy_val/utils/cache.dart';
 import 'package:mitproxy_val/utils/valorant_services.dart';
-import 'package:flutter/services.dart';
 
 class PartyWidget extends StatelessWidget {
   PartyWidget({super.key});
@@ -53,57 +51,61 @@ class PartyWidget extends StatelessWidget {
                               Colors.black, 14),
                         ),
                         const SizedBox(height: 10),
-                        Column(
-                          children: List.generate(
-                            Cache.partyMembers!.playerNames.length,
-                            (index) {
-                              return Container(
-                                decoration: const BoxDecoration(
-                                    //color: Colors.black
-                                    ),
-                                child: ListTile(
-                                  leading: Container(
-                                    width: 30,
-                                    height: 30,
-                                    decoration: BoxDecoration(
+                        Obx(() {
+                          return Column(
+                            children: List.generate(
+                              liveController.playerNames.length,
+                              (index) {
+                                return Container(
+                                  decoration: const BoxDecoration(
+                                      //color: Colors.black
+                                      ),
+                                  child: ListTile(
+                                    leading: Container(
+                                      width: 30,
+                                      height: 30,
+                                      decoration: BoxDecoration(
                                         image: DecorationImage(
-                                            image: NetworkImage(Cache
-                                                .partyMembers!
-                                                .playerCards[index]))),
-                                  ),
-                                  title: Text(
-                                    Cache.partyMembers!.playerNames[index],
-                                    style:
-                                        textStyleConstant.TextStyleInterNormal(
-                                            Colors.black, 14),
-                                  ),
-                                  subtitle: Text(
-                                    'Levels ${Cache.partyMembers!.playerLevels[index]}',
-                                    style:
-                                        textStyleConstant.TextStyleInterNormal(
-                                            Colors.black54, 12),
-                                  ),
-                                  trailing: Container(
-                                    width: 30,
-                                    height: 30,
-                                    decoration: BoxDecoration(
-                                      color: const Color.fromRGBO(
-                                          191, 191, 191, 1),
-                                      borderRadius: BorderRadius.circular(180),
-                                      border: Border.all(
-                                          color: const Color.fromRGBO(
-                                              156, 156, 156, 1)),
-                                      image: DecorationImage(
-                                        image: NetworkImage(Cache
-                                            .partyMembers!.playerRanks[index]),
+                                          image: NetworkImage(liveController
+                                              .playerCards[index]),
+                                        ),
+                                      ),
+                                    ),
+                                    title: Text(
+                                      liveController.playerNames[index],
+                                      style: textStyleConstant
+                                          .TextStyleInterNormal(
+                                              Colors.black, 14),
+                                    ),
+                                    subtitle: Text(
+                                      'Levels ${liveController.playerLevels[index]}',
+                                      style: textStyleConstant
+                                          .TextStyleInterNormal(
+                                              Colors.black54, 12),
+                                    ),
+                                    trailing: Container(
+                                      width: 30,
+                                      height: 30,
+                                      decoration: BoxDecoration(
+                                        color: const Color.fromRGBO(
+                                            191, 191, 191, 1),
+                                        borderRadius:
+                                            BorderRadius.circular(180),
+                                        border: Border.all(
+                                            color: const Color.fromRGBO(
+                                                156, 156, 156, 1)),
+                                        image: DecorationImage(
+                                          image: NetworkImage(liveController
+                                              .playerRanks[index]),
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
-                              );
-                            },
-                          ),
-                        ),
+                                );
+                              },
+                            ),
+                          );
+                        })
                       ],
                     ),
                   ),
@@ -185,7 +187,7 @@ class PartyWidget extends StatelessWidget {
                                       liveController.partyCode.text =
                                           await valorantServices
                                               .postGeneratePartyCode(
-                                                  Cache.partyMembers!.partyId);
+                                                  liveController.partyId.value);
                                       liveController
                                           .isPartyCodeGenerated.value = true;
                                       liveController.buttonGenerateCode_Text
@@ -194,7 +196,7 @@ class PartyWidget extends StatelessWidget {
                                       liveController.partyCode.text =
                                           await valorantServices
                                               .postDeletePartyCode(
-                                                  Cache.partyMembers!.partyId);
+                                                  liveController.partyId.value);
                                       liveController
                                           .isPartyCodeGenerated.value = false;
                                       liveController.buttonGenerateCode_Text
@@ -317,7 +319,7 @@ class PartyWidget extends StatelessWidget {
                               onChanged: (value) {
                                 liveController.isPartyReady.value = value;
                                 valorantServices.postPartyReadyState(
-                                    Cache.partyMembers!.partyId, value);
+                                    liveController.partyId.value, value);
                               },
                               activeColor:
                                   Colors.green, // Color when the switch is ON
@@ -363,11 +365,11 @@ class PartyWidget extends StatelessWidget {
                                 if (!liveController.isPartyOpen.value) {
                                   liveController.isPartyOpen.value = value;
                                   valorantServices.postPartyAccessibility(
-                                      Cache.partyMembers!.partyId, "OPEN");
+                                      liveController.partyId.value, "OPEN");
                                 } else {
                                   liveController.isPartyOpen.value = value;
                                   valorantServices.postPartyAccessibility(
-                                      Cache.partyMembers!.partyId, "CLOSED");
+                                      liveController.partyId.value, "CLOSED");
                                 }
                               },
                               activeColor:
@@ -415,7 +417,7 @@ class PartyWidget extends StatelessWidget {
                                   child: GestureDetector(
                                     onTap: () {
                                       valorantServices.postSetGameMode(
-                                          Cache.partyMembers!.partyId,
+                                          liveController.partyId.value,
                                           "unrated");
                                       liveController.currentGameMode_Text
                                           .value = 'Unrated';
@@ -428,7 +430,7 @@ class PartyWidget extends StatelessWidget {
                                   child: GestureDetector(
                                     onTap: () {
                                       valorantServices.postSetGameMode(
-                                          Cache.partyMembers!.partyId,
+                                          liveController.partyId.value,
                                           "competitive");
                                       liveController.currentGameMode_Text
                                           .value = 'Competitive';
@@ -441,7 +443,7 @@ class PartyWidget extends StatelessWidget {
                                   child: GestureDetector(
                                     onTap: () {
                                       valorantServices.postSetGameMode(
-                                          Cache.partyMembers!.partyId,
+                                          liveController.partyId.value,
                                           "swiftplay");
                                       liveController.currentGameMode_Text
                                           .value = 'Swiftplay';
@@ -454,7 +456,7 @@ class PartyWidget extends StatelessWidget {
                                   child: GestureDetector(
                                     onTap: () {
                                       valorantServices.postSetGameMode(
-                                          Cache.partyMembers!.partyId,
+                                          liveController.partyId.value,
                                           "spikerush");
                                       liveController.currentGameMode_Text
                                           .value = 'Spike Rush';
@@ -467,7 +469,7 @@ class PartyWidget extends StatelessWidget {
                                   child: GestureDetector(
                                     onTap: () {
                                       valorantServices.postSetGameMode(
-                                          Cache.partyMembers!.partyId,
+                                          liveController.partyId.value,
                                           "deathmatch");
                                       liveController.currentGameMode_Text
                                           .value = 'Deathmatch';
@@ -480,7 +482,7 @@ class PartyWidget extends StatelessWidget {
                                   child: GestureDetector(
                                     onTap: () {
                                       valorantServices.postSetGameMode(
-                                          Cache.partyMembers!.partyId,
+                                          liveController.partyId.value,
                                           "ggteam");
                                       liveController.currentGameMode_Text
                                           .value = 'Escalation';
@@ -493,7 +495,7 @@ class PartyWidget extends StatelessWidget {
                                   child: GestureDetector(
                                     onTap: () {
                                       valorantServices.postSetGameMode(
-                                          Cache.partyMembers!.partyId, "hurm");
+                                          liveController.partyId.value, "hurm");
                                       liveController.currentGameMode_Text
                                           .value = 'Team Deathmatch';
                                       Navigator.pop(context);
@@ -541,20 +543,20 @@ class PartyWidget extends StatelessWidget {
               ),
               Center(
                 child: SizedBox(
-                  width: MediaQuery.sizeOf(context).width - 200,
+                  width: MediaQuery.sizeOf(context).width - 150,
                   height: 25,
                   child: ElevatedButton(
                     onPressed: () async {
                       if (!liveController.isOnMatchmaking.value) {
                         valorantServices
-                            .postEntermatchmaking(Cache.partyMembers!.partyId);
+                            .postEntermatchmaking(liveController.partyId.value);
                         liveController.buttonMatchmaking_Text.value =
                             "STOP MATCHMAKING";
                         liveController.isOnMatchmaking.value = true;
                         liveController.startMatchmakingTimer();
                       } else {
                         valorantServices
-                            .postLeavematchmaking(Cache.partyMembers!.partyId);
+                            .postLeavematchmaking(liveController.partyId.value);
                         liveController.buttonMatchmaking_Text.value =
                             "START MATCHMAKING";
                         liveController.isOnMatchmaking.value = false;

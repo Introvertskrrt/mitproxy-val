@@ -1,9 +1,11 @@
 // ignore_for_file: non_constant_identifier_names, unused_local_variable, constant_identifier_names, no_leading_underscores_for_local_identifiers, prefer_typing_uninitialized_variables, unnecessary_null_comparison
 
+import 'dart:developer';
+
 import 'package:flutter/widgets.dart';
+import 'package:get/get.dart';
+import 'package:mitproxy_val/controllers/live_controller.dart';
 import 'package:mitproxy_val/models/account_model.dart';
-import 'package:mitproxy_val/models/match_model.dart';
-import 'package:mitproxy_val/models/party_model.dart';
 import 'package:mitproxy_val/models/store_model.dart';
 import 'package:mitproxy_val/utils/cache.dart';
 import 'dart:convert';
@@ -11,7 +13,8 @@ import 'package:http/http.dart' as http;
 import 'package:mitproxy_val/utils/exceptions.dart';
 
 class ValorantServices {
-  static String GLZ_URL = "https://glz-${Cache.accountToken!.region}-1.${Cache.accountToken!.shard}.a.pvp.net";
+  static String GLZ_URL =
+      "https://glz-${Cache.accountToken!.region}-1.${Cache.accountToken!.shard}.a.pvp.net";
   static String PD_URL = "https://pd.${Cache.accountToken!.shard}.a.pvp.net";
   static dynamic RIOT_HEADERS = {
     'X-Riot-ClientPlatform': Cache.accountToken!.clientPlatform,
@@ -60,8 +63,7 @@ class ValorantServices {
     }
 
     // get player currencies (vp, radianite, kingdom credits)
-    final wallet_api =
-        "$PD_URL/store/v1/wallet/${Cache.accountToken!.puuid}";
+    final wallet_api = "$PD_URL/store/v1/wallet/${Cache.accountToken!.puuid}";
     final wallet_headers = RIOT_HEADERS;
     final wallet_response =
         await http.get(Uri.parse(wallet_api), headers: wallet_headers);
@@ -95,21 +97,22 @@ class ValorantServices {
           "Error: Valorant API return code ${accountXp_response.statusCode}");
     }
 
-    // get player mmr
-    final playerMmr_api =
-        "$PD_URL/mmr/v1/players/${Cache.accountToken!.puuid}";
+    // get player current rank
+    final rank_api =
+        "https://api.henrikdev.xyz/valorant/v1/by-puuid/mmr/${Cache.accountToken!.region}/${Cache.accountToken!.puuid}";
+    final rank_response = await http.get(Uri.parse(rank_api));
+    var rank_data = json.decode(rank_response.body);
+    var rank_tier = rank_data['data']['currenttier'];
+    playerMmr = rank_data['data']['ranking_in_tier'];
+
+    final playerMmr_api = "$PD_URL/mmr/v1/players/${Cache.accountToken!.puuid}";
     final playerMmr_headers = RIOT_HEADERS;
     final playerMmr_response =
         await http.get(Uri.parse(playerMmr_api), headers: playerMmr_headers);
     if (playerMmr_response.statusCode == 200) {
       var playerMmr_data = json.decode(playerMmr_response.body);
 
-      playerMmr =
-          playerMmr_data['LatestCompetitiveUpdate']['RankedRatingAfterUpdate'];
-
       // uuid
-      var _currentCompetitiveRank =
-          playerMmr_data['LatestCompetitiveUpdate']['TierAfterUpdate'];
       var _currentCompetitiveSeason =
           playerMmr_data['LatestCompetitiveUpdate']['SeasonID'];
 
@@ -148,7 +151,7 @@ class ValorantServices {
         var latestCompetitiveTier = competitiveTier_list.last;
 
         for (var tier in latestCompetitiveTier['tiers']) {
-          if (tier['tier'] == _currentCompetitiveRank) {
+          if (tier['tier'] == rank_tier) {
             currentRank = tier['tierName'];
             rankImage = tier['largeIcon'];
             _rankColor = tier['color'];
@@ -356,7 +359,7 @@ class ValorantServices {
       }
     } else {
       throw ExceptionValApi(
-        "Error: Valorant API return code ${weaponSkins_response.statusCode}");
+          "Error: Valorant API return code ${weaponSkins_response.statusCode}");
     }
 
     Cache.bundleData = Bundle(
@@ -380,17 +383,21 @@ class ValorantServices {
     List<Color> weaponRarityColor = [];
     int dailyOffersRemainingTime;
 
-    final storeFront_api = '$PD_URL/store/v2/storefront/${Cache.accountToken!.puuid}';
+    final storeFront_api =
+        '$PD_URL/store/v2/storefront/${Cache.accountToken!.puuid}';
     final storeFront_headers = RIOT_HEADERS;
-    final storeFront_response = await http.get(Uri.parse(storeFront_api), headers: storeFront_headers);
+    final storeFront_response =
+        await http.get(Uri.parse(storeFront_api), headers: storeFront_headers);
     if (storeFront_response.statusCode == 200) {
       var storeFront_data = json.decode(storeFront_response.body);
 
-      dailyOffersRemainingTime = storeFront_data['SkinsPanelLayout']['SingleItemOffersRemainingDurationInSeconds'];
+      dailyOffersRemainingTime = storeFront_data['SkinsPanelLayout']
+          ['SingleItemOffersRemainingDurationInSeconds'];
 
       // loop 4x because daily offers only contain 4 weapons
       for (int i = 0; i < 4; i++) {
-        final offerId = storeFront_data['SkinsPanelLayout']['SingleItemOffers'][i];
+        final offerId =
+            storeFront_data['SkinsPanelLayout']['SingleItemOffers'][i];
 
         final weaponNameApi =
             "https://valorant-api.com/v1/weapons/skinlevels/$offerId";
@@ -404,16 +411,15 @@ class ValorantServices {
         }
 
         // Weapon Price
-        final price = storeFront_data['SkinsPanelLayout']['SingleItemStoreOffers'][i]
-            ['Cost']['85ad13f7-3d1b-5128-9eb2-7cd8ee0b5741'];
+        final price = storeFront_data['SkinsPanelLayout']
+                ['SingleItemStoreOffers'][i]['Cost']
+            ['85ad13f7-3d1b-5128-9eb2-7cd8ee0b5741'];
         weaponPrices.add(price);
       }
-    }
-    else {
+    } else {
       throw ExceptionValApi(
-        "Error: Valorant API return code ${storeFront_response.statusCode}");
+          "Error: Valorant API return code ${storeFront_response.statusCode}");
     }
-
 
     // get daily offers weapon rarity
     const weaponSkins_api = "https://valorant-api.com/v1/weapons/skins";
@@ -433,7 +439,8 @@ class ValorantServices {
 
               for (var contentTiers in contentTier_data['data']) {
                 if (contentTiers['uuid'] == data['contentTierUuid']) {
-                  var replacement_index = weaponNames.indexOf(data['displayName']);
+                  var replacement_index =
+                      weaponNames.indexOf(data['displayName']);
 
                   // item tier icon
                   var _tierIcon = contentTiers['displayIcon'];
@@ -443,24 +450,24 @@ class ValorantServices {
                   var _tierColor = contentTiers['highlightColor'];
                   String rgbHex = _tierColor.substring(0, 6);
 
-                  weaponRarityColor.add(Color(int.parse('0xff$rgbHex')).withOpacity(0.3));
+                  weaponRarityColor
+                      .add(Color(int.parse('0xff$rgbHex')).withOpacity(0.3));
                 }
               }
             }
           }
         }
       }
-    }
-    else {
+    } else {
       throw ExceptionValApi(
-        "Error: Valorant API return code ${storeFront_response.statusCode}");
+          "Error: Valorant API return code ${storeFront_response.statusCode}");
     }
 
     Cache.dailyOffers = DailyOffers(
-      weaponNames: weaponNames, 
-      weaponPrices: weaponPrices, 
-      weaponImages: weaponImages, 
-      weaponRarityIcon: weaponRarityIcon, 
+      weaponNames: weaponNames,
+      weaponPrices: weaponPrices,
+      weaponImages: weaponImages,
+      weaponRarityIcon: weaponRarityIcon,
       weaponRarityColor: weaponRarityColor,
       dailyOffersRemainingTime: dailyOffersRemainingTime,
     );
@@ -468,34 +475,40 @@ class ValorantServices {
 
   // used for live page
   Future<void> getPartyData() async {
+    final liveController = Get.put(LiveController());
+
     final String partyId;
     final List<String> playerNames = [];
     final List<String> playerCards = [];
     final List<int> playerLevels = [];
     final List<String> playerRanks = [];
 
-    final partyPlayer_api = "$GLZ_URL/parties/v1/players/${Cache.accountToken!.puuid}";
+    final partyPlayer_api =
+        "$GLZ_URL/parties/v1/players/${Cache.accountToken!.puuid}";
     final partyPlayer_headers = RIOT_HEADERS;
-    final partyPlayer_response = await http.get(Uri.parse(partyPlayer_api), headers: partyPlayer_headers);
+    final partyPlayer_response = await http.get(Uri.parse(partyPlayer_api),
+        headers: partyPlayer_headers);
     if (partyPlayer_response.statusCode == 200) {
       var partyPlayer_data = json.decode(partyPlayer_response.body);
       partyId = partyPlayer_data['CurrentPartyID'];
-    }
-    else{
-      throw ExceptionPlayerNotInGame("Error getting party ID: ${partyPlayer_response.statusCode}");
+    } else {
+      throw ExceptionPlayerNotInGame(
+          "Error getting party ID: ${partyPlayer_response.statusCode}");
     }
 
     final party_api = "$GLZ_URL/parties/v1/parties/$partyId";
     final party_headers = RIOT_HEADERS;
-    final party_response = await http.get(Uri.parse(party_api), headers: party_headers);
+    final party_response =
+        await http.get(Uri.parse(party_api), headers: party_headers);
     if (party_response.statusCode == 200) {
       var party_data = json.decode(party_response.body);
       var party_member_list = party_data['Members'];
-      
+
       var playerUuids = [];
       for (var member in party_member_list) {
         playerUuids.add(member['Subject']);
-        playerCards.add("https://media.valorant-api.com/playercards/${member['PlayerIdentity']['PlayerCardID']}/displayicon.png");
+        playerCards.add(
+            "https://media.valorant-api.com/playercards/${member['PlayerIdentity']['PlayerCardID']}/displayicon.png");
         playerLevels.add(member['PlayerIdentity']['AccountLevel']);
       }
 
@@ -503,104 +516,111 @@ class ValorantServices {
       final nameService_api = "$PD_URL/name-service/v2/players";
       final nameService_headers = RIOT_HEADERS;
       final nameService_body = json.encode(playerUuids);
-      final nameService_response = await http.put(Uri.parse(nameService_api), headers: nameService_headers, body: nameService_body);
+      final nameService_response = await http.put(Uri.parse(nameService_api),
+          headers: nameService_headers, body: nameService_body);
       if (nameService_response.statusCode == 200) {
         var nameService_data = json.decode(nameService_response.body);
         for (var pName in nameService_data) {
           playerNames.add('${pName['GameName']} #${pName['TagLine']}');
         }
-      }
-      else{
-        throw ExceptionValApi("Error while getting player names: ${nameService_response.statusCode}");
+      } else {
+        throw ExceptionValApi(
+            "Error while getting player names: ${nameService_response.statusCode}");
       }
 
-      // get each player's rank
+      // get each player's rank image
       for (var puuid in playerUuids) {
         final playerMmr_api = "$PD_URL/mmr/v1/players/$puuid";
         final playerMmr_headers = RIOT_HEADERS;
-        final playerMmr_response = await http.get(Uri.parse(playerMmr_api), headers: playerMmr_headers);
+        final playerMmr_response = await http.get(Uri.parse(playerMmr_api),
+            headers: playerMmr_headers);
         if (playerMmr_response.statusCode == 200) {
           var playerMmr_data = json.decode(playerMmr_response.body);
-          // uuid
-          var _currentCompetitiveRank = playerMmr_data['LatestCompetitiveUpdate']['TierAfterUpdate'];
+          var _currentCompetitiveSeason =
+              playerMmr_data['LatestCompetitiveUpdate']['SeasonID'];
 
-          // temp string
-          var rankImage;
+          var competitiveTier = playerMmr_data['QueueSkills']['competitive']
+                      ['SeasonalInfoBySeasonID']?[_currentCompetitiveSeason]
+                  ?['CompetitiveTier'] ??
+              0;
 
+          // convert competitive tier to actual rank
           const competitiveTier_api =
               "https://valorant-api.com/v1/competitivetiers";
           final competitiveTier_response =
               await http.get(Uri.parse(competitiveTier_api));
           if (competitiveTier_response.statusCode == 200) {
-            var competitiveTier_data = json.decode(competitiveTier_response.body);
+            var competitiveTier_data =
+                json.decode(competitiveTier_response.body);
             List<dynamic> competitiveTier_list = competitiveTier_data['data'];
             var latestCompetitiveTier = competitiveTier_list.last;
+            var tierList = latestCompetitiveTier['tiers'];
 
-            for (var tier in latestCompetitiveTier['tiers']) {
-              if (tier['tier'] == _currentCompetitiveRank) {
-                rankImage = tier['largeIcon'];
-                playerRanks.add(rankImage);
+            for (var tier in tierList) {
+              if (tier['tier'] == competitiveTier) {
+                playerRanks.add(tier['largeIcon']);
+
+                liveController.partyId.value = partyId;
+                liveController.playerNames.value = playerNames;
+                liveController.playerCards.value = playerCards;
+                liveController.playerLevels.value = playerLevels;
+                liveController.playerRanks.value = playerRanks;
+                await Future.delayed(const Duration(seconds: 3));
               }
             }
           }
-        } else {
-          throw ExceptionValApi(
-            "Error: Valorant API return code ${playerMmr_response.statusCode}");
         }
       }
     }
-    Cache.partyMembers = PartyMembers(
-      partyId: partyId,
-      playerNames: playerNames, 
-      playerCards: playerCards, 
-      playerLevels: playerLevels, 
-      playerRanks: playerRanks,
-    );
   }
 
   Future<void> postPartyReadyState(String partyId, bool readyState) async {
-    final partySetReady_api = "$GLZ_URL/parties/v1/parties/$partyId/members/${Cache.accountToken!.puuid}/setReady";
+    final partySetReady_api =
+        "$GLZ_URL/parties/v1/parties/$partyId/members/${Cache.accountToken!.puuid}/setReady";
     final partySetReady_headers = RIOT_HEADERS;
-    final partySetReady_body = {
-      "ready": readyState
-    };
+    final partySetReady_body = {"ready": readyState};
 
     final body = json.encode(partySetReady_body);
 
-    final partySetReady_response = await http.post(Uri.parse(partySetReady_api), headers: partySetReady_headers, body: body);
+    final partySetReady_response = await http.post(Uri.parse(partySetReady_api),
+        headers: partySetReady_headers, body: body);
     if (partySetReady_response.statusCode == 200) {
       return;
-    }
-    else{
-      throw ExceptionValApi("Error set party ready state: ${partySetReady_response.statusCode}");
+    } else {
+      throw ExceptionValApi(
+          "Error set party ready state: ${partySetReady_response.statusCode}");
     }
   }
 
   Future<String> postGeneratePartyCode(String partyId) async {
-    final generatePartyCode_api = "$GLZ_URL/parties/v1/parties/$partyId/invitecode";
+    final generatePartyCode_api =
+        "$GLZ_URL/parties/v1/parties/$partyId/invitecode";
     final generatePartyCode_headers = RIOT_HEADERS;
-    final genereatePartyCode_response = await http.post(Uri.parse(generatePartyCode_api), headers: generatePartyCode_headers);
-    
+    final genereatePartyCode_response = await http.post(
+        Uri.parse(generatePartyCode_api),
+        headers: generatePartyCode_headers);
+
     if (genereatePartyCode_response.statusCode == 200) {
       var response_data = json.decode(genereatePartyCode_response.body);
       var partyCode = response_data['InviteCode'];
       return partyCode;
-    }
-    else{
+    } else {
       print(genereatePartyCode_response.statusCode);
       return "error";
     }
   }
 
   Future<String> postDeletePartyCode(String partyId) async {
-    final deletePartyCode_api = "$GLZ_URL/parties/v1/parties/$partyId/invitecode";
+    final deletePartyCode_api =
+        "$GLZ_URL/parties/v1/parties/$partyId/invitecode";
     final deletePartyCode_headers = RIOT_HEADERS;
-    final deletePartyCode_response = await http.delete(Uri.parse(deletePartyCode_api), headers: deletePartyCode_headers);
+    final deletePartyCode_response = await http.delete(
+        Uri.parse(deletePartyCode_api),
+        headers: deletePartyCode_headers);
 
     if (deletePartyCode_response.statusCode == 200) {
       return "******";
-    }
-    else{
+    } else {
       return "******";
     }
   }
@@ -608,37 +628,40 @@ class ValorantServices {
   Future<void> postJoinPartyByCode(String partyCode) async {
     final joinParty_api = "$GLZ_URL/parties/v1/players/joinbycode/$partyCode";
     final joinParty_headers = RIOT_HEADERS;
-    final joinParty_response = await http.get(Uri.parse(joinParty_api), headers: joinParty_headers);
+    final joinParty_response =
+        await http.get(Uri.parse(joinParty_api), headers: joinParty_headers);
 
     if (joinParty_response.statusCode == 200) {
       return;
     }
   }
 
-  Future<void> postPartyAccessibility(String partyId, String partyStatus) async {
-    final partyAccessibility_api = "$GLZ_URL/parties/v1/parties/$partyId/accessibility";
+  Future<void> postPartyAccessibility(
+      String partyId, String partyStatus) async {
+    final partyAccessibility_api =
+        "$GLZ_URL/parties/v1/parties/$partyId/accessibility";
     final partyAccessibility_headers = RIOT_HEADERS;
-    final partyAccessibility_body = {
-      "accessibility": partyStatus 
-    };
+    final partyAccessibility_body = {"accessibility": partyStatus};
     final body = json.encode(partyAccessibility_body);
 
-    final partyAccessibility_response = await http.post(Uri.parse(partyAccessibility_api), headers: partyAccessibility_headers, body: body);
+    final partyAccessibility_response = await http.post(
+        Uri.parse(partyAccessibility_api),
+        headers: partyAccessibility_headers,
+        body: body);
 
     if (partyAccessibility_response.statusCode == 200) {
       return;
     }
   }
 
-  Future<void> postSetGameMode(String partyId, String gameMode) async{
+  Future<void> postSetGameMode(String partyId, String gameMode) async {
     final setGameMode_api = "$GLZ_URL/parties/v1/parties/$partyId/queue";
     final setGameMode_headers = RIOT_HEADERS;
-    final setGameMode_body = {
-      'queueId': gameMode
-    };
+    final setGameMode_body = {'queueId': gameMode};
     final body = json.encode(setGameMode_body);
 
-    final setGameMode_response = await http.post(Uri.parse(setGameMode_api), headers: setGameMode_headers, body: body);
+    final setGameMode_response = await http.post(Uri.parse(setGameMode_api),
+        headers: setGameMode_headers, body: body);
 
     if (setGameMode_response.statusCode == 200) {
       return;
@@ -646,9 +669,11 @@ class ValorantServices {
   }
 
   Future<void> postEntermatchmaking(String partyId) async {
-    final joinMatchmaking_api = "$GLZ_URL/parties/v1/parties/$partyId/matchmaking/join";
+    final joinMatchmaking_api =
+        "$GLZ_URL/parties/v1/parties/$partyId/matchmaking/join";
     final joinMatchmaking_headers = RIOT_HEADERS;
-    final joinMatchmaking_response = await http.post(Uri.parse(joinMatchmaking_api), headers: joinMatchmaking_headers);
+    final joinMatchmaking_response = await http
+        .post(Uri.parse(joinMatchmaking_api), headers: joinMatchmaking_headers);
 
     if (joinMatchmaking_response.statusCode == 200) {
       return;
@@ -656,16 +681,20 @@ class ValorantServices {
   }
 
   Future<void> postLeavematchmaking(String partyId) async {
-    final leaveMatchmaking_api = "$GLZ_URL/parties/v1/parties/$partyId/matchmaking/leave";
+    final leaveMatchmaking_api =
+        "$GLZ_URL/parties/v1/parties/$partyId/matchmaking/leave";
     final leaveMatchmaking_headers = RIOT_HEADERS;
-    final leaveMatchmaking_response = await http.post(Uri.parse(leaveMatchmaking_api), headers: leaveMatchmaking_headers);
+    final leaveMatchmaking_response = await http.post(
+        Uri.parse(leaveMatchmaking_api),
+        headers: leaveMatchmaking_headers);
 
     if (leaveMatchmaking_response.statusCode == 200) {
       return;
     }
   }
 
-  Future<void> getPreGameMatch() async {
+  Future<void> getPreGame() async {
+    final liveController = Get.put(LiveController());
     // match data
     String matchId;
     String mapBanner;
@@ -673,162 +702,332 @@ class ValorantServices {
     String gameMode;
 
     // ally team players data
-    String allyTeamId;
+    String allyTeamId = '';
+    Color allyTeamColor = const Color.fromRGBO(255, 255, 255, 1);
     List<String> allyPlayerNames = [];
     List<String> allyAgentImages = [];
     List<bool> allySelectionStates = [];
     List<String> allyRanks = [];
-    
+
     // enemy team players data
-    String enemyTeamId;
-    List<String> enemyPlayerNames = [];
-    List<String> enemyAgentImages = [];
     List<bool> enemySelectionStates = [];
-    List<String> enemyRanks = [];
 
     // get pregame player first
-    final preGamePlayer_api = "$GLZ_URL/pregame/v1/players/${Cache.accountToken!.puuid}";
+    final preGamePlayer_api =
+        "$GLZ_URL/pregame/v1/players/${Cache.accountToken!.puuid}";
     final preGamePlayer_headers = RIOT_HEADERS;
-    final preGamePlayer_response = await http.get(Uri.parse(preGamePlayer_api), headers: preGamePlayer_headers);
+    final preGamePlayer_response = await http.get(Uri.parse(preGamePlayer_api),
+        headers: preGamePlayer_headers);
 
     if (preGamePlayer_response.statusCode == 200) {
+      liveController.isOnMatchmaking.value = false;
       var preGamePlayer_data = json.decode(preGamePlayer_response.body);
       matchId = preGamePlayer_data['MatchID'];
-    }
-    else{
-      return;
-    }
 
-    // get match info
-    final preGameMatch_api = "$GLZ_URL/pregame/v1/matches/$matchId";
-    final preGameMatch_headers = RIOT_HEADERS;
-    final preGameMatch_response = await http.get(Uri.parse(preGameMatch_api), headers: preGameMatch_headers);
+      // get match info
+      final preGameMatch_api = "$GLZ_URL/pregame/v1/matches/$matchId";
+      final preGameMatch_headers = RIOT_HEADERS;
+      final preGameMatch_response = await http.get(Uri.parse(preGameMatch_api),
+          headers: preGameMatch_headers);
 
-    if (preGameMatch_response.statusCode == 200) {
-      var preGameMatch_data = json.decode(preGameMatch_response.body);
-      mapBanner = "https://media.valorant-api.com/maps/${preGameMatch_data['MapID']}/listviewicon.png";
-      gameMode = preGameMatch_data['Mode'];
+      if (preGameMatch_response.statusCode == 200) {
+        var preGameMatch_data = json.decode(preGameMatch_response.body);
+        String _gameMode = preGameMatch_data['Mode'];
 
-      // get map data
-      final maps_api = "https://valorant-api.com/v1/maps/${preGameMatch_data['MapID']}";
-      final maps_response = await http.get(Uri.parse(maps_api));
-
-      if (maps_response.statusCode == 200) {
-        var maps_data = json.decode(maps_response.body);
-        mapName = maps_data['displayName'];
-      }
-
-      Cache.currentMatch = CurrentMatch(
-        mapBanner: mapBanner, 
-        gameMode: gameMode,
-      );
-
-      // get ally team players info
-      allyTeamId = preGameMatch_data['AllyTeam']['TeamID'];
-      
-      var allyPlayers = preGameMatch_data['AllyTeam']['Players']; // List
-
-      for (var player in allyPlayers) {
-        if (player['CharacterID'] != null && player['CharacterID'] != ""){
-          allyAgentImages.add("https:/media.valorant-api.com/agents/${player['CharacterID']}/displayicon.png");
-        }
-        else{
-          allyAgentImages.add("https://cdn.discordapp.com/attachments/1127494450030051349/1230609946920615996/image.png?ex=6633f1d2&is=66217cd2&hm=a516f2012a6689fac0e4d21ddeff4f000f414ae1ab9a749bbe7aa714367140c8&");
-        }
-        var playerId = player['Subject'];
-
-        final nameService_api ="$PD_URL/name-service/v2/players";
-        final nameService_headers = RIOT_HEADERS;
-        final nameService_body = [playerId];
-        final body = json.encode(nameService_body);
-
-        final nameService_response = await http.put(Uri.parse(nameService_api), headers: nameService_headers, body: body);
-
-        if (nameService_response.statusCode == 200) {
-          var nameService_data = json.decode(nameService_response.body);
-          var playerName = nameService_data[0]['GameName'] + " #" + nameService_data[0]['TagLine'];
-          allyPlayerNames.add(playerName);
+        if (preGameMatch_data['IsRanked'] == true) {
+          gameMode = "Competitive";
+        } else if (_gameMode.contains("_C")) {
+          gameMode = "Costum";
+        } else if (_gameMode.contains("Deathmatch")) {
+          gameMode = "Deathmatch";
+        } else if (_gameMode.contains("GunGameTeams")) {
+          gameMode = "Escalation";
+        } else if (_gameMode.contains("HURM")) {
+          gameMode = "Team Deathmatch";
+        } else if (_gameMode.contains("OneForAll_GameMode_DataAsset_Desktop")) {
+          gameMode = "Tutorial";
+        } else if (_gameMode.contains("QuickBomb")) {
+          gameMode = "Spike Rush";
+        } else if (_gameMode.contains("ShootingRange")) {
+          gameMode = "Practice Range";
+        } else if (_gameMode.contains("SwiftPlay")) {
+          gameMode = "Swiftplay";
+        } else if (_gameMode.contains("BombGameMode")) {
+          gameMode = "Unrated";
+        } else {
+          gameMode = "Unknown";
         }
 
-        var pSelectionState = player['CharacterSelectionState'];
-        if (pSelectionState == "" || pSelectionState == "selected") {
-          allySelectionStates.add(false);
-        }
-        else if (pSelectionState == "locked"){
-          allySelectionStates.add(true);
-        }
-        
-        final rank_api = "https://api.henrikdev.xyz/valorant/v1/by-puuid/mmr/${Cache.accountToken!.region}/$playerId";
-        final rank_response = await http.get(Uri.parse(rank_api));
+        var mapUrl = preGameMatch_data['MapID'];
+        var maps_api = "https://valorant-api.com/v1/maps";
+        final maps_response = await http.get(Uri.parse(maps_api));
+        if (maps_response.statusCode == 200) {
+          var map_data_list = json.decode(maps_response.body)['data'];
 
-        if (rank_response.statusCode == 200) {
-          var rank_data = json.decode(rank_response.body);
-          allyRanks.add(rank_data['data']['images']['large']);
+          for (var maps in map_data_list) {
+            if (maps['mapUrl'] == mapUrl) {
+              mapName = maps['displayName'];
+              mapBanner =
+                  "https://media.valorant-api.com/maps/${maps['uuid']}/listviewicon.png";
+              liveController.mapBanner.value = mapBanner;
+              liveController.mapName.value = mapName;
+              liveController.gameMode.value = gameMode;
+            }
+          }
         }
-      }
 
-      Cache.allyTeam = AllyTeam(
-        allyTeamId: allyTeamId, 
-        allyPlayerNames: allyPlayerNames, 
-        allyAgentImages: allyAgentImages, 
-        allySelectionStates: allySelectionStates, 
-        allyRanks: allyRanks,
-      );
-
-      // get enemy team players info
-      enemyTeamId = preGameMatch_data['EnemyTeam']?['TeamID'] ?? "";
-
-      if (enemyTeamId != null && enemyTeamId != "") {
-        var enemyPlayers = preGameMatch_data['EnemyTeam']['Players'];
-
-        for (var player in enemyPlayers) {
-          if (player['CharacterID'] != null && player['CharacterID'] != ""){
-          enemyAgentImages.add("https:/media.valorant-api.com/agents/${player['CharacterID']}/displayicon.png");
+        // get ally team players info
+        if (preGameMatch_data['AllyTeam']['TeamID'] == "Red") {
+          allyTeamId = "Attacker";
+          allyTeamColor = const Color(0xFFFF0000);
+        } else {
+          // Blue
+          allyTeamId = "Defender";
+          allyTeamColor = const Color(0xFF0000FF);
         }
-        else{
-          enemyAgentImages.add("https://cdn.discordapp.com/attachments/1127494450030051349/1230609946920615996/image.png?ex=6633f1d2&is=66217cd2&hm=a516f2012a6689fac0e4d21ddeff4f000f414ae1ab9a749bbe7aa714367140c8&");
-        }
+
+        var allyPlayers = preGameMatch_data['AllyTeam']['Players']; // List
+
+        for (var player in allyPlayers) {
+          if (player['CharacterID'] != null && player['CharacterID'] != "") {
+            allyAgentImages.add(
+                "https://media.valorant-api.com/agents/${player['CharacterID']}/displayiconsmall.png");
+          } else {
+            allyAgentImages.add(
+                "https://cdn.discordapp.com/attachments/1127494450030051349/1230609946920615996/image.png?ex=6633f1d2&is=66217cd2&hm=a516f2012a6689fac0e4d21ddeff4f000f414ae1ab9a749bbe7aa714367140c8&");
+          }
           var playerId = player['Subject'];
 
-          final nameService_api ="$PD_URL/name-service/v2/players";
+          final nameService_api = "$PD_URL/name-service/v2/players";
           final nameService_headers = RIOT_HEADERS;
           final nameService_body = [playerId];
           final body = json.encode(nameService_body);
 
-          final nameService_response = await http.put(Uri.parse(nameService_api), headers: nameService_headers, body: body);
+          final nameService_response = await http.put(
+              Uri.parse(nameService_api),
+              headers: nameService_headers,
+              body: body);
 
           if (nameService_response.statusCode == 200) {
             var nameService_data = json.decode(nameService_response.body);
-            var playerName = nameService_data[0]['GameName'] + " #" + nameService_data[0]['TagLine'];
-            enemyPlayerNames.add(playerName);
+            var playerName = nameService_data[0]['GameName'] +
+                " #" +
+                nameService_data[0]['TagLine'];
+            allyPlayerNames.add(playerName);
           }
 
           var pSelectionState = player['CharacterSelectionState'];
           if (pSelectionState == "" || pSelectionState == "selected") {
-            enemySelectionStates.add(false);
+            allySelectionStates.add(false);
+          } else if (pSelectionState == "locked") {
+            allySelectionStates.add(true);
           }
-          else if (pSelectionState == "locked"){
-            enemySelectionStates.add(true);
-          }
-          
-          final rank_api = "https://api.henrikdev.xyz/valorant/v1/by-puuid/mmr/${Cache.accountToken!.region}/$playerId";
-          final rank_response = await http.get(Uri.parse(rank_api));
 
-          if (rank_response.statusCode == 200) {
-            var rank_data = json.decode(rank_response.body);
-            enemyRanks.add(rank_data['data']['images']['large']);
+          // get each player's rank
+          if (liveController.allyRanks.length != allyPlayers.length) {
+            final playerMmr_api = "$PD_URL/mmr/v1/players/$playerId";
+            final playerMmr_headers = RIOT_HEADERS;
+            final playerMmr_response = await http.get(Uri.parse(playerMmr_api),
+                headers: playerMmr_headers);
+            if (playerMmr_response.statusCode == 200) {
+              var playerMmr_data = json.decode(playerMmr_response.body);
+              var _currentCompetitiveSeason =
+                  playerMmr_data['LatestCompetitiveUpdate']['SeasonID'];
+              var competitiveTier = playerMmr_data['QueueSkills']['competitive']
+                          ['SeasonalInfoBySeasonID']?[_currentCompetitiveSeason]
+                      ?['CompetitiveTier'] ??
+                  0;
+
+              // convert competitive tier to actual rank
+              const competitiveTier_api =
+                  "https://valorant-api.com/v1/competitivetiers";
+              final competitiveTier_response =
+                  await http.get(Uri.parse(competitiveTier_api));
+              if (competitiveTier_response.statusCode == 200) {
+                var competitiveTier_data =
+                    json.decode(competitiveTier_response.body);
+                List<dynamic> competitiveTier_list =
+                    competitiveTier_data['data'];
+                var latestCompetitiveTier = competitiveTier_list.last;
+                var tierList = latestCompetitiveTier['tiers'];
+
+                for (var tier in tierList) {
+                  if (tier['tier'] == competitiveTier) {
+                    allyRanks.add(tier['largeIcon']);
+                    await Future.delayed(const Duration(seconds: 2));
+                  }
+                }
+                liveController.allyRanks.value = allyRanks;
+              }
+            }
           }
         }
-
-        Cache.enemyTeam = EnemyTeam(
-          enemyTeamId: enemyTeamId, 
-          enemyPlayerNames: enemyPlayerNames, 
-          enemyAgentImages: enemyAgentImages, 
-          enemySelectionStates: enemySelectionStates, 
-          enemyRanks: enemyRanks,
-        );
+        liveController.allyTeamId.value = allyTeamId;
+        liveController.allyPlayerNames.value = allyPlayerNames;
+        liveController.allyAgentImages.value = allyAgentImages;
+        liveController.allySelectionStates.value = allySelectionStates;
+        liveController.allyTeamColor.value = allyTeamColor;
       }
+    } else {
+      await Future.delayed(const Duration(seconds: 5));
+      await getCurrentGame();
     }
   }
 
+  Future<void> getCurrentGame() async {
+    final liveController = Get.put(LiveController());
+    String enemyTeamId = '';
+    Color enemyTeamColor = const Color.fromRGBO(255, 255, 255, 1);
+    List<String> enemyPlayerNames = [];
+    List<String> enemyAgentImages = [];
+    List<String> enemyRanks = [];
+
+    String matchId;
+
+    final currentGamePlayer_api =
+        "$GLZ_URL/core-game/v1/players/${Cache.accountToken!.puuid}";
+    final currentGamePlayer_headers = RIOT_HEADERS;
+    final currentGamePlayers_response = await http.get(
+        Uri.parse(currentGamePlayer_api),
+        headers: currentGamePlayer_headers);
+
+    if (currentGamePlayers_response.statusCode == 200) {
+      var currentGamePlayers_data =
+          json.decode(currentGamePlayers_response.body);
+      matchId = currentGamePlayers_data['MatchID'];
+    } else {
+
+      liveController.mapName.value = '';
+      liveController.mapBanner.value =
+          'https://media.valorant-api.com/maps/7eaecc1b-4337-bbf6-6ab9-04b8f06b3319/listviewicon.png';
+      liveController.gameMode.value = '';
+
+      // reset ally players value
+      liveController.allyTeamId.value = '';
+      liveController.allyPlayerNames.clear(); // Clear the list
+      liveController.allyAgentImages.clear(); // Clear the list
+      liveController.allySelectionStates.clear(); // Clear the list
+      liveController.allyRanks.clear(); // Clear the list
+      liveController.allyTeamColor.value =
+          const Color.fromARGB(255, 255, 255, 255);
+
+      liveController.enemyTeamId.value = '';
+      liveController.enemyPlayerNames.clear(); // Clear the list
+      liveController.enemyAgentImages.clear(); // Clear the list
+      liveController.enemySelectionStates.clear(); // Clear the list
+      liveController.enemyRanks.clear(); // Clear the list
+      liveController.enemyTeamColor.value =
+          const Color.fromARGB(255, 255, 255, 255);
+      return;
+    }
+
+    // core game (get enemy's data)
+    final currentGameMatch_api = "$GLZ_URL/core-game/v1/matches/$matchId";
+    final currentGameMatch_headers = RIOT_HEADERS;
+    final currentGameMatch_response = await http.get(
+        Uri.parse(currentGameMatch_api),
+        headers: currentGameMatch_headers);
+
+    if (currentGameMatch_response.statusCode == 200) {
+      var currentGameMatch_data = json.decode(currentGameMatch_response.body);
+      var eTeamId;
+      if (liveController.allyTeamId.value == "Attacker") {
+        eTeamId = "Red";
+      } else {
+        eTeamId = "Blue";
+      }
+      var allPlayers = currentGameMatch_data['Players']; // List
+
+      for (var player in allPlayers) {
+        if (player['Subject'] == Cache.accountToken!.puuid &&
+            player['TeamID'] == eTeamId) {
+          liveController.allyTeamId.value = "Attacker";
+          liveController.allyTeamColor.value = const Color(0xFFFF0000);
+
+          liveController.enemyTeamId.value = "Defender";
+          liveController.enemyTeamColor.value = const Color(0xFF0000FF);
+        } else {
+          // Blue
+          liveController.allyTeamId.value = "Defender";
+          liveController.allyTeamColor.value = const Color(0xFF0000FF);
+
+          liveController.enemyTeamId.value = "Attacker";
+          liveController.enemyTeamColor.value = const Color(0xFFFF0000);
+        }
+      }
+
+      // filter from all players and select enemy players only
+      var enemyPlayers = []; // uuid
+      for (var player in allPlayers) {
+        if (player['TeamID'] != eTeamId) {
+          enemyAgentImages.add(
+              "https://media.valorant-api.com/agents/${player['CharacterID']}/displayiconsmall.png");
+          enemyPlayers.add(player['Subject']);
+        }
+      }
+      if (liveController.enemyRanks.length != enemyPlayers.length) {
+        log('${liveController.enemyRanks} $enemyPlayers');
+        for (var player in enemyPlayers) {
+          final nameService_api = "$PD_URL/name-service/v2/players";
+          final nameService_headers = RIOT_HEADERS;
+          final nameService_body = [player];
+          final body = json.encode(nameService_body);
+
+          final nameService_response = await http.put(
+              Uri.parse(nameService_api),
+              headers: nameService_headers,
+              body: body);
+
+          if (nameService_response.statusCode == 200) {
+            var nameService_data = json.decode(nameService_response.body);
+            var playerName = nameService_data[0]['GameName'] +
+                " #" +
+                nameService_data[0]['TagLine'];
+            enemyPlayerNames.add(playerName);
+          }
+
+          // get each player's rank
+          final playerMmr_api = "$PD_URL/mmr/v1/players/$player";
+          final playerMmr_headers = RIOT_HEADERS;
+          final playerMmr_response = await http.get(Uri.parse(playerMmr_api),
+              headers: playerMmr_headers);
+          if (playerMmr_response.statusCode == 200) {
+            var playerMmr_data = json.decode(playerMmr_response.body);
+            var _currentCompetitiveSeason =
+                playerMmr_data['LatestCompetitiveUpdate']['SeasonID'];
+            var competitiveTier = playerMmr_data['QueueSkills']['competitive']
+                        ['SeasonalInfoBySeasonID']?[_currentCompetitiveSeason]
+                    ?['CompetitiveTier'] ??
+                0;
+
+            // convert competitive tier to actual rank
+            const competitiveTier_api =
+                "https://valorant-api.com/v1/competitivetiers";
+            final competitiveTier_response =
+                await http.get(Uri.parse(competitiveTier_api));
+            if (competitiveTier_response.statusCode == 200) {
+              var competitiveTier_data =
+                  json.decode(competitiveTier_response.body);
+              List<dynamic> competitiveTier_list = competitiveTier_data['data'];
+              var latestCompetitiveTier = competitiveTier_list.last;
+              var tierList = latestCompetitiveTier['tiers'];
+
+              for (var tier in tierList) {
+                if (tier['tier'] == competitiveTier) {
+                  enemyRanks.add(tier['largeIcon']);
+                  await Future.delayed(const Duration(seconds: 2));
+                }
+              }
+            }
+          }
+        }
+        liveController.enemyRanks.value = enemyRanks;
+        liveController.enemyPlayerNames.value = enemyPlayerNames;
+        liveController.enemyAgentImages.value = enemyAgentImages;
+        liveController.enemyTeamColor.value = enemyTeamColor;
+      }
+    }
+    else {
+    }
+  }
 }
