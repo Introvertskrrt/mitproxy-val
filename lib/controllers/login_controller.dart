@@ -19,7 +19,6 @@ class LoginController extends GetxController {
 
 
   Future<bool> fetchLogin() async {
-    print("Authenticating to login server");
     // http://127.0.0.1:5000/api/riot/authenticate || Local development API
     // https://api.1ntrovertval.my.id/api/riot/authenticate || Hosted API
     final url = Uri.parse('https://api.1ntrovertval.my.id/api/riot/authenticate');
@@ -62,7 +61,7 @@ class LoginController extends GetxController {
       barrierDismissible:
           false, // Dialog cannot be dismissed by tapping outside
       builder: (BuildContext context) {
-        return LoadingDialogConstant();
+        return const LoadingDialogConstant();
       },
     );
   }

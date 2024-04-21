@@ -4,10 +4,10 @@ import 'package:get/get.dart';
 import 'package:mitproxy_val/controllers/login_controller.dart';
 import 'package:mitproxy_val/utils/cache.dart';
 import 'package:mitproxy_val/utils/exceptions.dart';
-import 'package:mitproxy_val/utils/valorant_services.dart';
+import 'package:mitproxy_val/utils/valorant_home_services.dart';
 
 class HomeController extends GetxController {
-  final valorantServices = ValorantServices();
+  final valorantHomeServices = ValorantHomeServices();
   RxBool isPageLoading = false.obs;
   RxString bundleRemainingTime = ''.obs;
   RxString dailyOffersRemainingTime = ''.obs;
@@ -62,9 +62,9 @@ class HomeController extends GetxController {
   Future<void> onLoginSuccess() async {
     try {
       isPageLoading(true);
-      await valorantServices.getUserProfileData();
-      await valorantServices.getBundleData();
-      await valorantServices.getDailyStoreData();
+      await valorantHomeServices.getUserProfileData();
+      await valorantHomeServices.getBundleData();
+      await valorantHomeServices.getDailyStoreData();
       startCountdownTimer();
       isPageLoading(false);
     } on ExceptionValApi {

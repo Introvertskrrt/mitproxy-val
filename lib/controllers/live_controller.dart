@@ -7,10 +7,10 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:mitproxy_val/controllers/login_controller.dart';
 import 'package:mitproxy_val/utils/exceptions.dart';
-import 'package:mitproxy_val/utils/valorant_services.dart';
+import 'package:mitproxy_val/utils/valorant_live_services.dart';
 
 class LiveController extends GetxController {
-  final valorantServices = ValorantServices();
+  final valorantLiveServices = ValorantLiveServices();
   final loginController = Get.put(LoginController());
 
   // party
@@ -59,8 +59,8 @@ class LiveController extends GetxController {
     super.onReady();
     while (true) {
       try {
-        await valorantServices.getPartyData();
-        await valorantServices.getPreGame();
+        await valorantLiveServices.getPartyData();
+        await valorantLiveServices.getPreGame();
         isPlayerInGame.value = true;
         await Future.delayed(const Duration(seconds: 1));
       } on ExceptionPlayerNotInGame {
