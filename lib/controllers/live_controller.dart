@@ -1,6 +1,7 @@
-// ignore_for_file: non_constant_identifier_names
+// ignore_for_file: non_constant_identifier_names, empty_catches
 
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -12,6 +13,10 @@ import 'package:mitproxy_val/utils/valorant_live_services.dart';
 class LiveController extends GetxController {
   final valorantLiveServices = ValorantLiveServices();
   final loginController = Get.put(LoginController());
+  Timer? periodicTimer;
+  Timer? _timer;
+  RxInt seconds = 0.obs;
+  RxInt minutes = 0.obs;
 
   // party
   TextEditingController partyCode = TextEditingController();
@@ -32,8 +37,11 @@ class LiveController extends GetxController {
   RxList<String> playerRanks = <String>[].obs;
 
   // matches
+  RxString preMatchId = "".obs;
   RxString mapName = "".obs;
-  RxString mapBanner = "https://media.valorant-api.com/maps/7eaecc1b-4337-bbf6-6ab9-04b8f06b3319/listviewicon.png".obs;
+  RxString mapBanner =
+      "https://media.valorant-api.com/maps/7eaecc1b-4337-bbf6-6ab9-04b8f06b3319/listviewicon.png"
+          .obs;
   RxString gameMode = "".obs;
 
   RxString allyTeamId = ''.obs;
@@ -49,25 +57,62 @@ class LiveController extends GetxController {
   RxList<bool> enemySelectionStates = <bool>[].obs;
   RxList<String> enemyRanks = <String>[].obs;
   Rx<Color> enemyTeamColor = const Color.fromARGB(255, 255, 255, 255).obs;
-  
-  Timer? _timer;
-  RxInt seconds = 0.obs;
-  RxInt minutes = 0.obs;
+
+  // Instalock
+  RxString buttonLockIn_Text = "LOCK IN".obs;
+  RxList<String> allAgentsIds = <String>[].obs;
+  RxList<String> allAgentsImages = <String>[].obs;
+  RxList<String> allAgentsNames = <String>[].obs;
+  RxString selectedAgentName = 'Gekko'.obs;
+  RxString selectedAgentId = 'e370fa57-4757-3604-3648-499e1f642d3f'.obs; // gekko uuid
+  bool isInstalocking = false;
+  var isSelectedList = <RxBool>[];
+
+  RxBool isAgentSelected(int index) {
+    return isSelectedList[index];
+  }
+
+  void toggleAgentSelection(int index) {
+    isSelectedList[index].value = !isSelectedList[index].value;
+  }
+
+  void initializeSelectedList() {
+    isSelectedList.assignAll(List.generate(allAgentsIds.length, (_) => false.obs));
+  }
+
+  Future<void> initializeAgents() async {
+    await valorantLiveServices.getAgentsData();
+    initializeSelectedList();
+  }
 
   @override
-  Future<void> onReady() async {
-    super.onReady();
-    while (true) {
+  void onInit() async {
+    super.onInit();
+    periodicTimer = Timer.periodic(const Duration(seconds: 10), (timer) {
       try {
-        await valorantLiveServices.getPartyData();
-        await valorantLiveServices.getPreGame();
-        isPlayerInGame.value = true;
-        await Future.delayed(const Duration(seconds: 1));
-      } on ExceptionPlayerNotInGame {
-        isPlayerInGame.value = false;
-      } on ExceptionValApi {
-        loginController.fetchLogin();
+        // Kode yang mungkin menyebabkan error
+        fetchLiveData();
+      } catch (e) {
+        // Tangkap dan tangani error di sini
+        log(e.toString());
       }
+    });
+  }
+
+  void fetchLiveData() async {
+    try {
+      await valorantLiveServices.getPartyData();
+      await valorantLiveServices.getPreGame();
+      isPlayerInGame.value = true;
+    } on ExceptionPlayerNotInGame {
+      isPlayerInGame.value = false;
+    } on ExceptionValApi {
+      isPlayerInGame.value = false;
+      // log("Token Expired, Trying to re-authenticating...");
+      // await loginController.reAuthLogin();
+    } catch (e) {
+      isPlayerInGame.value = false;
+      log(e.toString());
     }
   }
 

@@ -1,5 +1,15 @@
 import 'package:flutter/widgets.dart';
 
+class TemporarySavedAccount {
+  String username;
+  String password;
+  
+  TemporarySavedAccount({
+    required this.username,
+    required this.password,
+  });
+}
+
 class AccountToken {
   String accessTokenType;
   String entitlementsToken;

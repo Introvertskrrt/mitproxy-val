@@ -8,100 +8,99 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:mitproxy_val/utils/exceptions.dart';
 import 'package:mitproxy_val/utils/valorant_endpoints.dart';
+import 'dart:developer';
 
 class ValorantHomeServices{
 
-  Future<void> getUserProfileData() async {
-    final String playername;
-    final int valorantPoint;
-    final int radianite;
-    final int kingdomCredits;
-    final int playerXp;
-    final int playerLevels;
-    final int playerMmr;
-    final String playerCardId;
-    final String playerTitleId;
-    final List<String> missionNames = [];
-    final List<int> missionXpRewards = [];
-    final List<int> missionProgress = [];
-    final List<int> missionProgressToComplete = [];
-    final List<String> missionType = [];
+  Future<void> getCompetitiveUpdate() async {
+    final competitiveUpdate_api = "${ValorantEndpoints.PD_URL}/mmr/v1/players/87386b82-bc51-5870-a016-1cad906b98cb/competitiveupdates?queue=competitive";
+    final competitiveUpdate_response = await http.get(Uri.parse(competitiveUpdate_api), headers: ValorantEndpoints.RIOT_HEADERS);
+    if (competitiveUpdate_response.statusCode == 200) {
+      var data = json.decode(competitiveUpdate_response.body);
+      log(data.toString());
+    } else if (competitiveUpdate_response.statusCode == 429) {
+      log("too many request!");
+    }
+  }
 
-    final String currentCompetitiveRank;
-    final String currentCompetitiveSeason;
-    final String currentRankImage;
-    final Color rankColor;
+  Future<void> getUserProfileData() async {
+    String playername = '';
+    int valorantPoint = 0;
+    int radianite = 0;
+    int kingdomCredits = 0;
+    int playerXp = 0;
+    int playerLevels = 0;
+    int playerMmr = 0;
+    String playerCardId = '';
+    String playerTitleId = '';
+    List<String> missionNames = [];
+    List<int> missionXpRewards = [];
+    List<int> missionProgress = [];
+    List<int> missionProgressToComplete = [];
+    List<String> missionType = [];
+
+    String currentCompetitiveRank = '';
+    String currentCompetitiveSeason = '';
+    String currentRankImage = '';
+    Color rankColor = const Color.fromRGBO(255, 255, 255, 1);
 
     // get playername and tagline
     final nameService_api = "${ValorantEndpoints.PD_URL}/name-service/v2/players";
-    final nameService_headers = ValorantEndpoints.RIOT_HEADERS;
     final List<String> nameService_body = [Cache.accountToken!.puuid];
     final nameService_body_json = json.encode(nameService_body);
-    final nameService_response = await http.put(Uri.parse(nameService_api),
-        headers: nameService_headers, body: nameService_body_json);
+    final nameService_response = await http.put(Uri.parse(nameService_api), headers: ValorantEndpoints.RIOT_HEADERS, body: nameService_body_json);
     if (nameService_response.statusCode == 200) {
       var nameService_data = json.decode(nameService_response.body);
-      playername = nameService_data[0]['GameName'] +
-          " #" +
-          nameService_data[0]['TagLine'];
-    } else {
-      throw ExceptionValApi(
-          "Error: Valorant API return code ${nameService_response.statusCode}");
+      playername = nameService_data[0]['GameName'] + " #" + nameService_data[0]['TagLine'];
+    } else if (nameService_response.statusCode == 400){
+      log('Error at getProfileUserData in name service api: ${nameService_response.body.toString()}');
+      throw ExceptionTokenExpired("Error: Valorant API return code ${nameService_response.statusCode}");
     }
 
     // get player currencies (vp, radianite, kingdom credits)
     final wallet_api = "${ValorantEndpoints.PD_URL}/store/v1/wallet/${Cache.accountToken!.puuid}";
-    final wallet_headers = ValorantEndpoints.RIOT_HEADERS;
-    final wallet_response =
-        await http.get(Uri.parse(wallet_api), headers: wallet_headers);
+    final wallet_response = await http.get(Uri.parse(wallet_api), headers: ValorantEndpoints.RIOT_HEADERS);
     if (wallet_response.statusCode == 200) {
       var wallet_data = json.decode(wallet_response.body);
 
-      valorantPoint =
-          wallet_data['Balances']['85ad13f7-3d1b-5128-9eb2-7cd8ee0b5741'];
-      radianite =
-          wallet_data['Balances']['e59aa87c-4cbf-517a-5983-6e81511be9b7'];
-      kingdomCredits =
-          wallet_data['Balances']['85ca954a-41f2-ce94-9b45-8ca3dd39a00d'];
-    } else {
-      throw ExceptionValApi(
-          "Error: Valorant API return code ${wallet_response.statusCode}");
+      valorantPoint = wallet_data['Balances']['85ad13f7-3d1b-5128-9eb2-7cd8ee0b5741'];
+      radianite = wallet_data['Balances']['e59aa87c-4cbf-517a-5983-6e81511be9b7'];
+      kingdomCredits = wallet_data['Balances']['85ca954a-41f2-ce94-9b45-8ca3dd39a00d'];
+    } else if (wallet_response.statusCode == 400){
+      log('Error at getProfileUserData in wallet api: ${wallet_response.body.toString()}');
+      throw ExceptionTokenExpired("Error: Valorant API return code ${wallet_response.statusCode}");
     }
 
     // get player xp and levels
-    final accountXp_api =
-        "${ValorantEndpoints.PD_URL}/account-xp/v1/players/${Cache.accountToken!.puuid}";
-    final accountXp_headers = ValorantEndpoints.RIOT_HEADERS;
-    final accountXp_response =
-        await http.get(Uri.parse(accountXp_api), headers: accountXp_headers);
+    final accountXp_api = "${ValorantEndpoints.PD_URL}/account-xp/v1/players/${Cache.accountToken!.puuid}";
+    final accountXp_response = await http.get(Uri.parse(accountXp_api), headers: ValorantEndpoints.RIOT_HEADERS);
     if (accountXp_response.statusCode == 200) {
       var accountXp_data = json.decode(accountXp_response.body);
 
       playerLevels = accountXp_data["Progress"]["Level"];
       playerXp = accountXp_data["Progress"]["XP"];
-    } else {
-      throw ExceptionValApi(
-          "Error: Valorant API return code ${accountXp_response.statusCode}");
+    } else if (accountXp_response.statusCode == 400){
+      log('Error at getProfileUserData in account xp api: ${accountXp_response.body.toString()}');
+      throw ExceptionTokenExpired("Error: Valorant API return code ${accountXp_response.statusCode}");
     }
 
     // get player current rank
-    final rank_api =
-        "https://api.henrikdev.xyz/valorant/v1/by-puuid/mmr/${Cache.accountToken!.region}/${Cache.accountToken!.puuid}";
+    final rank_api = "https://api.henrikdev.xyz/valorant/v1/by-puuid/mmr/${Cache.accountToken!.region}/${Cache.accountToken!.puuid}";
     final rank_response = await http.get(Uri.parse(rank_api));
+
     var rank_data = json.decode(rank_response.body);
     var rank_tier = rank_data['data']['currenttier'];
     playerMmr = rank_data['data']['ranking_in_tier'];
 
+    await Future.delayed(const Duration(seconds: 5)); // prevent too many request error
+
     final playerMmr_api = "${ValorantEndpoints.PD_URL}/mmr/v1/players/${Cache.accountToken!.puuid}";
-    final playerMmr_headers = ValorantEndpoints.RIOT_HEADERS;
-    final playerMmr_response =
-        await http.get(Uri.parse(playerMmr_api), headers: playerMmr_headers);
+    final playerMmr_response = await http.get(Uri.parse(playerMmr_api), headers: ValorantEndpoints.RIOT_HEADERS);
     if (playerMmr_response.statusCode == 200) {
       var playerMmr_data = json.decode(playerMmr_response.body);
 
       // uuid
-      var _currentCompetitiveSeason =
-          playerMmr_data['LatestCompetitiveUpdate']['SeasonID'];
+      var _currentCompetitiveSeason = playerMmr_data['LatestCompetitiveUpdate']['SeasonID'];
 
       // temp string
       var currectAct;
@@ -110,8 +109,7 @@ class ValorantHomeServices{
       var rankImage;
       var _rankColor;
 
-      final seasons_api =
-          "https://valorant-api.com/v1/seasons/$_currentCompetitiveSeason";
+      final seasons_api = "https://valorant-api.com/v1/seasons/$_currentCompetitiveSeason";
       final seasons_response = await http.get(Uri.parse(seasons_api));
       if (seasons_response.statusCode == 200) {
         var seasons_data = json.decode(seasons_response.body);
@@ -128,10 +126,8 @@ class ValorantHomeServices{
         currentEps = lastItem['displayName'];
       }
 
-      const competitiveTier_api =
-          "https://valorant-api.com/v1/competitivetiers";
-      final competitiveTier_response =
-          await http.get(Uri.parse(competitiveTier_api));
+      const competitiveTier_api = "https://valorant-api.com/v1/competitivetiers";
+      final competitiveTier_response = await http.get(Uri.parse(competitiveTier_api));
       if (competitiveTier_response.statusCode == 200) {
         var competitiveTier_data = json.decode(competitiveTier_response.body);
         List<dynamic> competitiveTier_list = competitiveTier_data['data'];
@@ -142,6 +138,7 @@ class ValorantHomeServices{
             currentRank = tier['tierName'];
             rankImage = tier['largeIcon'];
             _rankColor = tier['color'];
+            log(rankImage.toString());
           }
         }
       }
@@ -152,34 +149,27 @@ class ValorantHomeServices{
 
       String rgbHex = _rankColor.substring(0, 6);
       rankColor = Color(int.parse('0xff$rgbHex'));
-    } else {
-      throw ExceptionValApi(
-          "Error: Valorant API return code ${playerMmr_response.statusCode}");
+    } else if (playerMmr_response.statusCode == 400){
+      log("Error: Valorant API playerMmr_response return code ${playerMmr_response.statusCode}");
+      throw ExceptionTokenExpired("Error: Valorant API return code ${playerMmr_response.statusCode}");
     }
 
     // get player card, banner and title id
-    final playerLoadout_api =
-        "${ValorantEndpoints.PD_URL}/personalization/v2/players/${Cache.accountToken!.puuid}/playerloadout";
-    final playerLoadout_haders = ValorantEndpoints.RIOT_HEADERS;
-    final playerLoadout_response = await http.get(Uri.parse(playerLoadout_api),
-        headers: playerLoadout_haders);
+    final playerLoadout_api = "${ValorantEndpoints.PD_URL}/personalization/v2/players/${Cache.accountToken!.puuid}/playerloadout";
+    final playerLoadout_response = await http.get(Uri.parse(playerLoadout_api), headers: ValorantEndpoints.RIOT_HEADERS);
     if (playerLoadout_response.statusCode == 200) {
       var playerLoadout_data = json.decode(playerLoadout_response.body);
 
-      playerCardId = playerLoadout_data['Identity']
-          ['PlayerCardID']; // can be used for banner
+      playerCardId = playerLoadout_data['Identity']['PlayerCardID']; // can be used for banner
       playerTitleId = playerLoadout_data['Identity']['playerTitleID'] ?? "-";
-    } else {
-      throw ExceptionValApi(
-          "Error: Valorant API return code ${playerLoadout_response.statusCode}");
+    } else if (playerLoadout_response.statusCode == 400){
+      log("Error: Valorant API playerLoadout_response return code ${playerLoadout_response.statusCode}");
+      throw ExceptionTokenExpired("Error: Valorant API return code ${playerLoadout_response.statusCode}");
     }
 
     // get player mission (daily/weekly)
-    final playerContract_api =
-        "${ValorantEndpoints.PD_URL}/contracts/v1/contracts/${Cache.accountToken!.puuid}";
-    final playerContract_headers = ValorantEndpoints.RIOT_HEADERS;
-    final playerContract_response = await http
-        .get(Uri.parse(playerContract_api), headers: playerContract_headers);
+    final playerContract_api = "${ValorantEndpoints.PD_URL}/contracts/v1/contracts/${Cache.accountToken!.puuid}";
+    final playerContract_response = await http.get(Uri.parse(playerContract_api), headers: ValorantEndpoints.RIOT_HEADERS);
     if (playerContract_response.statusCode == 200) {
       var playerContract_data = json.decode(playerContract_response.body);
 
@@ -222,9 +212,9 @@ class ValorantHomeServices{
           }
         }
       }
-    } else {
-      throw ExceptionValApi(
-          "Error: Valorant API return code ${playerContract_response.statusCode}");
+    } else if (playerContract_response.statusCode == 400){
+      log("Error: Valorant API playerContract_response return code ${playerContract_response.statusCode}");
+      throw ExceptionTokenExpired("Error: Valorant API return code ${playerContract_response.statusCode}");
     }
 
     Cache.playerProfile = PlayerProfile(
@@ -261,8 +251,7 @@ class ValorantHomeServices{
     List<Color> itemTierColor = [];
 
     // using third party API because more easier to process the data
-    const storeFront_api =
-        "https://api.henrikdev.xyz/valorant/v2/store-featured";
+    const storeFront_api = "https://api.henrikdev.xyz/valorant/v2/store-featured";
 
     final storeFront_response = await http.get(Uri.parse(storeFront_api));
     if (storeFront_response.statusCode == 200) {
@@ -291,16 +280,14 @@ class ValorantHomeServices{
         bundleName = "Null";
       }
     } else {
-      throw ExceptionValApi(
-          "Error: Valorant API return code ${storeFront_response.statusCode}");
+      return;
     }
 
     // put placeholder to the color list
     for (var x in itemNames) {
-      itemTierColor
-          .add(const Color.fromRGBO(147, 139, 144, 1).withOpacity(0.3));
+      itemTierColor.add(const Color.fromRGBO(147, 139, 144, 1).withOpacity(0.3));
       itemTierIcon.add(
-          "https://cdn.discordapp.com/attachments/1127494450030051349/1230077457986752564/image.png?ex=663201e7&is=661f8ce7&hm=c7cc261fa7873fa2e91616330ce940496d641c9879e5a6c664167a94aaa191a0&");
+        "https://cdn.discordapp.com/attachments/1127494450030051349/1230077457986752564/image.png?ex=663201e7&is=661f8ce7&hm=c7cc261fa7873fa2e91616330ce940496d641c9879e5a6c664167a94aaa191a0&");
     }
 
     // get weapon/bundle item rarity
@@ -314,39 +301,31 @@ class ValorantHomeServices{
         for (var data in weaponSkins_list) {
           if (data['displayName'] == item) {
             const contentTier_api = "https://valorant-api.com/v1/contenttiers";
-            final contentTier_response =
-                await http.get(Uri.parse(contentTier_api));
+            final contentTier_response = await http.get(Uri.parse(contentTier_api));
             if (contentTier_response.statusCode == 200) {
               var contentTier_data = json.decode(contentTier_response.body);
 
               for (var contentTiers in contentTier_data['data']) {
                 if (contentTiers['uuid'] == data['contentTierUuid']) {
-                  var replacement_index =
-                      itemNames.indexOf(data['displayName']);
+                  var replacement_index = itemNames.indexOf(data['displayName']);
 
                   // item tier icon
                   var _tierIcon = contentTiers['displayIcon'];
                   var replacement_Icon = _tierIcon;
-                  itemTierIcon.replaceRange(
-                      replacement_index, replacement_index, [replacement_Icon]);
+                  itemTierIcon.replaceRange(replacement_index, replacement_index, [replacement_Icon]);
 
                   // item tier color
                   var _tierColor = contentTiers['highlightColor'];
                   String rgbHex = _tierColor.substring(0, 6);
 
-                  var replacement_color =
-                      Color(int.parse('0xff$rgbHex')).withOpacity(0.3);
-                  itemTierColor.replaceRange(replacement_index,
-                      replacement_index, [replacement_color]);
+                  var replacement_color = Color(int.parse('0xff$rgbHex')).withOpacity(0.3);
+                  itemTierColor.replaceRange(replacement_index, replacement_index, [replacement_color]);
                 }
               }
             }
           }
         }
       }
-    } else {
-      throw ExceptionValApi(
-          "Error: Valorant API return code ${weaponSkins_response.statusCode}");
     }
 
     Cache.bundleData = Bundle(
@@ -368,26 +347,20 @@ class ValorantHomeServices{
     List<String> weaponImages = [];
     List<String> weaponRarityIcon = [];
     List<Color> weaponRarityColor = [];
-    int dailyOffersRemainingTime;
+    int dailyOffersRemainingTime = 0;
 
-    final storeFront_api =
-        '${ValorantEndpoints.PD_URL}/store/v2/storefront/${Cache.accountToken!.puuid}';
-    final storeFront_headers = ValorantEndpoints.RIOT_HEADERS;
-    final storeFront_response =
-        await http.get(Uri.parse(storeFront_api), headers: storeFront_headers);
+    final storeFront_api = '${ValorantEndpoints.PD_URL}/store/v2/storefront/${Cache.accountToken!.puuid}';
+    final storeFront_response = await http.get(Uri.parse(storeFront_api), headers: ValorantEndpoints.RIOT_HEADERS);
     if (storeFront_response.statusCode == 200) {
       var storeFront_data = json.decode(storeFront_response.body);
 
-      dailyOffersRemainingTime = storeFront_data['SkinsPanelLayout']
-          ['SingleItemOffersRemainingDurationInSeconds'];
+      dailyOffersRemainingTime = storeFront_data['SkinsPanelLayout']['SingleItemOffersRemainingDurationInSeconds'];
 
       // loop 4x because daily offers only contain 4 weapons
       for (int i = 0; i < 4; i++) {
-        final offerId =
-            storeFront_data['SkinsPanelLayout']['SingleItemOffers'][i];
+        final offerId = storeFront_data['SkinsPanelLayout']['SingleItemOffers'][i];
 
-        final weaponNameApi =
-            "https://valorant-api.com/v1/weapons/skinlevels/$offerId";
+        final weaponNameApi = "https://valorant-api.com/v1/weapons/skinlevels/$offerId";
         final weaponNameResponse = await http.get(Uri.parse(weaponNameApi));
 
         if (weaponNameResponse.statusCode == 200) {
@@ -398,14 +371,15 @@ class ValorantHomeServices{
         }
 
         // Weapon Price
-        final price = storeFront_data['SkinsPanelLayout']
-                ['SingleItemStoreOffers'][i]['Cost']
-            ['85ad13f7-3d1b-5128-9eb2-7cd8ee0b5741'];
+        final price = storeFront_data['SkinsPanelLayout']['SingleItemStoreOffers'][i]['Cost']['85ad13f7-3d1b-5128-9eb2-7cd8ee0b5741'];
         weaponPrices.add(price);
       }
-    } else {
-      throw ExceptionValApi(
-          "Error: Valorant API return code ${storeFront_response.statusCode}");
+    } else if (storeFront_response.statusCode == 400){
+      log("Error: Valorant API storeFront_response return code ${storeFront_response.statusCode}");
+      throw ExceptionTokenExpired("Error: Valorant API return code ${storeFront_response.statusCode}");
+    }
+    else{
+      
     }
 
     // get daily offers weapon rarity
@@ -419,15 +393,13 @@ class ValorantHomeServices{
         for (var data in weaponSkins_list) {
           if (data['displayName'] == item) {
             const contentTier_api = "https://valorant-api.com/v1/contenttiers";
-            final contentTier_response =
-                await http.get(Uri.parse(contentTier_api));
+            final contentTier_response = await http.get(Uri.parse(contentTier_api));
             if (contentTier_response.statusCode == 200) {
               var contentTier_data = json.decode(contentTier_response.body);
 
               for (var contentTiers in contentTier_data['data']) {
                 if (contentTiers['uuid'] == data['contentTierUuid']) {
-                  var replacement_index =
-                      weaponNames.indexOf(data['displayName']);
+                  var replacement_index = weaponNames.indexOf(data['displayName']);
 
                   // item tier icon
                   var _tierIcon = contentTiers['displayIcon'];
@@ -437,17 +409,13 @@ class ValorantHomeServices{
                   var _tierColor = contentTiers['highlightColor'];
                   String rgbHex = _tierColor.substring(0, 6);
 
-                  weaponRarityColor
-                      .add(Color(int.parse('0xff$rgbHex')).withOpacity(0.3));
+                  weaponRarityColor.add(Color(int.parse('0xff$rgbHex')).withOpacity(0.3));
                 }
               }
             }
           }
         }
       }
-    } else {
-      throw ExceptionValApi(
-          "Error: Valorant API return code ${storeFront_response.statusCode}");
     }
 
     Cache.dailyOffers = DailyOffers(

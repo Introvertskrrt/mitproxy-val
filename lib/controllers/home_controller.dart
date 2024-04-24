@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:get/get.dart';
 import 'package:mitproxy_val/controllers/login_controller.dart';
@@ -21,8 +22,7 @@ class HomeController extends GetxController {
     }
 
     int bundleRemainingSeconds = Cache.bundleData!.bundleRemainingTime;
-    int dailyOffersRemainingSeconds =
-        Cache.dailyOffers!.dailyOffersRemainingTime;
+    int dailyOffersRemainingSeconds = Cache.dailyOffers!.dailyOffersRemainingTime;
 
     countdownTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (bundleRemainingSeconds > 0) {
@@ -36,8 +36,7 @@ class HomeController extends GetxController {
         countdownTimer!.cancel();
       } else {
         // Update the remaining time in the widget
-        updateRemainingTime(
-            bundleRemainingSeconds, dailyOffersRemainingSeconds);
+        updateRemainingTime(bundleRemainingSeconds, dailyOffersRemainingSeconds);
       }
     });
   }
@@ -59,16 +58,27 @@ class HomeController extends GetxController {
         '${dailyDays.toString().padLeft(2, '0')}:${dailyHours.toString().padLeft(2, '0')}:${dailyMinutes.toString().padLeft(2, '0')}:${dailyRemainingSeconds.toString().padLeft(2, '0')}';
   }
 
+  Future<void> initPage() async {
+    isPageLoading(true);
+    await valorantHomeServices.getUserProfileData();
+    await valorantHomeServices.getBundleData();
+    await valorantHomeServices.getDailyStoreData();
+    startCountdownTimer();
+    isPageLoading(false);
+  }
+
   Future<void> onLoginSuccess() async {
     try {
+      await initPage();
+    } on ExceptionTokenExpired {
       isPageLoading(true);
-      await valorantHomeServices.getUserProfileData();
-      await valorantHomeServices.getBundleData();
-      await valorantHomeServices.getDailyStoreData();
-      startCountdownTimer();
-      isPageLoading(false);
-    } on ExceptionValApi {
-      loginController.fetchLogin();
+      log("Token Expired, Trying to re-authenticating...");
+      bool successReauth = await loginController.reAuthLogin();
+      if (successReauth) {
+        await initPage();
+      }
+    }catch (e) {
+      log(e.toString());
     }
   }
 }

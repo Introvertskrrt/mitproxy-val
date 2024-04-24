@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mitproxy_val/constants/color_constant.dart';
@@ -69,7 +70,7 @@ class MatchesWidget extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 20),
-                
+
                 // ally/team widget
                 Visibility(
                   visible: liveController.allyPlayerNames.isNotEmpty,
@@ -170,7 +171,8 @@ class MatchesWidget extends StatelessWidget {
                         ),
                         Column(
                             children: List.generate(
-                                liveController.enemyPlayerNames.length, (index) {
+                                liveController.enemyPlayerNames.length,
+                                (index) {
                           return ListTile(
                             leading: Container(
                               width: 40,
@@ -217,7 +219,95 @@ class MatchesWidget extends StatelessWidget {
                     ),
                   ),
                 ),
-
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Visibility(
+                    visible: liveController.allAgentsIds.isNotEmpty,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Agent Instalock",
+                          style: textStyleConstant.TextStyleInterNormal(Colors.black54, 14),
+                        ),
+                        const SizedBox(height: 10),
+                        Center(
+                          child: Wrap(
+                            children: List.generate(liveController.allAgentsIds.length,
+                                (index) {
+                              return GestureDetector(
+                                onTap: () {
+                                  liveController.selectedAgentName.value = liveController.allAgentsNames[index];
+                                  liveController.selectedAgentId.value = liveController.allAgentsIds[index];
+                                  for (var isSelected
+                                      in liveController.isSelectedList) {
+                                    isSelected.value = false;
+                                  }
+                                  liveController.toggleAgentSelection(index);
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.all(3.0),
+                                  child: Container(
+                                    width: 40,
+                                    height: 40,
+                                    decoration: BoxDecoration(
+                                      color: liveController.isAgentSelected(index).value
+                                          ? Colors.blue
+                                          : const Color.fromARGB(255, 255, 255, 255),
+                                      border: Border.all(
+                                        color:
+                                            liveController.isAgentSelected(index).value
+                                                ? Colors.blue
+                                                : const Color.fromARGB(255, 255, 0, 0),
+                                      ),
+                                      image: DecorationImage(
+                                        image: NetworkImage(
+                                            liveController.allAgentsImages[index]),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            }),
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        Center(
+                          child: Container(
+                            width: MediaQuery.sizeOf(context).width - 150,
+                            height: 25,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(5)
+                            ),
+                            child: ElevatedButton(
+                              onPressed: () async {
+                                if (!liveController.isInstalocking) {
+                                  liveController.isInstalocking = true;
+                                  liveController.valorantLiveServices.postInstalockAgent();
+                                  liveController.buttonLockIn_Text.value = "STOP LOCK IN";
+                                } else if (liveController.isInstalocking){
+                                  liveController.isInstalocking = false;
+                                  liveController.buttonLockIn_Text.value = "LOCK IN";
+                                }
+                              }, 
+                              style: ElevatedButton.styleFrom(
+                                elevation: 3, // Elevation shadow
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(
+                                      1), // Button border radius
+                                ),
+                              ),
+                              child: Text(
+                                "${liveController.buttonLockIn_Text} // ${liveController.selectedAgentName}",
+                                style: textStyleConstant.TextStyleInterNormal(Colors.black, 14),
+                              )
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                )
               ],
             ),
           );

@@ -249,7 +249,7 @@ class ProfileWidget extends StatelessWidget {
                                     Colors.black54, 12),
                               ),
                               trailing: Text(
-                                '0/${Cache.playerProfile!.missionProgressToComplete[index]}',
+                                '${Cache.playerProfile!.missionProgress[index]}/${Cache.playerProfile!.missionProgressToComplete[index]}',
                                 style: textStyleConstant.TextStyleInterNormal(
                                     Colors.black, 12),
                               ),
