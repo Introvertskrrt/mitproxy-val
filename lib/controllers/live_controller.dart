@@ -1,12 +1,10 @@
 // ignore_for_file: non_constant_identifier_names, empty_catches
 
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:mitproxy_val/constants/loading_dialog_constant.dart';
 import 'package:mitproxy_val/controllers/login_controller.dart';
 import 'package:mitproxy_val/utils/exceptions.dart';
 import 'package:mitproxy_val/utils/valorant_live_services.dart';
