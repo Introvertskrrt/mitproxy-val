@@ -24,6 +24,7 @@ class ValorantHomeServices{
   }
 
   Future<void> getUserProfileData() async {
+    log(Cache.accountToken!.puuid);
     String playername = '';
     int valorantPoint = 0;
     int radianite = 0;
@@ -213,7 +214,7 @@ class ValorantHomeServices{
         }
       }
     } else if (playerContract_response.statusCode == 400){
-      log("Error: Valorant API playerContract_response return code ${playerContract_response.statusCode}");
+      log("Error: Valorant API playerContract_response return code ${playerContract_response.body}");
       throw ExceptionTokenExpired("Error: Valorant API return code ${playerContract_response.statusCode}");
     }
 

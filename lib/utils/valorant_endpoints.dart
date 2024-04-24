@@ -11,4 +11,15 @@ class ValorantEndpoints{
     'X-Riot-Entitlements-JWT': Cache.accountToken!.entitlementsToken,
     'Authorization': 'Bearer ${Cache.accountToken!.authToken}'
   };
+
+  void updateEndpoints() {
+    GLZ_URL = "https://glz-${Cache.accountToken!.region}-1.${Cache.accountToken!.shard}.a.pvp.net";
+    PD_URL = "https://pd.${Cache.accountToken!.shard}.a.pvp.net";
+    RIOT_HEADERS = {
+      'X-Riot-ClientPlatform': Cache.accountToken!.clientPlatform,
+      'X-Riot-ClientVersion': Cache.accountToken!.clientVersion,
+      'X-Riot-Entitlements-JWT': Cache.accountToken!.entitlementsToken,
+      'Authorization': 'Bearer ${Cache.accountToken!.authToken}'
+    };
+  }
 }

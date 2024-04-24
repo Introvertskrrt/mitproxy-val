@@ -6,6 +6,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:mitproxy_val/constants/loading_dialog_constant.dart';
 import 'package:mitproxy_val/controllers/login_controller.dart';
 import 'package:mitproxy_val/utils/exceptions.dart';
 import 'package:mitproxy_val/utils/valorant_live_services.dart';
@@ -89,13 +90,7 @@ class LiveController extends GetxController {
   void onInit() async {
     super.onInit();
     periodicTimer = Timer.periodic(const Duration(seconds: 10), (timer) {
-      try {
-        // Kode yang mungkin menyebabkan error
-        fetchLiveData();
-      } catch (e) {
-        // Tangkap dan tangani error di sini
-        log(e.toString());
-      }
+      fetchLiveData();
     });
   }
 
@@ -106,13 +101,12 @@ class LiveController extends GetxController {
       isPlayerInGame.value = true;
     } on ExceptionPlayerNotInGame {
       isPlayerInGame.value = false;
-    } on ExceptionValApi {
-      isPlayerInGame.value = false;
-      // log("Token Expired, Trying to re-authenticating...");
-      // await loginController.reAuthLogin();
-    } catch (e) {
-      isPlayerInGame.value = false;
-      log(e.toString());
+    } on ExceptionTokenExpired {
+      // tampilkan dialog box loading circularprogress
+      bool successReauth = await loginController.fetchLogin();
+      if (successReauth) {
+        // jika sukses reauth sembunyikan loading nya
+      }
     }
   }
 

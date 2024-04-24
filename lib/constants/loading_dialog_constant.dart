@@ -9,7 +9,22 @@ class LoadingDialogConstant extends StatelessWidget {
       backgroundColor: Colors.transparent,
       elevation: 0,
       child: Center(
-        child: CircularProgressIndicator(), // Or any other loading indicator widget
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            CircularProgressIndicator(),
+            SizedBox(height: 10),
+            Text(
+              "Authenticating...",
+              style: TextStyle(
+                fontFamily: 'Inter',
+                fontSize: 16,
+                color: Colors.white
+              ),
+            ),
+          ],
+        ), // Or any other loading indicator widget
       ),
     );
   }

@@ -1,8 +1,6 @@
 // ignore_for_file: non_constant_identifier_names, unused_local_variable, constant_identifier_names, no_leading_underscores_for_local_identifiers, prefer_typing_uninitialized_variables, unnecessary_null_comparison
 
 import 'dart:async';
-import 'dart:developer';
-
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:mitproxy_val/controllers/live_controller.dart';
@@ -57,9 +55,13 @@ class ValorantLiveServices {
     if (partyPlayer_response.statusCode == 200) {
       var partyPlayer_data = json.decode(partyPlayer_response.body);
       partyId = partyPlayer_data['CurrentPartyID'];
-    } else {
-      throw ExceptionPlayerNotInGame(
-        "Error getting party ID: ${partyPlayer_response.statusCode}");
+    } else if (partyPlayer_response.statusCode == 400) {
+      throw ExceptionTokenExpired("Token expired");
+    } else if (partyPlayer_response.statusCode == 404){
+      throw ExceptionValApi("Player not in game");
+    }
+    else{
+      return;
     }
 
     final party_api = "${ValorantEndpoints.GLZ_URL}/parties/v1/parties/$partyId";
@@ -84,9 +86,13 @@ class ValorantLiveServices {
         for (var pName in nameService_data) {
           playerNames.add('${pName['GameName']} #${pName['TagLine']}');
         }
-      } else {
-        throw ExceptionValApi(
-          "Error while getting player names: ${nameService_response.statusCode}");
+      } else if (nameService_response.statusCode == 400) {
+        throw ExceptionTokenExpired("Token expired");
+      } else if (nameService_response.statusCode == 404){
+        throw ExceptionValApi("Player not in game");
+      }
+      else{
+        return;
       }
 
       // get each player's rank image
@@ -121,6 +127,13 @@ class ValorantLiveServices {
               }
             }
           }
+        } else if (playerMmr_response.statusCode == 400) {
+          throw ExceptionTokenExpired("Token expired");
+        } else if (playerMmr_response.statusCode == 404){
+          throw ExceptionValApi("Player not in game");
+        }
+        else{
+          return;
         }
       }
     }
@@ -135,9 +148,13 @@ class ValorantLiveServices {
     final partySetReady_response = await http.post(Uri.parse(partySetReady_api), headers: ValorantEndpoints.RIOT_HEADERS, body: body);
     if (partySetReady_response.statusCode == 200) {
       return;
-    } else {
-      throw ExceptionValApi(
-        "Error set party ready state: ${partySetReady_response.statusCode}");
+    } else if (partySetReady_response.statusCode == 400) {
+      throw ExceptionTokenExpired("Token expired");
+    } else if (partySetReady_response.statusCode == 404){
+      throw ExceptionValApi("Player not in game");
+    }
+    else{
+      return;
     }
   }
 
@@ -348,8 +365,6 @@ class ValorantLiveServices {
                 }
                 liveController.allyRanks.value = allyRanks;
               }
-            } else if (playerMmr_response.statusCode == 429) {
-              log("Too many request to get each palyers rank");
             }
           }
         }
@@ -498,9 +513,10 @@ class ValorantLiveServices {
 
   Future<void> postInstalockAgent() async{
     final liveController = Get.put(LiveController());
+
+    // using while loop for locking agent faster
     while (liveController.isInstalocking) {
-      log("Instalocking...");
-      // use select agent api first to prevent skip agent select screen
+      // use select agent api first to prevent instant load to the game
       final selectAgent_api = "${ValorantEndpoints.GLZ_URL}/pregame/v1/matches/${liveController.preMatchId.value}/select/${liveController.selectedAgentId.value}";
       final selectAgent_response = await http.post(Uri.parse(selectAgent_api), headers: ValorantEndpoints.RIOT_HEADERS);
       

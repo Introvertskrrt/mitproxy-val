@@ -73,7 +73,7 @@ class HomeController extends GetxController {
     } on ExceptionTokenExpired {
       isPageLoading(true);
       log("Token Expired, Trying to re-authenticating...");
-      bool successReauth = await loginController.reAuthLogin();
+      bool successReauth = await loginController.fetchLogin();
       if (successReauth) {
         await initPage();
       }
