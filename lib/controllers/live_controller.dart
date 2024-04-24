@@ -38,9 +38,7 @@ class LiveController extends GetxController {
   // matches
   RxString preMatchId = "".obs;
   RxString mapName = "".obs;
-  RxString mapBanner =
-      "https://media.valorant-api.com/maps/7eaecc1b-4337-bbf6-6ab9-04b8f06b3319/listviewicon.png"
-          .obs;
+  RxString mapBanner = "https://media.valorant-api.com/maps/7eaecc1b-4337-bbf6-6ab9-04b8f06b3319/listviewicon.png".obs;
   RxString gameMode = "".obs;
 
   RxString allyTeamId = ''.obs;
@@ -100,11 +98,7 @@ class LiveController extends GetxController {
     } on ExceptionPlayerNotInGame {
       isPlayerInGame.value = false;
     } on ExceptionTokenExpired {
-      // tampilkan dialog box loading circularprogress
-      bool successReauth = await loginController.fetchLogin();
-      if (successReauth) {
-        // jika sukses reauth sembunyikan loading nya
-      }
+      await loginController.fetchLogin();
     }
   }
 
