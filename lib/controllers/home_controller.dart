@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:get/get.dart';
+import 'package:http/http.dart';
 import 'package:mitproxy_val/controllers/login_controller.dart';
 import 'package:mitproxy_val/utils/cache.dart';
 import 'package:mitproxy_val/utils/exceptions.dart';
@@ -72,13 +73,12 @@ class HomeController extends GetxController {
       await initPage();
     } on ExceptionTokenExpired {
       isPageLoading(true);
-      log("Token Expired, Trying to re-authenticating...");
       bool successReauth = await loginController.fetchLogin();
       if (successReauth) {
         await initPage();
       }
-    }catch (e) {
-      log(e.toString());
+    }on ClientException {
+      isPageLoading(true);
     }
   }
 }

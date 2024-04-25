@@ -58,7 +58,7 @@ class ValorantLiveServices {
     } else if (partyPlayer_response.statusCode == 400) {
       throw ExceptionTokenExpired("Token expired");
     } else if (partyPlayer_response.statusCode == 404){
-      throw ExceptionValApi("Player not in game");
+      throw ExceptionPlayerNotInGame("Player not in game");
     }
     else{
       return;
@@ -89,7 +89,7 @@ class ValorantLiveServices {
       } else if (nameService_response.statusCode == 400) {
         throw ExceptionTokenExpired("Token expired");
       } else if (nameService_response.statusCode == 404){
-        throw ExceptionValApi("Player not in game");
+        throw ExceptionPlayerNotInGame("Player not in game");
       }
       else{
         return;
@@ -130,7 +130,7 @@ class ValorantLiveServices {
         } else if (playerMmr_response.statusCode == 400) {
           throw ExceptionTokenExpired("Token expired");
         } else if (playerMmr_response.statusCode == 404){
-          throw ExceptionValApi("Player not in game");
+          throw ExceptionPlayerNotInGame("Player not in game");
         }
         else{
           return;
@@ -151,7 +151,7 @@ class ValorantLiveServices {
     } else if (partySetReady_response.statusCode == 400) {
       throw ExceptionTokenExpired("Token expired");
     } else if (partySetReady_response.statusCode == 404){
-      throw ExceptionValApi("Player not in game");
+      throw ExceptionPlayerNotInGame("Player not in game");
     }
     else{
       return;
@@ -516,17 +516,22 @@ class ValorantLiveServices {
 
     // using while loop for locking agent faster
     while (liveController.isInstalocking) {
-      // use select agent api first to prevent instant load to the game
-      final selectAgent_api = "${ValorantEndpoints.GLZ_URL}/pregame/v1/matches/${liveController.preMatchId.value}/select/${liveController.selectedAgentId.value}";
-      final selectAgent_response = await http.post(Uri.parse(selectAgent_api), headers: ValorantEndpoints.RIOT_HEADERS);
+      try {
+        // use select agent api first to prevent instant load to the game
+        final selectAgent_api = "${ValorantEndpoints.GLZ_URL}/pregame/v1/matches/${liveController.preMatchId.value}/select/${liveController.selectedAgentId.value}";
+        final selectAgent_response = await http.post(Uri.parse(selectAgent_api), headers: ValorantEndpoints.RIOT_HEADERS);
+        
+        if (selectAgent_response.statusCode == 200) {
+          final lockAgent_api = "${ValorantEndpoints.GLZ_URL}/pregame/v1/matches/${liveController.preMatchId.value}/lock/${liveController.selectedAgentId.value}";
+          await http.post(Uri.parse(lockAgent_api), headers: ValorantEndpoints.RIOT_HEADERS);
+        }
+        if (!liveController.isInstalocking) {
+          break;
+        }
+      } on http.ClientException {
+        return;
+      }
       
-      if (selectAgent_response.statusCode == 200) {
-        final lockAgent_api = "${ValorantEndpoints.GLZ_URL}/pregame/v1/matches/${liveController.preMatchId.value}/lock/${liveController.selectedAgentId.value}";
-        await http.post(Uri.parse(lockAgent_api), headers: ValorantEndpoints.RIOT_HEADERS);
-      }
-      if (!liveController.isInstalocking) {
-        break;
-      }
     }
   }
 }

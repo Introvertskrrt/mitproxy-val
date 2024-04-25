@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mitproxy_val/constants/color_constant.dart';
 import 'package:mitproxy_val/controllers/main_controller.dart';
+import 'package:mitproxy_val/utils/dependency_injection.dart';
 import 'package:mitproxy_val/utils/routes.dart';
 import 'package:mitproxy_val/views/home_view.dart';
 import 'package:mitproxy_val/views/live_view.dart';
@@ -32,6 +33,7 @@ Future<void> main() async {
       initialRoute: AppRoutes.login,
     ),
   );
+  DependencyInjection.init();
 }
 
 class MainView extends StatelessWidget {

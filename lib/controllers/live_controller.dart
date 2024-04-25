@@ -5,6 +5,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart';
 import 'package:mitproxy_val/controllers/login_controller.dart';
 import 'package:mitproxy_val/utils/exceptions.dart';
 import 'package:mitproxy_val/utils/valorant_live_services.dart';
@@ -90,6 +91,12 @@ class LiveController extends GetxController {
     });
   }
 
+  @override
+  void onClose() {
+    periodicTimer?.cancel();
+    super.onClose();
+  }
+
   void fetchLiveData() async {
     try {
       await valorantLiveServices.getPartyData();
@@ -99,6 +106,8 @@ class LiveController extends GetxController {
       isPlayerInGame.value = false;
     } on ExceptionTokenExpired {
       await loginController.fetchLogin();
+    } on ClientException {
+      isPlayerInGame.value = false;
     }
   }
 

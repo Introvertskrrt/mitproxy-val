@@ -116,16 +116,7 @@ class LoginView extends StatelessWidget {
                       Get.toNamed(AppRoutes.main);
                     } else {
                       Navigator.of(context).pop();
-
-                      showDialog(
-                        context: context,
-                        barrierDismissible: true,
-                        builder: (BuildContext context) {
-                          return CustomDialogMessage(
-                            text: loginController.errorLoginMessage!.value,
-                          );
-                        },
-                      );
+                      loginController.showCustomDialog(context);
                     }
                   },
                   style: ElevatedButton.styleFrom(
