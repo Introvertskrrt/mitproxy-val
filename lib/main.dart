@@ -7,6 +7,7 @@ import 'package:mitproxy_val/utils/routes.dart';
 import 'package:mitproxy_val/views/home_view.dart';
 import 'package:mitproxy_val/views/live_view.dart';
 import 'package:mitproxy_val/views/login_view.dart';
+import 'package:mitproxy_val/views/search_view.dart';
 
 Future<void> main() async {
   runApp(
@@ -28,6 +29,10 @@ Future<void> main() async {
         GetPage(
           name: AppRoutes.live,
           page: () => LiveView(),
+        ),
+        GetPage(
+          name: AppRoutes.search,
+          page: () => SearchView(),
         ),
       ],
       initialRoute: AppRoutes.login,

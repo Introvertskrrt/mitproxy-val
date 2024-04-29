@@ -10,19 +10,7 @@ import 'package:mitproxy_val/utils/exceptions.dart';
 import 'package:mitproxy_val/utils/valorant_endpoints.dart';
 import 'dart:developer';
 
-class ValorantHomeServices{
-
-  Future<void> getCompetitiveUpdate() async {
-    final competitiveUpdate_api = "${ValorantEndpoints.PD_URL}/mmr/v1/players/87386b82-bc51-5870-a016-1cad906b98cb/competitiveupdates?queue=competitive";
-    final competitiveUpdate_response = await http.get(Uri.parse(competitiveUpdate_api), headers: ValorantEndpoints.RIOT_HEADERS);
-    if (competitiveUpdate_response.statusCode == 200) {
-      var data = json.decode(competitiveUpdate_response.body);
-      log(data.toString());
-    } else if (competitiveUpdate_response.statusCode == 429) {
-      log("too many request!");
-    }
-  }
-
+class ValorantHomeServices {
   Future<void> getUserProfileData() async {
     log(Cache.accountToken!.puuid);
     String playername = '';

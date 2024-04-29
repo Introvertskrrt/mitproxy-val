@@ -3,4 +3,5 @@ class AppRoutes {
   static const String main = '/main';
   static const String home = '/home';
   static const String live = '/live';
+  static const String search = '/live';
 }
