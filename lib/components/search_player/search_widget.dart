@@ -84,7 +84,9 @@ class SearchWidget extends StatelessWidget {
                 height: 25,
                 child: ElevatedButton(
                   onPressed: () async {
-                    searchController.getPlayerData();
+                    if (!searchController.isOnSearching.value) {
+                      await searchController.searchButtonClicked();
+                    }
                   },
                   style: ElevatedButton.styleFrom(
                     elevation: 3, // Elevation shadow
@@ -107,8 +109,13 @@ class SearchWidget extends StatelessWidget {
               child: Divider(),
             ),
             Obx(() {
-              if (searchController.isPageLoading.value) {
-                return const CircularProgressIndicator();
+              if (searchController.isOnFirstLoad.value) {
+                return const Center(
+                  child: Text("Player's stats will be displayed here"),
+                );
+              }
+              if (searchController.isOnSearching.value) {
+                return const Center(child: CircularProgressIndicator());
               }
               if (searchController.isError.value) {
                 return const Center(

@@ -1,4 +1,6 @@
 
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mitproxy_val/utils/exceptions.dart';
@@ -9,16 +11,20 @@ class SearchPlayerController extends GetxController {
   TextEditingController tag = TextEditingController();
   final valorantSearchServices = ValorantSearchServices();
 
-  RxBool isPageLoading = true.obs;
+  RxBool isOnFirstLoad = true.obs;
+  RxBool isOnSearching = false.obs;
   RxBool isError = false.obs;
 
-  Future<void> getPlayerData() async {
+  Future<void> searchButtonClicked() async {
     try{
-      isPageLoading.value = true;
-      await valorantSearchServices.getPlayerData(playername.text, tag.text);
+      isOnFirstLoad.value = false;
+      isOnSearching.value = true;
+      await valorantSearchServices.getPlayerMatchHistory(playername.text, tag.text);
       isError.value = false;
-      isPageLoading.value = false;
+      isOnSearching.value = false;
     } on ExceptionPlayerNotFound {
+      isOnSearching.value = false;
+      isOnFirstLoad.value = false;
       isError.value = true;
     }
   }

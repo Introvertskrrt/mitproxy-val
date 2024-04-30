@@ -1,8 +1,6 @@
 
 // ignore_for_file: non_constant_identifier_names, constant_identifier_names
 
-import 'dart:developer';
-
 import 'package:http/http.dart' as http;
 import 'package:mitproxy_val/models/player_search_model.dart';
 import 'dart:convert';
@@ -12,11 +10,7 @@ import 'package:mitproxy_val/utils/valorant_endpoints.dart';
 
 
 class ValorantSearchServices {
-  Future<dynamic> getMatchHistory(String puuid) async {
-    
-  }
-  
-  Future<void> getPlayerData(String name, String tag) async {
+  Future<void> getPlayerMatchHistory(String name, String tag) async {
     String playerUuid = '';
     String playerName = '';
     String playerCard = '';
@@ -62,7 +56,7 @@ class ValorantSearchServices {
         );
       }
     }
-    else if (byName_response.statusCode == 404){
+    else {
       throw ExceptionPlayerNotFound("Player not found");
     }
     
@@ -150,7 +144,5 @@ class ValorantSearchServices {
       mapBanner: mapBanner,
       agentPicture: agentPicture,
     );
-
-    
   }
 }
