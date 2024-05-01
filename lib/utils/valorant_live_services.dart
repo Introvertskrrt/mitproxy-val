@@ -13,7 +13,6 @@ import 'package:mitproxy_val/utils/valorant_endpoints.dart';
 class ValorantLiveServices {
   Timer? periodicTimer;
 
-  // used for live page
   Future<void> getAgentsData() async {
     final liveController = Get.put(LiveController());
     List<String> allAgentsIds = [];
@@ -314,7 +313,7 @@ class ValorantLiveServices {
           if (player['CharacterID'] != null && player['CharacterID'] != "") {
             allyAgentImages.add("https://media.valorant-api.com/agents/${player['CharacterID']}/displayiconsmall.png");
           } else {
-            allyAgentImages.add("https://cdn.discordapp.com/attachments/1127494450030051349/1230609946920615996/image.png?ex=6633f1d2&is=66217cd2&hm=a516f2012a6689fac0e4d21ddeff4f000f414ae1ab9a749bbe7aa714367140c8&");
+            allyAgentImages.add("https://i.imgur.com/aFZAvdh.png");
           }
           var playerId = player['Subject'];
 

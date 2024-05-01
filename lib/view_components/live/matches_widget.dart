@@ -281,14 +281,7 @@ class MatchesWidget extends StatelessWidget {
                             ),
                             child: ElevatedButton(
                               onPressed: () async {
-                                if (!liveController.isInstalocking) {
-                                  liveController.isInstalocking = true;
-                                  liveController.valorantLiveServices.postInstalockAgent();
-                                  liveController.buttonLockIn_Text.value = "STOP LOCK IN";
-                                } else if (liveController.isInstalocking){
-                                  liveController.isInstalocking = false;
-                                  liveController.buttonLockIn_Text.value = "LOCK IN";
-                                }
+                                liveController.buttonInstalockClicked();
                               }, 
                               style: ElevatedButton.styleFrom(
                                 elevation: 3, // Elevation shadow

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mitproxy_val/components/search_player/search_widget.dart';
+import 'package:mitproxy_val/view_components/search_player/search_widget.dart';
 import 'package:mitproxy_val/constants/color_constant.dart';
 import 'package:mitproxy_val/constants/textstyle_constant.dart';
 

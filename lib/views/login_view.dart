@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mitproxy_val/constants/textstyle_constant.dart';
 import 'package:mitproxy_val/controllers/login_controller.dart';
-import 'package:mitproxy_val/utils/routes.dart';
 
 class LoginView extends StatelessWidget {
   LoginView({super.key});
@@ -108,21 +107,13 @@ class LoginView extends StatelessWidget {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () async {
-                    loginController.showLoadingDialog(context);
-                    bool isLoginSuccess = await loginController.fetchLogin();
-                    if (isLoginSuccess) {
-                      Navigator.of(context).pop(); // Hide loading dialog
-                      Get.toNamed(AppRoutes.main);
-                    } else {
-                      Navigator.of(context).pop();
-                      loginController.showCustomDialog(context);
-                    }
+                    await loginController.loginButtonClicked(context);
                   },
                   style: ElevatedButton.styleFrom(
                     elevation: 3, // Elevation shadow
                     shape: RoundedRectangleBorder(
                       borderRadius:
-                          BorderRadius.circular(8), // Button border radius
+                          BorderRadius.circular(8),
                     ),
                   ),
                   child: Text(

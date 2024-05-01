@@ -135,4 +135,45 @@ class LiveController extends GetxController {
     seconds.value = 0;
     minutes.value = 0;
   }
+
+  Future<void> buttonStartMatchmakingClicked() async {
+    if (!isOnMatchmaking.value) {
+      valorantLiveServices.postEntermatchmaking(partyId.value);
+      buttonMatchmaking_Text.value = "STOP MATCHMAKING";
+      isOnMatchmaking.value = true;
+      startMatchmakingTimer();
+    } else {
+      valorantLiveServices.postLeavematchmaking(partyId.value);
+      buttonMatchmaking_Text.value = "START MATCHMAKING";
+      isOnMatchmaking.value = false;
+      stopMatchmakingTimer();
+    }
+  }
+
+  Future<void> buttonJoinPartyCodeClicked() async {
+    valorantLiveServices.postJoinPartyByCode(joinPartCode.text.toUpperCase());
+  }
+
+  Future<void> buttonGeneratePartyCodeClicked() async {
+    if (!isPartyCodeGenerated.value) {
+      partyCode.text = await valorantLiveServices.postGeneratePartyCode(partyId.value);
+      isPartyCodeGenerated.value = true;
+      buttonGenerateCode_Text.value = "DISABLE CODE";
+    } else {
+      partyCode.text = await valorantLiveServices.postDeletePartyCode(partyId.value);
+      isPartyCodeGenerated.value = false;
+      buttonGenerateCode_Text.value = "GENERATE CODE";
+    }
+  }
+
+  void buttonInstalockClicked() {
+    if (!isInstalocking) {
+      isInstalocking = true;
+      valorantLiveServices.postInstalockAgent();
+      buttonLockIn_Text.value = "STOP LOCK IN";
+    } else if (isInstalocking){
+      isInstalocking = false;
+      buttonLockIn_Text.value = "LOCK IN";
+    }
+  }
 }

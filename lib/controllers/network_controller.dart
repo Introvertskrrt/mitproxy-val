@@ -1,10 +1,10 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:get/get.dart';
-import 'package:mitproxy_val/constants/connection_error_dialog.dart';
+import 'package:mitproxy_val/constants/dialog_constant.dart.dart';
 import 'package:mitproxy_val/utils/routes.dart';
 
 class NetworkController extends GetxController {
-  ConnectionErrorDialog connectionErrorDialog = ConnectionErrorDialog();
+  DialogConstant connectionErrorDialog = DialogConstant();
   final Connectivity _connectivity = Connectivity();
 
   @override
@@ -20,7 +20,7 @@ class NetworkController extends GetxController {
     if (connectivityResult == ConnectivityResult.none) {
       Get.deleteAll();
       Get.offNamed(AppRoutes.login); 
-      connectionErrorDialog.showErrorDialog();
+      connectionErrorDialog.showConnectionError();
     } else {
       if (Get.isDialogOpen != null && Get.isDialogOpen!) {
         Get.back(); // Close the error dialog if it's open

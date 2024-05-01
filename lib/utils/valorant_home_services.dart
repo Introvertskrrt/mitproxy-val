@@ -8,11 +8,9 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:mitproxy_val/utils/exceptions.dart';
 import 'package:mitproxy_val/utils/valorant_endpoints.dart';
-import 'dart:developer';
 
 class ValorantHomeServices {
   Future<void> getUserProfileData() async {
-    log(Cache.accountToken!.puuid);
     String playername = '';
     int valorantPoint = 0;
     int radianite = 0;
@@ -42,7 +40,6 @@ class ValorantHomeServices {
       var nameService_data = json.decode(nameService_response.body);
       playername = nameService_data[0]['GameName'] + " #" + nameService_data[0]['TagLine'];
     } else if (nameService_response.statusCode == 400){
-      log('Error at getProfileUserData in name service api: ${nameService_response.body.toString()}');
       throw ExceptionTokenExpired("Error: Valorant API return code ${nameService_response.statusCode}");
     }
 
@@ -56,7 +53,6 @@ class ValorantHomeServices {
       radianite = wallet_data['Balances']['e59aa87c-4cbf-517a-5983-6e81511be9b7'];
       kingdomCredits = wallet_data['Balances']['85ca954a-41f2-ce94-9b45-8ca3dd39a00d'];
     } else if (wallet_response.statusCode == 400){
-      log('Error at getProfileUserData in wallet api: ${wallet_response.body.toString()}');
       throw ExceptionTokenExpired("Error: Valorant API return code ${wallet_response.statusCode}");
     }
 
@@ -69,7 +65,6 @@ class ValorantHomeServices {
       playerLevels = accountXp_data["Progress"]["Level"];
       playerXp = accountXp_data["Progress"]["XP"];
     } else if (accountXp_response.statusCode == 400){
-      log('Error at getProfileUserData in account xp api: ${accountXp_response.body.toString()}');
       throw ExceptionTokenExpired("Error: Valorant API return code ${accountXp_response.statusCode}");
     }
 
@@ -127,7 +122,6 @@ class ValorantHomeServices {
             currentRank = tier['tierName'];
             rankImage = tier['largeIcon'];
             _rankColor = tier['color'];
-            log(rankImage.toString());
           }
         }
       }
@@ -139,7 +133,6 @@ class ValorantHomeServices {
       String rgbHex = _rankColor.substring(0, 6);
       rankColor = Color(int.parse('0xff$rgbHex'));
     } else if (playerMmr_response.statusCode == 400){
-      log("Error: Valorant API playerMmr_response return code ${playerMmr_response.statusCode}");
       throw ExceptionTokenExpired("Error: Valorant API return code ${playerMmr_response.statusCode}");
     }
 
@@ -152,7 +145,6 @@ class ValorantHomeServices {
       playerCardId = playerLoadout_data['Identity']['PlayerCardID']; // can be used for banner
       playerTitleId = playerLoadout_data['Identity']['playerTitleID'] ?? "-";
     } else if (playerLoadout_response.statusCode == 400){
-      log("Error: Valorant API playerLoadout_response return code ${playerLoadout_response.statusCode}");
       throw ExceptionTokenExpired("Error: Valorant API return code ${playerLoadout_response.statusCode}");
     }
 
@@ -202,7 +194,6 @@ class ValorantHomeServices {
         }
       }
     } else if (playerContract_response.statusCode == 400){
-      log("Error: Valorant API playerContract_response return code ${playerContract_response.body}");
       throw ExceptionTokenExpired("Error: Valorant API return code ${playerContract_response.statusCode}");
     }
 
@@ -276,7 +267,7 @@ class ValorantHomeServices {
     for (var x in itemNames) {
       itemTierColor.add(const Color.fromRGBO(147, 139, 144, 1).withOpacity(0.3));
       itemTierIcon.add(
-        "https://cdn.discordapp.com/attachments/1127494450030051349/1230077457986752564/image.png?ex=663201e7&is=661f8ce7&hm=c7cc261fa7873fa2e91616330ce940496d641c9879e5a6c664167a94aaa191a0&");
+        "https://i.imgur.com/HqE4dQc.png");
     }
 
     // get weapon/bundle item rarity
@@ -364,7 +355,6 @@ class ValorantHomeServices {
         weaponPrices.add(price);
       }
     } else if (storeFront_response.statusCode == 400){
-      log("Error: Valorant API storeFront_response return code ${storeFront_response.statusCode}");
       throw ExceptionTokenExpired("Error: Valorant API return code ${storeFront_response.statusCode}");
     }
     else{

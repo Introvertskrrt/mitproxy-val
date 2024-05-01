@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mitproxy_val/components/live/matches_widget.dart';
-import 'package:mitproxy_val/components/live/party_widget.dart';
-import 'package:mitproxy_val/components/live/waiting_page.dart';
+import 'package:mitproxy_val/view_components/live/matches_widget.dart';
+import 'package:mitproxy_val/view_components/live/party_widget.dart';
+import 'package:mitproxy_val/view_components/live/waiting_page.dart';
 import 'package:mitproxy_val/constants/color_constant.dart';
 import 'package:mitproxy_val/constants/textstyle_constant.dart';
 import 'package:mitproxy_val/controllers/live_controller.dart';

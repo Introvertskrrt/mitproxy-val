@@ -182,26 +182,7 @@ class PartyWidget extends StatelessWidget {
                                 child: ElevatedButton(
                                   onPressed: () async {
                                     // Generate party code
-                                    if (!liveController
-                                        .isPartyCodeGenerated.value) {
-                                      liveController.partyCode.text =
-                                          await valorantLiveServices
-                                              .postGeneratePartyCode(
-                                                  liveController.partyId.value);
-                                      liveController
-                                          .isPartyCodeGenerated.value = true;
-                                      liveController.buttonGenerateCode_Text
-                                          .value = "DISABLE CODE";
-                                    } else {
-                                      liveController.partyCode.text =
-                                          await valorantLiveServices
-                                              .postDeletePartyCode(
-                                                  liveController.partyId.value);
-                                      liveController
-                                          .isPartyCodeGenerated.value = false;
-                                      liveController.buttonGenerateCode_Text
-                                          .value = "GENERATE CODE";
-                                    }
+                                    liveController.buttonGeneratePartyCodeClicked();
                                   },
                                   style: ElevatedButton.styleFrom(
                                     elevation: 3, // Elevation shadow
@@ -260,9 +241,7 @@ class PartyWidget extends StatelessWidget {
                                 child: ElevatedButton(
                                   onPressed: () async {
                                     // Join Party by Code
-                                    valorantLiveServices.postJoinPartyByCode(
-                                        liveController.joinPartCode.text
-                                            .toUpperCase());
+                                    liveController.buttonJoinPartyCodeClicked();
                                   },
                                   style: ElevatedButton.styleFrom(
                                     elevation: 3, // Elevation shadow
@@ -503,19 +482,6 @@ class PartyWidget extends StatelessWidget {
                                     child: const Text('Team Deathmatch'),
                                   ),
                                 ),
-                                // PopupMenuItem(
-                                //   child: GestureDetector(
-                                //     onTap: () {
-                                //       valorantLiveServices.postSetGameMode(
-                                //           Cache.partyMembers!.partyId,
-                                //           "premier");
-                                //       liveController.currentGameMode_Text
-                                //           .value = 'Premier';
-                                //       Navigator.pop(context);
-                                //     },
-                                //     child: const Text('Premier'),
-                                //   ),
-                                // ),
                               ],
                             );
                           },
@@ -547,21 +513,7 @@ class PartyWidget extends StatelessWidget {
                   height: 25,
                   child: ElevatedButton(
                     onPressed: () async {
-                      if (!liveController.isOnMatchmaking.value) {
-                        valorantLiveServices
-                            .postEntermatchmaking(liveController.partyId.value);
-                        liveController.buttonMatchmaking_Text.value =
-                            "STOP MATCHMAKING";
-                        liveController.isOnMatchmaking.value = true;
-                        liveController.startMatchmakingTimer();
-                      } else {
-                        valorantLiveServices
-                            .postLeavematchmaking(liveController.partyId.value);
-                        liveController.buttonMatchmaking_Text.value =
-                            "START MATCHMAKING";
-                        liveController.isOnMatchmaking.value = false;
-                        liveController.stopMatchmakingTimer();
-                      }
+                      liveController.buttonStartMatchmakingClicked();
                     },
                     style: ElevatedButton.styleFrom(
                       elevation: 3, // Elevation shadow
