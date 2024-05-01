@@ -1,7 +1,5 @@
 // ignore_for_file: non_constant_identifier_names, use_build_context_synchronously
 
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
