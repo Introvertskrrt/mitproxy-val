@@ -1,7 +1,7 @@
 // ignore_for_file: non_constant_identifier_names, empty_catches
 
 import 'dart:async';
-
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -99,6 +99,7 @@ class LiveController extends GetxController {
 
   void fetchLiveData() async {
     try {
+      await initializeAgents();
       await valorantLiveServices.getPartyData();
       await valorantLiveServices.getPreGame();
       isPlayerInGame.value = true;

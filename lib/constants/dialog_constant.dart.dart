@@ -25,7 +25,7 @@ class DialogConstant {
 
   void showAuthDialog() {
     Get.defaultDialog(
-      title: "Authenticating",
+      title: "Auth",
       middleText: 'Please wait a moment...',
       barrierDismissible: false,
       actions: [
@@ -33,6 +33,14 @@ class DialogConstant {
           child: CircularProgressIndicator(),
         )
       ],
+    );
+  }
+
+  void showSuccessLogin() {
+    Get.defaultDialog(
+      title: "Auth",
+      middleText: 'Login Success',
+      barrierDismissible: true,
     );
   }
 }

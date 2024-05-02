@@ -9,6 +9,7 @@ import 'package:mitproxy_val/utils/valorant_home_services.dart';
 
 class HomeController extends GetxController {
   final valorantHomeServices = ValorantHomeServices();
+  
   RxBool isPageLoading = false.obs;
   RxString bundleRemainingTime = ''.obs;
   RxString dailyOffersRemainingTime = ''.obs;

@@ -19,7 +19,7 @@ class WaitingPage extends StatelessWidget {
             height: 150,
             decoration: const BoxDecoration(
               color: Colors.transparent,
-              image: DecorationImage(image: NetworkImage("https://cdn.discordapp.com/attachments/1127494450030051349/1230202405489086595/valorant-logo-play-2-svgrepo-com.png?ex=66327645&is=66200145&hm=b7953d3be8beb333e4e9c85fc7553d5ae56ee56f0c1fdaea77b0a7395416c4f6&"),
+              image: DecorationImage(image: NetworkImage("https://i.imgur.com/0AXqK0O.png"),
                 fit: BoxFit.fill
               ),
             ),

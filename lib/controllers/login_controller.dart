@@ -5,7 +5,6 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:mitproxy_val/constants/dialog_constant.dart.dart';
 import 'package:mitproxy_val/controllers/home_controller.dart';
-import 'package:mitproxy_val/controllers/live_controller.dart';
 import 'dart:convert';
 
 import 'package:mitproxy_val/models/account_model.dart';
@@ -28,13 +27,13 @@ class LoginController extends GetxController {
     bool isLoginSuccess = await fetchLogin();
 
     if (isLoginSuccess) {
-      Navigator.of(context).pop();
-      Get.toNamed(AppRoutes.main);
+      Get.offAllNamed(AppRoutes.main);
     } else {
-      Navigator.of(context).pop();
+      Get.back();
       dialogConstant.showLoginError(errorLoginMessage!.value);
     }
   }
+
 
   Future<bool> fetchLogin() async {
     // http://127.0.0.1:5000/api/riot/authenticate || Local development API
@@ -75,9 +74,7 @@ class LoginController extends GetxController {
 
         // Call the callback function in Controller on successful login
         final homeController = Get.put(HomeController());
-        final liveController = Get.put(LiveController());
         homeController.onLoginSuccess();
-        liveController.initializeAgents();
 
         return true;
       } else {

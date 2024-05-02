@@ -44,6 +44,7 @@ class ValorantSearchServices {
         playerMmr = playerMmr_data['data']['elo'];
         playerRankedRating = playerMmr_data['data']['ranking_in_tier'];
 
+        // Player stats
         Cache.targetPlayerMmr = TargetPlayerMmr(
           playername: playerName, 
           playerRank: playerRank, 
@@ -136,6 +137,7 @@ class ValorantSearchServices {
       }
     }
 
+    // Match history
     Cache.targetPlayerHistory = TargetPlayerHistory(
       matchIds: matchIds, 
       mapName: mapName, 
@@ -144,5 +146,16 @@ class ValorantSearchServices {
       mapBanner: mapBanner,
       agentPicture: agentPicture,
     );
+  }
+
+  Future<void> getMatchDetails(String matchId) async {
+    final matchDetails_api = "${ValorantEndpoints.PD_URL}/match-details/v1/matches/$matchId";
+    final matchDetails_response = await http.get(Uri.parse(matchDetails_api), headers: ValorantEndpoints.RIOT_HEADERS);
+
+    if (matchDetails_response.statusCode == 200) {
+      var matchDetails_data = json.decode(matchDetails_response.body);
+      
+      
+    }
   }
 }

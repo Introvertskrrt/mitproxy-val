@@ -122,7 +122,7 @@ class ValorantLiveServices {
                 liveController.playerCards.value = playerCards;
                 liveController.playerLevels.value = playerLevels;
                 liveController.playerRanks.value = playerRanks;
-                await Future.delayed(const Duration(seconds: 3));
+                Future.delayed(const Duration(seconds: 3));
               }
             }
           }
