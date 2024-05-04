@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:mitproxy_val/constants/color_constant.dart';
 import 'package:mitproxy_val/constants/textstyle_constant.dart';
 import 'package:mitproxy_val/controllers/home_controller.dart';
-import 'package:mitproxy_val/utils/cache.dart';
+import 'package:mitproxy_val/utils/globals.dart';
 
 class StoreWidget extends StatelessWidget {
   StoreWidget({super.key});
@@ -38,7 +38,7 @@ class StoreWidget extends StatelessWidget {
                   borderRadius: BorderRadius.circular(10),
                   image: DecorationImage(
                     image: NetworkImage(
-                        "https://media.valorant-api.com/bundles/${Cache.bundleData!.bundleUuid}/displayicon.png"),
+                        "https://media.valorant-api.com/bundles/${Globals.bundleData!.bundleUuid}/displayicon.png"),
                     fit: BoxFit.fill,
                   ),
                 ),
@@ -48,7 +48,7 @@ class StoreWidget extends StatelessWidget {
                       left: 10,
                       bottom: 10,
                       child: Text(
-                        '${Cache.bundleData!.bundleName} Bundle',
+                        '${Globals.bundleData!.bundleName} Bundle',
                         style: textStyleConstant.TextStyleInterBold(
                             Colors.white, 14),
                       ),
@@ -57,7 +57,7 @@ class StoreWidget extends StatelessWidget {
                       left: 33,
                       top: 10,
                       child: Text(
-                        '${Cache.bundleData!.bundlePrice}',
+                        '${Globals.bundleData!.bundlePrice}',
                         style: textStyleConstant.TextStyleInterBold(
                             Colors.white, 14),
                       ),
@@ -114,7 +114,7 @@ class StoreWidget extends StatelessWidget {
                 scrollDirection: Axis.horizontal,
                 child: Row(
                   children: List.generate(
-                    Cache.bundleData!.itemNames.length,
+                    Globals.bundleData!.itemNames.length,
                     (index) {
                       return Padding(
                         padding: const EdgeInsets.all(16),
@@ -123,7 +123,7 @@ class StoreWidget extends StatelessWidget {
                           height: 100,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
-                            color: Cache.bundleData!.itemTierColor[index],
+                            color: Globals.bundleData!.itemTierColor[index],
                           ),
                           child: Stack(
                             children: [
@@ -134,8 +134,7 @@ class StoreWidget extends StatelessWidget {
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(10),
                                       image: DecorationImage(
-                                        image: NetworkImage(Cache
-                                            .bundleData!.itemImages[index]),
+                                        image: NetworkImage(Globals.bundleData!.itemImages[index]),
                                         alignment: Alignment.center,
                                       ),
                                     ),
@@ -146,9 +145,9 @@ class StoreWidget extends StatelessWidget {
                                 left: 10,
                                 bottom: 10,
                                 child: Text(
-                                  Cache.bundleData!.itemNames[index],
+                                  Globals.bundleData!.itemNames[index],
                                   style: textStyleConstant.TextStyleInterBold(
-                                      Cache.bundleData!.itemTierColor[index]
+                                      Globals.bundleData!.itemTierColor[index]
                                           .withOpacity(1),
                                       12),
                                 ),
@@ -157,9 +156,9 @@ class StoreWidget extends StatelessWidget {
                                 left: 30,
                                 top: 10,
                                 child: Text(
-                                  '${Cache.bundleData!.itemPrices[index]}',
+                                  '${Globals.bundleData!.itemPrices[index]}',
                                   style: textStyleConstant.TextStyleInterBold(
-                                      Cache.bundleData!.itemTierColor[index]
+                                      Globals.bundleData!.itemTierColor[index]
                                           .withOpacity(1),
                                       12),
                                 ),
@@ -186,7 +185,7 @@ class StoreWidget extends StatelessWidget {
                                   height: 15,
                                   decoration: BoxDecoration(
                                     image: DecorationImage(
-                                      image: NetworkImage(Cache
+                                      image: NetworkImage(Globals
                                           .bundleData!.itemTierIcon[index]),
                                     ),
                                   ),
@@ -236,7 +235,7 @@ class StoreWidget extends StatelessWidget {
                 scrollDirection: Axis.horizontal,
                 child: Row(
                   children: List.generate(
-                    Cache.dailyOffers!.weaponNames.length,
+                    Globals.dailyOffers!.weaponNames.length,
                     (index) {
                       return Padding(
                         padding: const EdgeInsets.all(16),
@@ -245,7 +244,7 @@ class StoreWidget extends StatelessWidget {
                           height: 100,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
-                            color: Cache.dailyOffers!.weaponRarityColor[index],
+                            color: Globals.dailyOffers!.weaponRarityColor[index],
                           ),
                           child: Stack(
                             children: [
@@ -256,7 +255,7 @@ class StoreWidget extends StatelessWidget {
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(10),
                                       image: DecorationImage(
-                                        image: NetworkImage(Cache.dailyOffers!.weaponImages[index]),
+                                        image: NetworkImage(Globals.dailyOffers!.weaponImages[index]),
                                         alignment: Alignment.center,
                                       ),
                                     ),
@@ -267,9 +266,9 @@ class StoreWidget extends StatelessWidget {
                                 left: 10,
                                 bottom: 10,
                                 child: Text(
-                                  Cache.dailyOffers!.weaponNames[index],
+                                  Globals.dailyOffers!.weaponNames[index],
                                   style: textStyleConstant.TextStyleInterBold(
-                                      Cache.dailyOffers!.weaponRarityColor[index]
+                                      Globals.dailyOffers!.weaponRarityColor[index]
                                           .withOpacity(1),
                                       12),
                                 ),
@@ -278,9 +277,9 @@ class StoreWidget extends StatelessWidget {
                                 left: 30,
                                 top: 10,
                                 child: Text(
-                                  '${Cache.dailyOffers!.weaponPrices[index]}',
+                                  '${Globals.dailyOffers!.weaponPrices[index]}',
                                   style: textStyleConstant.TextStyleInterBold(
-                                      Cache.dailyOffers!.weaponRarityColor[index]
+                                      Globals.dailyOffers!.weaponRarityColor[index]
                                           .withOpacity(1),
                                       12),
                                 ),
@@ -307,7 +306,7 @@ class StoreWidget extends StatelessWidget {
                                   height: 15,
                                   decoration: BoxDecoration(
                                     image: DecorationImage(
-                                      image: NetworkImage(Cache.dailyOffers!.weaponRarityIcon[index]),
+                                      image: NetworkImage(Globals.dailyOffers!.weaponRarityIcon[index]),
                                     ),
                                   ),
                                 ),

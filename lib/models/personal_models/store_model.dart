@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class Bundle {
+class MyBundle {
   String bundleUuid;
   String bundleName;
   int bundlePrice;
@@ -11,7 +11,7 @@ class Bundle {
   List<String> itemTierIcon;
   List<Color> itemTierColor;
 
-  Bundle({
+  MyBundle({
     required this.bundleUuid,
     required this.bundleName,
     required this.bundlePrice,

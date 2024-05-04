@@ -3,14 +3,15 @@ import 'package:get/get.dart';
 import 'package:mitproxy_val/constants/color_constant.dart';
 import 'package:mitproxy_val/constants/textstyle_constant.dart';
 import 'package:mitproxy_val/controllers/live_controller.dart';
-import 'package:mitproxy_val/utils/valorant_live_services.dart';
+import 'package:mitproxy_val/utils/live_data_services.dart';
+import 'package:mitproxy_val/utils/valorant_client_services.dart';
 
 class PartyWidget extends StatelessWidget {
   PartyWidget({super.key});
 
   final textStyleConstant = TextStyleConstant();
   final liveController = Get.put(LiveController());
-  final valorantLiveServices = ValorantLiveServices();
+  final liveServices = LiveServices();
 
   @override
   Widget build(BuildContext context) {
@@ -297,7 +298,7 @@ class PartyWidget extends StatelessWidget {
                               value: liveController.isPartyReady.value,
                               onChanged: (value) {
                                 liveController.isPartyReady.value = value;
-                                valorantLiveServices.postPartyReadyState(
+                                ValorantClientServices.postPartyReadyState(
                                     liveController.partyId.value, value);
                               },
                               activeColor:
@@ -343,11 +344,11 @@ class PartyWidget extends StatelessWidget {
                               onChanged: (value) {
                                 if (!liveController.isPartyOpen.value) {
                                   liveController.isPartyOpen.value = value;
-                                  valorantLiveServices.postPartyAccessibility(
+                                  ValorantClientServices.postPartyAccessibility(
                                       liveController.partyId.value, "OPEN");
                                 } else {
                                   liveController.isPartyOpen.value = value;
-                                  valorantLiveServices.postPartyAccessibility(
+                                  ValorantClientServices.postPartyAccessibility(
                                       liveController.partyId.value, "CLOSED");
                                 }
                               },
@@ -395,7 +396,7 @@ class PartyWidget extends StatelessWidget {
                                 PopupMenuItem(
                                   child: GestureDetector(
                                     onTap: () {
-                                      valorantLiveServices.postSetGameMode(
+                                      ValorantClientServices.postSetGameMode(
                                           liveController.partyId.value,
                                           "unrated");
                                       liveController.currentGameMode_Text
@@ -408,7 +409,7 @@ class PartyWidget extends StatelessWidget {
                                 PopupMenuItem(
                                   child: GestureDetector(
                                     onTap: () {
-                                      valorantLiveServices.postSetGameMode(
+                                      ValorantClientServices.postSetGameMode(
                                           liveController.partyId.value,
                                           "competitive");
                                       liveController.currentGameMode_Text
@@ -421,7 +422,7 @@ class PartyWidget extends StatelessWidget {
                                 PopupMenuItem(
                                   child: GestureDetector(
                                     onTap: () {
-                                      valorantLiveServices.postSetGameMode(
+                                      ValorantClientServices.postSetGameMode(
                                           liveController.partyId.value,
                                           "swiftplay");
                                       liveController.currentGameMode_Text
@@ -434,7 +435,7 @@ class PartyWidget extends StatelessWidget {
                                 PopupMenuItem(
                                   child: GestureDetector(
                                     onTap: () {
-                                      valorantLiveServices.postSetGameMode(
+                                      ValorantClientServices.postSetGameMode(
                                           liveController.partyId.value,
                                           "spikerush");
                                       liveController.currentGameMode_Text
@@ -447,7 +448,7 @@ class PartyWidget extends StatelessWidget {
                                 PopupMenuItem(
                                   child: GestureDetector(
                                     onTap: () {
-                                      valorantLiveServices.postSetGameMode(
+                                      ValorantClientServices.postSetGameMode(
                                           liveController.partyId.value,
                                           "deathmatch");
                                       liveController.currentGameMode_Text
@@ -460,7 +461,7 @@ class PartyWidget extends StatelessWidget {
                                 PopupMenuItem(
                                   child: GestureDetector(
                                     onTap: () {
-                                      valorantLiveServices.postSetGameMode(
+                                      ValorantClientServices.postSetGameMode(
                                           liveController.partyId.value,
                                           "ggteam");
                                       liveController.currentGameMode_Text
@@ -473,7 +474,7 @@ class PartyWidget extends StatelessWidget {
                                 PopupMenuItem(
                                   child: GestureDetector(
                                     onTap: () {
-                                      valorantLiveServices.postSetGameMode(
+                                      ValorantClientServices.postSetGameMode(
                                           liveController.partyId.value, "hurm");
                                       liveController.currentGameMode_Text
                                           .value = 'Team Deathmatch';

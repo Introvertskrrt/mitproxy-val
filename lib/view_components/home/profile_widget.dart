@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mitproxy_val/constants/color_constant.dart';
 import 'package:mitproxy_val/constants/textstyle_constant.dart';
-import 'package:mitproxy_val/utils/cache.dart';
+import 'package:mitproxy_val/utils/globals.dart';
 
 class ProfileWidget extends StatelessWidget {
   ProfileWidget({super.key});
@@ -43,7 +43,7 @@ class ProfileWidget extends StatelessWidget {
                             topRight: Radius.circular(10)),
                         image: DecorationImage(
                           image: NetworkImage(
-                              "https://media.valorant-api.com/playercards/${Cache.playerProfile!.playerCardId}/wideart.png"),
+                              "https://media.valorant-api.com/playercards/${Globals.playerProfile!.playerCardId}/wideart.png"),
                           fit: BoxFit.fill,
                         ),
                       ),
@@ -65,7 +65,7 @@ class ProfileWidget extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.only(top: 4),
                           child: Text(
-                            '${Cache.playerProfile!.valorantPoint}',
+                            '${Globals.playerProfile!.valorantPoint}',
                             style: textStyleConstant.TextStyleInterNormal(Colors.white, 16)
                           ),
                         ),
@@ -84,7 +84,7 @@ class ProfileWidget extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.only(top: 4),
                           child: Text(
-                            '${Cache.playerProfile!.radianite}',
+                            '${Globals.playerProfile!.radianite}',
                             style: textStyleConstant.TextStyleInterNormal(Colors.white, 16)
                           ),
                         ),
@@ -103,7 +103,7 @@ class ProfileWidget extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.only(top: 4),
                           child: Text(
-                            '${Cache.playerProfile!.kingdomCredits}',
+                            '${Globals.playerProfile!.kingdomCredits}',
                             style: textStyleConstant.TextStyleInterNormal(Colors.white, 16)
                           ),
                         ),
@@ -124,7 +124,7 @@ class ProfileWidget extends StatelessWidget {
                               borderRadius: BorderRadius.circular(5),
                               image: DecorationImage(
                                 image: NetworkImage(
-                                    "https://media.valorant-api.com/playercards/${Cache.playerProfile!.playerCardId}/smallart.png"),
+                                    "https://media.valorant-api.com/playercards/${Globals.playerProfile!.playerCardId}/smallart.png"),
                                 fit: BoxFit.fill,
                               ),
                             ),
@@ -146,7 +146,7 @@ class ProfileWidget extends StatelessWidget {
                         ),
                         child: Center(
                           child: Text(
-                            '${Cache.playerProfile!.playerLevels}',
+                            '${Globals.playerProfile!.playerLevels}',
                             style: textStyleConstant.TextStyleInterNormal(
                                 Colors.black54, 14),
                           ),
@@ -157,12 +157,12 @@ class ProfileWidget extends StatelessWidget {
                 ),
               ),
               Text(
-                Cache.playerProfile!.playername,
+                Globals.playerProfile!.playername,
                 style: textStyleConstant.TextStyleInterBold(Colors.black, 14),
               ),
               const SizedBox(height: 5),
               Text(
-                Cache.playerProfile!.currentCompetitiveSeason,
+                Globals.playerProfile!.currentCompetitiveSeason,
                 style:
                     textStyleConstant.TextStyleInterNormal(Colors.black54, 12),
               ),
@@ -172,16 +172,16 @@ class ProfileWidget extends StatelessWidget {
                 height: 90,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(180),
-                  border: Border.all(color: Cache.playerProfile!.rankColor),
-                  color: Cache.playerProfile!.rankColor.withOpacity(0.3),
+                  border: Border.all(color: Globals.playerProfile!.rankColor),
+                  color: Globals.playerProfile!.rankColor.withOpacity(0.3),
                   image: DecorationImage(
-                    image: NetworkImage(Cache.playerProfile!.currentRankImage),
+                    image: NetworkImage(Globals.playerProfile!.currentRankImage),
                     fit: BoxFit.fill,
                   ),
                 ),
               ),
               Text(
-                Cache.playerProfile!.currentCompetitiveRank,
+                Globals.playerProfile!.currentCompetitiveRank,
                 style: textStyleConstant.TextStyleInterBold(Colors.black, 14),
               ),
               Padding(
@@ -198,12 +198,12 @@ class ProfileWidget extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         Text(
-                          '${Cache.playerProfile!.playerXp} Xp',
+                          '${Globals.playerProfile!.playerXp} Xp',
                           style: textStyleConstant.TextStyleInterNormal(
                               Colors.black54, 14),
                         ),
                         Text(
-                          "${Cache.playerProfile!.playerMmr} RR",
+                          "${Globals.playerProfile!.playerMmr} RR",
                           style: textStyleConstant.TextStyleInterNormal(
                               Colors.black54, 14),
                         ),
@@ -235,21 +235,21 @@ class ProfileWidget extends StatelessWidget {
                         ),
                         Column(
                           children: List.generate(
-                              Cache.playerProfile!.missionNames.length,
+                              Globals.playerProfile!.missionNames.length,
                               (index) {
                             return ListTile(
                               title: Text(
-                                '${Cache.playerProfile!.missionType[index]} | ${Cache.playerProfile!.missionNames[index]}',
+                                '${Globals.playerProfile!.missionType[index]} | ${Globals.playerProfile!.missionNames[index]}',
                                 style: textStyleConstant.TextStyleInterNormal(
                                     Colors.black, 14),
                               ),
                               subtitle: Text(
-                                'Reward ${Cache.playerProfile!.missionXpRewards[index]} XP',
+                                'Reward ${Globals.playerProfile!.missionXpRewards[index]} XP',
                                 style: textStyleConstant.TextStyleInterNormal(
                                     Colors.black54, 12),
                               ),
                               trailing: Text(
-                                '${Cache.playerProfile!.missionProgress[index]}/${Cache.playerProfile!.missionProgressToComplete[index]}',
+                                '${Globals.playerProfile!.missionProgress[index]}/${Globals.playerProfile!.missionProgressToComplete[index]}',
                                 style: textStyleConstant.TextStyleInterNormal(
                                     Colors.black, 12),
                               ),
