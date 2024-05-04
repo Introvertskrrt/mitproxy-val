@@ -38,7 +38,3 @@ class TargetPlayerHistory {
     required this.agentPicture,
   });
 }
-
-class PlayerMatchDetails {
-  
-}

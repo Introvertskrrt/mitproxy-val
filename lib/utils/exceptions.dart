@@ -22,3 +22,8 @@ class ExceptionTooManyRequests implements Exception {
   String cause;
   ExceptionTooManyRequests(this.cause);
 }
+
+class ExceptionFailedToGetCareer implements Exception {
+  String cause;
+  ExceptionFailedToGetCareer(this.cause);
+}

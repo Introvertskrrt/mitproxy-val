@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:mitproxy_val/constants/color_constant.dart';
 import 'package:mitproxy_val/constants/textstyle_constant.dart';
 import 'package:mitproxy_val/controllers/search_controller.dart';
-import 'package:mitproxy_val/utils/cache.dart';
+import 'package:mitproxy_val/utils/globals.dart';
 
 class SearchWidget extends StatelessWidget {
   SearchWidget({super.key});
@@ -117,9 +117,9 @@ class SearchWidget extends StatelessWidget {
               if (searchController.isOnSearching.value) {
                 return const Center(child: CircularProgressIndicator());
               }
-              if (searchController.isError.value) {
+              if (searchController.isPlayerNotFound.value) {
                 return const Center(
-                  child: Text("Player not found"),
+                  child: Text("Player not found or this is a private account!"),
                 );
               }
               else {
@@ -142,7 +142,7 @@ class SearchWidget extends StatelessWidget {
                                       topRight: Radius.circular(10)),
                                   image: DecorationImage(
                                     image: NetworkImage(
-                                        Cache.targetPlayerMmr!.playerBanner),
+                                        Globals.targetPlayerMmr!.playerBanner),
                                     fit: BoxFit.fill,
                                   ),
                                 ),
@@ -162,7 +162,7 @@ class SearchWidget extends StatelessWidget {
                                         borderRadius: BorderRadius.circular(5),
                                         image: DecorationImage(
                                           image: NetworkImage(
-                                              Cache.targetPlayerMmr!.playerCard),
+                                              Globals.targetPlayerMmr!.playerCard),
                                           fit: BoxFit.fill,
                                         ),
                                       ),
@@ -184,7 +184,7 @@ class SearchWidget extends StatelessWidget {
                                   ),
                                   child: Center(
                                     child: Text(
-                                      '${Cache.targetPlayerMmr!.playerLevel}',
+                                      '${Globals.targetPlayerMmr!.playerLevel}',
                                       style: textStyleConstant.TextStyleInterNormal(
                                           Colors.black54, 14),
                                     ),
@@ -197,12 +197,12 @@ class SearchWidget extends StatelessWidget {
                       ],
                     ),
                     Text(
-                      Cache.targetPlayerMmr!.playername,
+                      Globals.targetPlayerMmr!.playername,
                       style: textStyleConstant.TextStyleInterBold(Colors.black, 14),
                     ),
                     const SizedBox(height: 5),
                     Text(
-                      Cache.playerProfile!.currentCompetitiveSeason,
+                      Globals.playerProfile!.currentCompetitiveSeason,
                       style:
                           textStyleConstant.TextStyleInterNormal(Colors.black54, 12),
                     ),
@@ -215,13 +215,13 @@ class SearchWidget extends StatelessWidget {
                         borderRadius: BorderRadius.circular(180),
                         border: Border.all(color: const Color.fromRGBO(156, 156, 156, 1)),
                         image: DecorationImage(
-                          image: NetworkImage(Cache.targetPlayerMmr!.playerRankImage),
+                          image: NetworkImage(Globals.targetPlayerMmr!.playerRankImage),
                           fit: BoxFit.fill,
                         ),
                       ),
                     ),
                     Text(
-                      Cache.targetPlayerMmr!.playerRank.toUpperCase(),
+                      Globals.targetPlayerMmr!.playerRank.toUpperCase(),
                       style: textStyleConstant.TextStyleInterBold(Colors.black, 14),
                     ),
                     Padding(
@@ -238,12 +238,12 @@ class SearchWidget extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               Text(
-                                '${Cache.targetPlayerMmr!.playerMmr} MMR',
+                                '${Globals.targetPlayerMmr!.playerMmr} MMR',
                                 style: textStyleConstant.TextStyleInterNormal(
                                     Colors.black54, 14),
                               ),
                               Text(
-                                "${Cache.targetPlayerMmr!.playerRankedRating} RR",
+                                "${Globals.targetPlayerMmr!.playerRankedRating} RR",
                                 style: textStyleConstant.TextStyleInterNormal(
                                     Colors.black54, 14),
                               ),
@@ -262,73 +262,82 @@ class SearchWidget extends StatelessWidget {
                       ],
                     ),
                     const Divider(),
-                    Column(
-                      children: List.generate(Cache.targetPlayerHistory!.matchIds.length, (index) {
-                        return GestureDetector(
-                          child: Padding(
-                            padding: const EdgeInsets.only(bottom: 10),
-                            child: Container(
-                              width: double.infinity,
-                              height: 60,
-                              decoration: BoxDecoration(
-                                image: DecorationImage(
-                                  image: NetworkImage(Cache.targetPlayerHistory!.mapBanner[index]),
-                                  fit: BoxFit.fill,
-                                ),
-                                border: Border.all(
-                                  color: Cache.targetPlayerHistory!.rankedRatingEarned[index] >= 0 ? Colors.green : Colors.red,
-                                  width: 2, // Adjust the width of the border as needed
-                                ),
-                              ),
-                              child: Stack(
-                                children: [
-                                  Center(
-                                    child: Text(
-                                      Cache.targetPlayerHistory!.mapName[index],
-                                      style: textStyleConstant.TextStyleInterBold(Colors.white, 16),
+                    Obx(() {
+                      if (searchController.isFailedToGetCareer.value) {
+                        return const Center(
+                          child: Text("Failed to get Competitive History"),
+                        );
+                      } else {
+                        return Column(
+                          children: List.generate(Globals.targetPlayerHistory!.matchIds.length, (index) {
+                            return GestureDetector(
+                              child: Padding(
+                                padding: const EdgeInsets.only(bottom: 10),
+                                child: Container(
+                                  width: double.infinity,
+                                  height: 60,
+                                  decoration: BoxDecoration(
+                                    image: DecorationImage(
+                                      image: NetworkImage(Globals.targetPlayerHistory!.mapBanner[index]),
+                                      fit: BoxFit.fill,
+                                    ),
+                                    border: Border.all(
+                                      color: Globals.targetPlayerHistory!.rankedRatingEarned[index] >= 0 ? Colors.green : Colors.red,
+                                      width: 2, // Adjust the width of the border as needed
                                     ),
                                   ),
-                                  Positioned(
-                                    child: Container(
-                                      width: 60,
-                                      height: 60,
-                                      decoration: BoxDecoration(
-                                        image: DecorationImage(
-                                          image: NetworkImage(Cache.targetPlayerHistory!.agentPicture[index]),
-                                          fit: BoxFit.fill
+                                  child: Stack(
+                                    children: [
+                                      Center(
+                                        child: Text(
+                                          Globals.targetPlayerHistory!.mapName[index],
+                                          style: textStyleConstant.TextStyleInterBold(Colors.white, 16),
                                         ),
                                       ),
-                                    ),
-                                  ),
-                                  Positioned(
-                                    left: 60,
-                                    child: Column(
-                                      children: [
-                                        Container(
-                                          width: 35,
-                                          height: 35,
+                                      Positioned(
+                                        child: Container(
+                                          width: 60,
+                                          height: 60,
                                           decoration: BoxDecoration(
-                                            image: DecorationImage(image: NetworkImage(Cache.targetPlayerHistory!.rankAfterUpdate[index]))
+                                            image: DecorationImage(
+                                              image: NetworkImage(Globals.targetPlayerHistory!.agentPicture[index]),
+                                              fit: BoxFit.fill
+                                            ),
                                           ),
                                         ),
-                                        Text(
-                                          (Cache.targetPlayerHistory!.rankedRatingEarned[index] >= 0 ? '+' : '') +
-                                            Cache.targetPlayerHistory!.rankedRatingEarned[index].toString(),
-                                          style: textStyleConstant.TextStyleInterBold(
-                                            Cache.targetPlayerHistory!.rankedRatingEarned[index] >= 0 ? Colors.green : Colors.red,
-                                            12,
-                                          ),
+                                      ),
+                                      Positioned(
+                                        left: 60,
+                                        child: Column(
+                                          children: [
+                                            Container(
+                                              width: 35,
+                                              height: 35,
+                                              decoration: BoxDecoration(
+                                                image: DecorationImage(image: NetworkImage(Globals.targetPlayerHistory!.rankAfterUpdate[index]))
+                                              ),
+                                            ),
+                                            Text(
+                                              (Globals.targetPlayerHistory!.rankedRatingEarned[index] >= 0 ? '+' : '') +
+                                                Globals.targetPlayerHistory!.rankedRatingEarned[index].toString(),
+                                              style: textStyleConstant.TextStyleInterBold(
+                                                Globals.targetPlayerHistory!.rankedRatingEarned[index] >= 0 ? Colors.green : Colors.red,
+                                                12,
+                                              ),
+                                            ),
+                                          ],
                                         ),
-                                      ],
-                                    ),
+                                      ),
+                                    ],
                                   ),
-                                ],
+                                ),
                               ),
-                            ),
-                          ),
+                            );
+                          }),
                         );
-                      }),
-                    ),
+                      }
+                    })
+                    
                   ],
                 );
               }

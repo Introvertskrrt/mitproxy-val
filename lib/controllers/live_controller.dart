@@ -8,15 +8,21 @@ import 'package:get/get.dart';
 import 'package:http/http.dart';
 import 'package:mitproxy_val/controllers/login_controller.dart';
 import 'package:mitproxy_val/utils/exceptions.dart';
-import 'package:mitproxy_val/utils/valorant_live_services.dart';
+import 'package:mitproxy_val/utils/live_data_services.dart';
+import 'package:mitproxy_val/utils/valorant_client_services.dart';
 
 class LiveController extends GetxController {
-  final valorantLiveServices = ValorantLiveServices();
+  final liveServices = LiveServices();
   final loginController = Get.put(LoginController());
   Timer? periodicTimer;
   Timer? _timer;
   RxInt seconds = 0.obs;
   RxInt minutes = 0.obs;
+
+
+  ///
+  /// These variables are for Real-Time Data
+  ///
 
   // party
   TextEditingController partyCode = TextEditingController();
@@ -79,7 +85,7 @@ class LiveController extends GetxController {
   }
 
   Future<void> initializeAgents() async {
-    await valorantLiveServices.getAgentsData();
+    await liveServices.getAgentsData();
     initializeSelectedList();
   }
 
@@ -99,15 +105,17 @@ class LiveController extends GetxController {
 
   void fetchLiveData() async {
     try {
-      await initializeAgents();
-      await valorantLiveServices.getPartyData();
-      await valorantLiveServices.getPreGame();
+      await liveServices.getPartyData();
+      await liveServices.getPreGame();
       isPlayerInGame.value = true;
     } on ExceptionPlayerNotInGame {
+      log("ExceptionPlayerNotInGame");
       isPlayerInGame.value = false;
     } on ExceptionTokenExpired {
+      log("ExceptionTokenExpired");
       await loginController.fetchLogin();
     } on ClientException {
+      log("ClientException");
       isPlayerInGame.value = false;
     }
   }
@@ -139,12 +147,12 @@ class LiveController extends GetxController {
 
   Future<void> buttonStartMatchmakingClicked() async {
     if (!isOnMatchmaking.value) {
-      valorantLiveServices.postEntermatchmaking(partyId.value);
+      ValorantClientServices.postEntermatchmaking(partyId.value);
       buttonMatchmaking_Text.value = "STOP MATCHMAKING";
       isOnMatchmaking.value = true;
       startMatchmakingTimer();
     } else {
-      valorantLiveServices.postLeavematchmaking(partyId.value);
+      ValorantClientServices.postLeavematchmaking(partyId.value);
       buttonMatchmaking_Text.value = "START MATCHMAKING";
       isOnMatchmaking.value = false;
       stopMatchmakingTimer();
@@ -152,16 +160,16 @@ class LiveController extends GetxController {
   }
 
   Future<void> buttonJoinPartyCodeClicked() async {
-    valorantLiveServices.postJoinPartyByCode(joinPartCode.text.toUpperCase());
+    ValorantClientServices.postJoinPartyByCode(joinPartCode.text.toUpperCase());
   }
 
   Future<void> buttonGeneratePartyCodeClicked() async {
     if (!isPartyCodeGenerated.value) {
-      partyCode.text = await valorantLiveServices.postGeneratePartyCode(partyId.value);
+      partyCode.text = await ValorantClientServices.postGeneratePartyCode(partyId.value);
       isPartyCodeGenerated.value = true;
       buttonGenerateCode_Text.value = "DISABLE CODE";
     } else {
-      partyCode.text = await valorantLiveServices.postDeletePartyCode(partyId.value);
+      partyCode.text = await ValorantClientServices.postDeletePartyCode(partyId.value);
       isPartyCodeGenerated.value = false;
       buttonGenerateCode_Text.value = "GENERATE CODE";
     }
@@ -170,7 +178,7 @@ class LiveController extends GetxController {
   void buttonInstalockClicked() {
     if (!isInstalocking) {
       isInstalocking = true;
-      valorantLiveServices.postInstalockAgent();
+      ValorantClientServices.postInstalockAgent();
       buttonLockIn_Text.value = "STOP LOCK IN";
     } else if (isInstalocking){
       isInstalocking = false;

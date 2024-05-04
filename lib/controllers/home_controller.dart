@@ -1,14 +1,14 @@
 import 'dart:async';
-
 import 'package:get/get.dart';
 import 'package:http/http.dart';
+import 'package:mitproxy_val/controllers/live_controller.dart';
 import 'package:mitproxy_val/controllers/login_controller.dart';
-import 'package:mitproxy_val/utils/cache.dart';
+import 'package:mitproxy_val/utils/globals.dart';
 import 'package:mitproxy_val/utils/exceptions.dart';
-import 'package:mitproxy_val/utils/valorant_home_services.dart';
+import 'package:mitproxy_val/utils/home_data_services.dart';
 
 class HomeController extends GetxController {
-  final valorantHomeServices = ValorantHomeServices();
+  final homeServices = HomeServices();
   
   RxBool isPageLoading = false.obs;
   RxString bundleRemainingTime = ''.obs;
@@ -16,14 +16,15 @@ class HomeController extends GetxController {
   Timer? countdownTimer;
 
   final loginController = Get.put(LoginController());
+  final liveController = Get.put(LiveController());
 
   void startCountdownTimer() {
     if (countdownTimer != null) {
       countdownTimer!.cancel();
     }
 
-    int bundleRemainingSeconds = Cache.bundleData!.bundleRemainingTime;
-    int dailyOffersRemainingSeconds = Cache.dailyOffers!.dailyOffersRemainingTime;
+    int bundleRemainingSeconds = Globals.bundleData!.bundleRemainingTime;
+    int dailyOffersRemainingSeconds = Globals.dailyOffers!.dailyOffersRemainingTime;
 
     countdownTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (bundleRemainingSeconds > 0) {
@@ -61,16 +62,19 @@ class HomeController extends GetxController {
 
   Future<void> initPage() async {
     isPageLoading(true);
-    await valorantHomeServices.getUserProfileData();
-    await valorantHomeServices.getBundleData();
-    await valorantHomeServices.getDailyStoreData();
+    await homeServices.getUserProfileData();
+    await homeServices.getBundleData();
+    await homeServices.getDailyStoreData();
     startCountdownTimer();
     isPageLoading(false);
   }
 
-  Future<void> onLoginSuccess() async {
+  @override
+  void onInit() async {
+    super.onInit();
     try {
       await initPage();
+      await liveController.initializeAgents();
     } on ExceptionTokenExpired {
       isPageLoading(true);
       bool successReauth = await loginController.fetchLogin();

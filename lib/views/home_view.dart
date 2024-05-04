@@ -43,7 +43,7 @@ class HomeView extends StatelessWidget {
             ),
           ),
           body: RefreshIndicator(
-            onRefresh: homeController.onLoginSuccess,
+            onRefresh: homeController.initPage,
             child: SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.all(16),
