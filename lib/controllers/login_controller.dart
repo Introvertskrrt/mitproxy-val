@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:mitproxy_val/constants/dialog_constant.dart.dart';
-import 'package:mitproxy_val/controllers/home_controller.dart';
 import 'dart:convert';
 
 import 'package:mitproxy_val/models/personal_models/account_model.dart';
