@@ -142,12 +142,9 @@ class ValorantClientServices {
       return PartyPlayerResponse.fromJson(partyPlayer_data);
     } else if (partyPlayer_response.statusCode == 400) {
       throw ExceptionTokenExpired("Token expired");
-    } else if (partyPlayer_response.statusCode == 404){
+    } else{
       log("Error at getPartyPlayer() $partyPlayer_response");
       throw ExceptionPlayerNotInGame("Player not in game");
-    } else {
-      log("Error at getPartyPlayer() $partyPlayer_response");
-      throw Exception("Error: Unexpected response code ${partyPlayer_response.statusCode}");
     }
   }
 
@@ -159,12 +156,9 @@ class ValorantClientServices {
       return PartyResponse.fromJson(party_data);
     } else if (party_response.statusCode == 400) {
       throw ExceptionTokenExpired("Token expired");
-    } else if (party_response.statusCode == 404){
-      log("Error at getParty() $party_response");
-      throw ExceptionPlayerNotInGame("Player not in game");
     } else {
       log("Error at getParty() $party_response");
-      throw Exception("Error: Unexpected response code ${party_response.statusCode}");
+      throw ExceptionPlayerNotInGame("Player not in game");
     }
   }
 
