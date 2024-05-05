@@ -14,6 +14,7 @@ dependencies:
   http:
   shimmer: ^3.0.0
   connectivity_plus:
+  shared_preferences: any
 
 dev_dependencies:
   flutter_test:
@@ -22,3 +23,5 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/val_logo_red.png

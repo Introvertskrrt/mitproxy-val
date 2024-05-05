@@ -77,7 +77,7 @@ class HomeController extends GetxController {
       await liveController.initializeAgents();
     } on ExceptionTokenExpired {
       isPageLoading(true);
-      bool successReauth = await loginController.fetchLogin();
+      bool successReauth = await loginController.fetchLogin(Globals.temporarySavedAccount!.username, Globals.temporarySavedAccount!.password);
       if (successReauth) {
         await initPage();
       }

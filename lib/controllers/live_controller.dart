@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 import 'package:http/http.dart';
 import 'package:mitproxy_val/controllers/login_controller.dart';
 import 'package:mitproxy_val/utils/exceptions.dart';
+import 'package:mitproxy_val/utils/globals.dart';
 import 'package:mitproxy_val/utils/live_data_services.dart';
 import 'package:mitproxy_val/utils/valorant_client_services.dart';
 
@@ -113,7 +114,7 @@ class LiveController extends GetxController {
       isPlayerInGame.value = false;
     } on ExceptionTokenExpired {
       log("ExceptionTokenExpired");
-      await loginController.fetchLogin();
+      await loginController.fetchLogin(Globals.temporarySavedAccount!.username, Globals.temporarySavedAccount!.password);
     } on ClientException {
       log("ClientException");
       isPlayerInGame.value = false;

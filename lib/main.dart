@@ -8,11 +8,12 @@ import 'package:mitproxy_val/views/home_view.dart';
 import 'package:mitproxy_val/views/live_view.dart';
 import 'package:mitproxy_val/views/login_view.dart';
 import 'package:mitproxy_val/views/search_view.dart';
+import 'package:mitproxy_val/views/splash_screen.dart';
 
 Future<void> main() async {
   runApp(
     GetMaterialApp(
-      home: LoginView(),
+      home: SplashScreen(),
       getPages: [
         GetPage(
           name: AppRoutes.login,
@@ -34,8 +35,12 @@ Future<void> main() async {
           name: AppRoutes.search,
           page: () => SearchView(),
         ),
+        GetPage(
+          name: AppRoutes.splash,
+          page: () => SplashScreen(),
+        ),
       ],
-      initialRoute: AppRoutes.login,
+      initialRoute: AppRoutes.splash,
     ),
   );
   DependencyInjection.init();

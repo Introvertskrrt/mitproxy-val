@@ -10,6 +10,7 @@ import 'package:mitproxy_val/models/personal_models/account_model.dart';
 import 'package:mitproxy_val/utils/globals.dart';
 import 'package:mitproxy_val/utils/routes.dart';
 import 'package:mitproxy_val/utils/valorant_endpoints.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginController extends GetxController {
   final dialogConstant = DialogConstant();
@@ -23,9 +24,23 @@ class LoginController extends GetxController {
   Future<void> loginButtonClicked(BuildContext context) async {
     dialogConstant.showAuthDialog();
 
-    bool isLoginSuccess = await fetchLogin();
+    bool isLoginSuccess = await fetchLogin(username.text, password.text);
 
     if (isLoginSuccess) {
+      String correct_username = username.text;
+      String correct_password = password.text;
+
+      // if user checked remember me
+      if (isRememberMe.value) {
+        // add username and password to shared prefs
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        prefs.setString('username', correct_username);
+        prefs.setString('password', correct_password);
+      }
+
+      // add username and password to temporary model
+      Globals.temporarySavedAccount = TemporarySavedAccount(username: correct_username, password: correct_password);
+
       Get.offAllNamed(AppRoutes.main);
     } else {
       Get.back();
@@ -34,7 +49,7 @@ class LoginController extends GetxController {
   }
 
 
-  Future<bool> fetchLogin() async {
+  Future<bool> fetchLogin(String username, String password) async {
     // http://127.0.0.1:5000/api/v1/riot/authenticate || Local development API
 
     // THIS API SERVER IS CURRENTLY IP BANNED BY RIOT GAMES 
@@ -46,8 +61,8 @@ class LoginController extends GetxController {
         url,
         headers: {'Content-Type': 'application/json'},
         body: json.encode({
-          'username': username.text,
-          'password': password.text,
+          'username': username,
+          'password': password,
         }),
       );
 
@@ -105,11 +120,6 @@ class LoginController extends GetxController {
           shard: shard,
           clientPlatform: clientPlatform,
           region: region,
-        );
-
-        Globals.temporarySavedAccount = TemporarySavedAccount(
-          username: username.text,
-          password: password.text,
         );
 
         // update endpoint

@@ -326,9 +326,9 @@ class LiveServices {
         }
         liveController.enemyRanks.value = enemyRanks;
         liveController.enemyPlayerNames.value = enemyPlayerNames;
-        liveController.enemyAgentImages.value = enemyAgentImages;
         liveController.enemyTeamColor.value = enemyTeamColor;
       }
+      liveController.enemyAgentImages.value = enemyAgentImages;
 
       // extract ally data
       if (liveController.allyRanks.length != allyPlayers.length) {
@@ -356,10 +356,10 @@ class LiveServices {
         }
         liveController.allyRanks.value = allyRanks;
         liveController.allyPlayerNames.value = allyPlayerNames;
-        liveController.allyAgentImages.value = allyAgentImages;
         liveController.allyTeamColor.value = allyTeamColor;
-        liveController.allySelectionStates.value = [true, true, true, true, true];
       }
+      liveController.allyAgentImages.value = allyAgentImages;
+      liveController.allySelectionStates.value = [true, true, true, true, true];
     }
   }
 }
