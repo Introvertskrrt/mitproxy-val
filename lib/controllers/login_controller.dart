@@ -38,9 +38,6 @@ class LoginController extends GetxController {
         prefs.setString('password', correct_password);
       }
 
-      // add username and password to temporary model
-      Globals.temporarySavedAccount = TemporarySavedAccount(username: correct_username, password: correct_password);
-
       Get.offAllNamed(AppRoutes.main);
     } else {
       Get.back();
@@ -120,6 +117,12 @@ class LoginController extends GetxController {
           shard: shard,
           clientPlatform: clientPlatform,
           region: region,
+        );
+
+        // add username and password to temporary model
+        Globals.temporarySavedAccount = TemporarySavedAccount(
+          username: username, 
+          password: password,
         );
 
         // update endpoint
