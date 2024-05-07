@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:mitproxy_val/constants/color_constant.dart';
 import 'package:mitproxy_val/controllers/main_controller.dart';
@@ -12,6 +13,7 @@ import 'package:mitproxy_val/views/search_view.dart';
 import 'package:mitproxy_val/views/splash_screen.dart';
 
 Future<void> main() async {
+  await dotenv.load(fileName: "lib/.env");
   runApp(
     GetMaterialApp(
       home: SplashScreen(),

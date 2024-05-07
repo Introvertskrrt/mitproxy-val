@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'dart:developer';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:dash_chat_2/dash_chat_2.dart';
 import 'package:get/get.dart';
@@ -10,7 +10,7 @@ class ChatBotController extends GetxController {
   List<ChatMessage> allMessages = [];
   List<ChatUser> typing = [];
 
-  final ourUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=AIzaSyAy6qK-QejS0jw62TWGwllVOIHHz0_025g";
+  final geminiAPI = "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${dotenv.env['GEMINI_KEY']}";
   final header = {
     'Content-Type': 'application/json'
   };
@@ -24,7 +24,7 @@ class ChatBotController extends GetxController {
       "contents": [{"parts": [{"text": m.text}]}]
     };
 
-    await http.post(Uri.parse(ourUrl), headers: header, body: jsonEncode(data)).then((value) {
+    await http.post(Uri.parse(geminiAPI), headers: header, body: jsonEncode(data)).then((value) {
       if (value.statusCode == 200) {
         var result = jsonDecode(value.body);
         ChatMessage m1 = ChatMessage(

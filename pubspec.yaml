@@ -17,6 +17,7 @@ dependencies:
   shared_preferences: any
   dash_chat_2: ^0.0.19
   cupertino_icons: ^1.0.2
+  flutter_dotenv: any
 
 dev_dependencies:
   flutter_test:
@@ -27,3 +28,4 @@ flutter:
   uses-material-design: true
   assets:
     - assets/val_logo_red.png
+    - lib/.env
