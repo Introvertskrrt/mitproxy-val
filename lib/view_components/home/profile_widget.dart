@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:mitproxy_val/constants/color_constant.dart';
 import 'package:mitproxy_val/constants/textstyle_constant.dart';
 import 'package:mitproxy_val/utils/globals.dart';
@@ -233,28 +234,42 @@ class ProfileWidget extends StatelessWidget {
                             ),
                           ],
                         ),
-                        Column(
-                          children: List.generate(
-                              Globals.playerProfile!.missionNames.length,
-                              (index) {
-                            return ListTile(
-                              title: Text(
-                                '${Globals.playerProfile!.missionType[index]} | ${Globals.playerProfile!.missionNames[index]}',
-                                style: textStyleConstant.TextStyleInterNormal(
-                                    Colors.black, 14),
+                        Visibility(
+                          visible: Globals.playerProfile!.missionNames.isEmpty,
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Center(
+                              child: Text(
+                                "You've completed all missions!",
+                                style: textStyleConstant.TextStyleInterNormal(Colors.black54, 12),
                               ),
-                              subtitle: Text(
-                                'Reward ${Globals.playerProfile!.missionXpRewards[index]} XP',
-                                style: textStyleConstant.TextStyleInterNormal(
-                                    Colors.black54, 12),
-                              ),
-                              trailing: Text(
-                                '${Globals.playerProfile!.missionProgress[index]}/${Globals.playerProfile!.missionProgressToComplete[index]}',
-                                style: textStyleConstant.TextStyleInterNormal(
-                                    Colors.black, 12),
-                              ),
-                            );
-                          }),
+                            ),
+                          ),
+                        ),
+                        Visibility(
+                          visible: Globals.playerProfile!.missionNames.isNotEmpty,
+                          child: Column(
+                            children: List.generate(
+                                Globals.playerProfile!.missionNames.length, (index) {
+                              return ListTile(
+                                title: Text(
+                                  '${Globals.playerProfile!.missionType[index]} | ${Globals.playerProfile!.missionNames[index]}',
+                                  style: textStyleConstant.TextStyleInterNormal(
+                                      Colors.black, 14),
+                                ),
+                                subtitle: Text(
+                                  'Reward ${Globals.playerProfile!.missionXpRewards[index]} XP',
+                                  style: textStyleConstant.TextStyleInterNormal(
+                                      Colors.black54, 12),
+                                ),
+                                trailing: Text(
+                                  '${Globals.playerProfile!.missionProgress[index]}/${Globals.playerProfile!.missionProgressToComplete[index]}',
+                                  style: textStyleConstant.TextStyleInterNormal(
+                                      Colors.black, 12),
+                                ),
+                              );
+                            }),
+                          )
                         )
                       ],
                     ),

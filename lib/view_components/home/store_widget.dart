@@ -96,10 +96,12 @@ class StoreWidget extends StatelessWidget {
                         Obx(
                           () => Text(
                             homeController.bundleRemainingTime.value,
-                            style: textStyleConstant.TextStyleInterBold(
-                                Colors.black87, 14),
+                            style: textStyleConstant.TextStyleInterNormal(
+                                Colors.black54, 12),
                           ),
-                        )
+                        ),
+                        const SizedBox(width: 5),
+                        const Icon(Icons.access_time_rounded, color: Colors.black54, size: 14,)
                       ],
                     ),
                     const Divider(
@@ -217,10 +219,12 @@ class StoreWidget extends StatelessWidget {
                         Obx(
                           () => Text(
                             homeController.dailyOffersRemainingTime.value,
-                            style: textStyleConstant.TextStyleInterBold(
-                                Colors.black87, 14),
+                            style: textStyleConstant.TextStyleInterNormal(
+                                Colors.black54, 12),
                           ),
-                        )
+                        ),
+                        const SizedBox(width: 5),
+                        const Icon(Icons.access_time_rounded, color: Colors.black54, size: 14,)
                       ],
                     ),
                     const Divider(
