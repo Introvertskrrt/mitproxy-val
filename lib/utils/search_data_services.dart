@@ -8,6 +8,7 @@ import 'package:mitproxy_val/models/client_api_models/competitive_update_model.d
 import 'package:mitproxy_val/models/client_api_models/match_details_model.dart';
 import 'package:mitproxy_val/models/client_api_models/player_mmr_model.dart';
 import 'package:mitproxy_val/models/personal_models/player_search_model.dart';
+import 'package:mitproxy_val/utils/exceptions.dart';
 import 'dart:convert';
 import 'package:mitproxy_val/utils/globals.dart';
 import 'package:mitproxy_val/utils/mmr_calculator.dart';
@@ -73,6 +74,8 @@ class SearchServices {
           playerRankedRating = currentRR;
         }
       }
+    } else {
+      throw ExceptionPlayerNotFound("Player not found");
     }
 
     // Player stats

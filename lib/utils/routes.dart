@@ -5,4 +5,5 @@ class AppRoutes {
   static const String live = '/live';
   static const String search = '/live';
   static const String splash = '/splash';
+  static const String chatbot = '/chatbot';
 }

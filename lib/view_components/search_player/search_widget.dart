@@ -119,7 +119,7 @@ class SearchWidget extends StatelessWidget {
               }
               if (searchController.isPlayerNotFound.value) {
                 return const Center(
-                  child: Text("Player not found or this is a private account!"),
+                  child: Text("Player not found or Account is private"),
                 );
               }
               else {

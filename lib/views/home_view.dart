@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mitproxy_val/view_components/home/profile_widget.dart';
 import 'package:mitproxy_val/view_components/home/store_widget.dart';
-import 'package:mitproxy_val/view_components/skeletons/home_skeleton.dart';
+import 'package:mitproxy_val/view_components/loading_skeletons/home_skeleton.dart';
 import 'package:mitproxy_val/constants/color_constant.dart';
 import 'package:mitproxy_val/constants/textstyle_constant.dart';
 import 'package:mitproxy_val/controllers/home_controller.dart';
