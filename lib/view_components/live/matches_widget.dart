@@ -252,8 +252,8 @@ class MatchesWidget extends StatelessWidget {
                                     height: 40,
                                     decoration: BoxDecoration(
                                       color: liveController.isAgentSelected(index).value
-                                          ? Colors.blue
-                                          : const Color.fromARGB(255, 255, 255, 255),
+                                          ? const Color.fromARGB(255, 242, 249, 255)
+                                          : const Color.fromARGB(255, 255, 84, 84),
                                       border: Border.all(
                                         color:
                                             liveController.isAgentSelected(index).value
