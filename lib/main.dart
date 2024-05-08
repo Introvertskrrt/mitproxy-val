@@ -62,7 +62,16 @@ class MainView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
-      body: Obx(() => mainController.pages[mainController.currentIndex.value]),
+      body: Obx(() => AnimatedSwitcher(
+        duration: const Duration(milliseconds: 300),
+        child: mainController.pages[mainController.currentIndex.value],
+        transitionBuilder: (Widget child, Animation<double> animation) {
+          return FadeTransition(
+            opacity: animation,
+            child: child,
+          );
+        },
+      ),),
       bottomNavigationBar: Obx(
         () => Theme(
           data: Theme.of(context).copyWith(
