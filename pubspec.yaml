@@ -28,3 +28,4 @@ flutter:
   uses-material-design: true
   assets:
     - assets/val_logo_red.png
+    - lib/.env

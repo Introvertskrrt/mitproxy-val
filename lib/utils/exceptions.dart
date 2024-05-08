@@ -27,3 +27,8 @@ class ExceptionFailedToGetCareer implements Exception {
   String cause;
   ExceptionFailedToGetCareer(this.cause);
 }
+
+class ExceptionRiotAPIConflict implements Exception {
+  String cause;
+  ExceptionRiotAPIConflict(this.cause);
+}
