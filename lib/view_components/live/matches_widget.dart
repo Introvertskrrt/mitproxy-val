@@ -61,9 +61,11 @@ class MatchesWidget extends StatelessWidget {
                       ),
                       Center(
                         child: Text(
-                          liveController.gameMode.value,
+                          liveController.gameMode.value.isEmpty
+                              ? "waiting for match"
+                              : liveController.gameMode.value,
                           style: textStyleConstant.TextStyleInterBold(
-                              Colors.white70, 18),
+                              Colors.white.withOpacity(0.9), 18),
                         ),
                       ),
                     ],

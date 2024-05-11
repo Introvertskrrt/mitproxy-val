@@ -47,7 +47,7 @@ class LiveController extends GetxController {
   RxString preMatchId = "".obs;
   RxString mapName = "".obs;
   RxString mapBanner = "https://media.valorant-api.com/maps/7eaecc1b-4337-bbf6-6ab9-04b8f06b3319/listviewicon.png".obs;
-  RxString gameMode = "".obs;
+  RxString gameMode = ''.obs;
 
   RxString allyTeamId = ''.obs;
   RxList<String> allyPlayerNames = <String>[].obs;
