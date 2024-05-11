@@ -7,6 +7,7 @@ import 'package:mitproxy_val/utils/dependency_injection.dart';
 import 'package:mitproxy_val/utils/routes.dart';
 import 'package:mitproxy_val/views/chatbot_view.dart';
 import 'package:mitproxy_val/views/home_view.dart';
+import 'package:mitproxy_val/views/intro_view.dart';
 import 'package:mitproxy_val/views/live_view.dart';
 import 'package:mitproxy_val/views/login_view.dart';
 import 'package:mitproxy_val/views/search_view.dart';
@@ -45,6 +46,10 @@ Future<void> main() async {
         GetPage(
           name: AppRoutes.chatbot,
           page: () => ChatBotView(),
+        ),
+        GetPage(
+          name: AppRoutes.intro,
+          page: () => IntroductionView(),
         ),
       ],
       initialRoute: AppRoutes.splash,

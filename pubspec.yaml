@@ -18,6 +18,7 @@ dependencies:
   dash_chat_2: ^0.0.19
   cupertino_icons: ^1.0.2
   flutter_dotenv: any
+  introduction_screen: ^3.1.14
 
 dev_dependencies:
   flutter_test:
@@ -28,4 +29,7 @@ flutter:
   uses-material-design: true
   assets:
     - assets/val_logo_red.png
+    - assets/jett.png
+    - assets/raze.png
+    - assets/vanguard.png
     - lib/.env

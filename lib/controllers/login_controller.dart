@@ -22,6 +22,7 @@ class LoginController extends GetxController {
   RxString? errorLoginMessage;
 
   Future<void> loginButtonClicked(BuildContext context) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     dialogConstant.showAuthDialog();
 
     bool isLoginSuccess = await fetchLogin(username.text, password.text);
@@ -33,7 +34,6 @@ class LoginController extends GetxController {
       // if user checked remember me
       if (isRememberMe.value) {
         // add username and password to shared prefs
-        SharedPreferences prefs = await SharedPreferences.getInstance();
         prefs.setString('username', correct_username);
         prefs.setString('password', correct_password);
       }
