@@ -28,9 +28,9 @@ git clone https://github.com/Introvertskrrt/mitproxy-val.git
 ```bash
 flutter pub get
 ```
-4. Make .env file
+4. Go to 'lib' folder and create a new file named .env and then make a variable
 ```
-go to 'lib' folder and create a new file named .env and then make a variable **GEMINI_KEY = "YOUR GEMINI API KEY"**
+GEMINI_KEY = "YOUR GEMINI API KEY"
 ```
 5. Run the project (highly recommended in Mobile)
 ```bash
