@@ -12,7 +12,7 @@ class PartyResponse {
   String accessibility;
   CustomGameData customGameData;
   MatchmakingData matchmakingData;
-  List<String>? invites;
+  List<dynamic>? invites;
   List<dynamic>? requests;
   String queueEntryTime;
   ErrorNotification errorNotification;
@@ -64,8 +64,8 @@ class PartyResponse {
       accessibility: json['Accessibility'] ?? '',
       customGameData: CustomGameData.fromJson(json['CustomGameData'] ?? {}),
       matchmakingData: MatchmakingData.fromJson(json['MatchmakingData'] ?? {}),
-      invites: json['Invites'],
-      requests: json['Requests'],
+      invites: json['Invites'] ?? "",
+      requests: json['Requests'] ?? "",
       queueEntryTime: json['QueueEntryTime'] ?? '',
       errorNotification: ErrorNotification.fromJson(json['ErrorNotification'] ?? {}),
       restrictedSeconds: json['RestrictedSeconds'] ?? 0,
