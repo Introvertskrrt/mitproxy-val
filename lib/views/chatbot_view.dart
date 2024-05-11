@@ -26,6 +26,9 @@ class ChatBotView extends StatelessWidget {
         builder: (controller) {
           return DashChat(
             inputOptions: InputOptions(
+              inputToolbarStyle: const BoxDecoration(
+                color: Colors.white
+              ),
               sendButtonBuilder: (Function() sendMessage) {
                 return IconButton(
                   icon: const Icon(Icons.send),
