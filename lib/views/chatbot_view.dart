@@ -41,7 +41,8 @@ class ChatBotView extends StatelessWidget {
               showTime: true,
               textColor: Colors.black,
               containerColor: Colors.white,
-
+              showOtherUsersAvatar: true,
+              
               currentUserContainerColor: Colors.blue,
               currentUserTextColor: Colors.white,
             ),

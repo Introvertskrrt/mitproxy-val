@@ -6,7 +6,7 @@ import 'package:get/get.dart';
 
 class ChatBotController extends GetxController {
   ChatUser muself = ChatUser(id: "1", firstName: "Agent");
-  ChatUser bot = ChatUser(id: "2", firstName: "KAY/O");
+  ChatUser bot = ChatUser(id: "2", firstName: "KAY/O", profileImage: "assets/kayo_potrait.png");
   List<ChatMessage> allMessages = [];
   List<ChatUser> typing = [];
 
