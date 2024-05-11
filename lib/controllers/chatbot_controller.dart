@@ -39,7 +39,7 @@ class ChatBotController extends GetxController {
         ChatMessage m1 = ChatMessage(
           user: bot,
           createdAt: DateTime.now(),
-          text: "Limit request has reached, please try again later...",
+          text: "Limit request has been reached, please try again later...",
         );
         allMessages.insert(0, m1);
       }
