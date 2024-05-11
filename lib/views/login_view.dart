@@ -3,6 +3,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mitproxy_val/constants/dialog_constant.dart.dart';
 import 'package:mitproxy_val/constants/textstyle_constant.dart';
 import 'package:mitproxy_val/controllers/login_controller.dart';
 
@@ -11,6 +12,7 @@ class LoginView extends StatelessWidget {
 
   final loginController = Get.put(LoginController());
   final widgetConstant = TextStyleConstant();
+  final dialogConstant = DialogConstant();
 
   @override
   Widget build(BuildContext context) {
@@ -136,7 +138,9 @@ class LoginView extends StatelessWidget {
                       style: const TextStyle(
                           color:
                               Colors.purple), // Purple color for clickable text
-                      recognizer: TapGestureRecognizer()..onTap = () {},
+                      recognizer: TapGestureRecognizer()..onTap = () {
+                        dialogConstant.showEula(context, "End-User License and Agreement", loginController.eula);
+                      },
                     ),
                   ],
                 ),

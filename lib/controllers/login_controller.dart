@@ -21,6 +21,12 @@ class LoginController extends GetxController {
   RxBool isRememberMe = false.obs;
   RxString? errorLoginMessage;
 
+  final eula = """
+  1. We are not saving your credentials or sensitive information, your account will be stored locally in your phone.\n
+  2. We are not responsible if your account gets banned.\n
+  3. Do not abuse instalock agent feature, Riot doesn't like this, you may get banned or API restricted for the rest of us\n
+  """;
+
   Future<void> loginButtonClicked(BuildContext context) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     dialogConstant.showAuthDialog();
