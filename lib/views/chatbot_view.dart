@@ -25,6 +25,15 @@ class ChatBotView extends StatelessWidget {
       body: GetBuilder<ChatBotController>(
         builder: (controller) {
           return DashChat(
+            inputOptions: InputOptions(
+              sendButtonBuilder: (Function() sendMessage) {
+                return IconButton(
+                  icon: const Icon(Icons.send),
+                  color: Colors.blue, // Set your desired send button color here
+                  onPressed: sendMessage,
+                );
+              },
+            ),
             messageOptions: const MessageOptions(
               showTime: true,
               textColor: Colors.black,
@@ -39,6 +48,7 @@ class ChatBotView extends StatelessWidget {
               controller.sendMessage(m);
             },
             messages: controller.allMessages,
+            
           );
         },
       ),
