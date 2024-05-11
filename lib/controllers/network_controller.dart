@@ -19,7 +19,7 @@ class NetworkController extends GetxController {
 
     if (connectivityResult == ConnectivityResult.none) {
       Get.deleteAll();
-      Get.offNamed(AppRoutes.login); 
+      Get.offNamed(AppRoutes.intro); 
       connectionErrorDialog.showConnectionError();
     } else {
       if (Get.isDialogOpen != null && Get.isDialogOpen!) {
