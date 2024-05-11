@@ -64,7 +64,7 @@ class PartyResponse {
       accessibility: json['Accessibility'] ?? '',
       customGameData: CustomGameData.fromJson(json['CustomGameData'] ?? {}),
       matchmakingData: MatchmakingData.fromJson(json['MatchmakingData'] ?? {}),
-      invites: json['Invites'] ?? "",
+      invites: json['Invites'] ?? [],
       requests: json['Requests'] ?? "",
       queueEntryTime: json['QueueEntryTime'] ?? '',
       errorNotification: ErrorNotification.fromJson(json['ErrorNotification'] ?? {}),
