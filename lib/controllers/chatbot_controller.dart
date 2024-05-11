@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'dart:convert';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
@@ -27,10 +29,16 @@ class ChatBotController extends GetxController {
     await http.post(Uri.parse(geminiAPI), headers: header, body: jsonEncode(data)).then((value) {
       if (value.statusCode == 200) {
         var result = jsonDecode(value.body);
+        String msg_response = result["candidates"][0]["content"]["parts"][0]["text"];
+        
+        // Clean up the response
+        msg_response = msg_response.replaceAll(RegExp(r'<[^>]*>'), ''); // Remove HTML-like tags
+        msg_response = msg_response.replaceAll('* ', '- '); // Replace asterisks with hyphens
+        
         ChatMessage m1 = ChatMessage(
           user: bot,
           createdAt: DateTime.now(),
-          text: result["candidates"][0]["content"]["parts"][0]["text"],
+          text: msg_response,
         );
         allMessages.insert(0, m1);
 

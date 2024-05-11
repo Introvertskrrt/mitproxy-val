@@ -1,5 +1,6 @@
 import 'package:dash_chat_2/dash_chat_2.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:mitproxy_val/constants/color_constant.dart';
 import 'package:mitproxy_val/constants/textstyle_constant.dart';
@@ -37,12 +38,19 @@ class ChatBotView extends StatelessWidget {
                 );
               },
             ),
-            messageOptions: const MessageOptions(
+            messageOptions: MessageOptions(
+              onLongPressMessage: (p0) {
+                Clipboard.setData(ClipboardData(text: p0.text));
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                  content: Text('Message copied to clipboard'),
+                  duration: Duration(seconds: 1),
+                ));
+              },
               showTime: true,
               textColor: Colors.black,
               containerColor: Colors.white,
               showOtherUsersAvatar: true,
-              
+
               currentUserContainerColor: Colors.blue,
               currentUserTextColor: Colors.white,
             ),
