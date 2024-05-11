@@ -12,7 +12,7 @@ Dear Riot Games,
 If this project does not align with your policies or if you have any concerns, please feel free to contact me at 'not1ntrovertfps@gmail.com'. I am open to addressing any issues or making necessary adjustments as per your guidelines.
 ## Getting Started
 
-**INSTALLATION**
+**PROJECT INSTALLATION**
 
 First, you must have [Android Studio](https://developer.android.com/studio), [Flutter SDK](https://docs.flutter.dev/release/archive?tab=windows) (latest version), and [Visual Studio Code](https://code.visualstudio.com/download), you can read [Flutter Install Documentation](https://flutter-ko.dev/get-started/install) or search in YouTube how to install Flutter
 
@@ -28,17 +28,23 @@ git clone https://github.com/Introvertskrrt/mitproxy-val.git
 ```bash
 flutter pub get
 ```
-4. Run the project
+4. Make .env file
+```
+go to 'lib' folder and create a new file named .env and then make a variable **GEMINI_KEY = "YOUR GEMINI API KEY"**
+```
+5. Run the project (highly recommended in Mobile)
 ```bash
 flutter run lib/main.dart
 ```
+
+**RIOT API KEY INSTALLATION**
+Sorry, This project is currently on development stage, will be available in near future
+
 ## API Documentation
 
 [Valorant Client API](https://valapidocs.techchrism.me/)
 
 [Valorant Assets API](https://valorant-api.com/)
-
-[Third Party Valorant API by Henrik Dev](https://app.swaggerhub.com/apis-docs/Henrik-3/HenrikDev-API/3.0.0#/)
 
 ## Roadmap
 
@@ -47,12 +53,12 @@ flutter run lib/main.dart
 - Party Controller ✅
 - Instalock Agent ✅
 - Match Info ✅
-- Save Login Locally ❌ _on development_
-- Splash Screen ❌ _on development_
-- Search Player Stats ❌ _on development_
-- Smart AI ❌ _on development_
+- Save Login Locally ✅
+- Splash Screen ✅
+- Search Player Stats ✅
+- Smart AI ✅
 - Settings ❌ _on development_
-- Adding App Logo ❌ _on development_
+- Adding App Logo ✅
 
 
 ## Vanguard Anti-Cheat Detection ?
