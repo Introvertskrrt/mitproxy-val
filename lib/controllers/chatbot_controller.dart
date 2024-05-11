@@ -5,8 +5,8 @@ import 'package:dash_chat_2/dash_chat_2.dart';
 import 'package:get/get.dart';
 
 class ChatBotController extends GetxController {
-  ChatUser muself = ChatUser(id: "1", firstName: "SHARJEEL");
-  ChatUser bot = ChatUser(id: "2", firstName: "Gemini");
+  ChatUser muself = ChatUser(id: "1", firstName: "Agent");
+  ChatUser bot = ChatUser(id: "2", firstName: "KAY/O");
   List<ChatMessage> allMessages = [];
   List<ChatUser> typing = [];
 

@@ -18,7 +18,7 @@ class ChatBotView extends StatelessWidget {
       appBar: AppBar(
             automaticallyImplyLeading: false,
             title: Text(
-              "Gemini AI",
+              "KAY/O AI",
               style: textStyleConstant.TextStyleInterBold(Colors.black, 18),
             ),
           ),
