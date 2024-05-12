@@ -3,6 +3,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mitproxy_val/constants/color_constant.dart';
 import 'package:mitproxy_val/constants/dialog_constant.dart.dart';
 import 'package:mitproxy_val/constants/textstyle_constant.dart';
 import 'package:mitproxy_val/controllers/login_controller.dart';
@@ -17,7 +18,7 @@ class LoginView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: ColorConstant.pageColor,
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: SafeArea(
@@ -34,7 +35,7 @@ class LoginView extends StatelessWidget {
                           fontFamily: "Inter",
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
-                          color: Colors.white),
+                          color: Colors.black),
                     ),
                   ),
                 ],
@@ -45,46 +46,52 @@ class LoginView extends StatelessWidget {
                 height: 50,
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 decoration: BoxDecoration(
-                  color: const Color.fromARGB(255, 0, 0, 0),
-                  border: Border.all(color: Colors.white),
+                  color: Colors.white,
+                  border: Border.all(color: Colors.black),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: TextFormField(
                   controller: loginController.username,
                   style: const TextStyle(
-                      color: Color.fromARGB(255, 255, 255, 255)),
+                      color: Colors.black),
                   decoration: const InputDecoration(
                     hintText: 'Enter your username',
                     hintStyle: TextStyle(color: Colors.grey),
                     border: InputBorder.none,
                     prefixIcon: Icon(Icons.person_2_outlined,
-                        color: Colors.white), // person icon
+                        color: Colors.black54), // person icon
                   ),
                 ),
               ),
               const SizedBox(height: 10), // jarak antara username dan password
-              Container(
-                width: double.infinity,
-                height: 50,
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                decoration: BoxDecoration(
-                  color: const Color.fromARGB(255, 0, 0, 0),
-                  border: Border.all(color: Colors.white),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: TextFormField(
-                  controller: loginController.password,
-                  obscureText: true,
-                  style: const TextStyle(
-                      color: Color.fromARGB(255, 255, 255, 255)),
-                  decoration: const InputDecoration(
+              Obx(() => 
+                Container(
+                  width: double.infinity,
+                  height: 50,
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    border: Border.all(color: Colors.black),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: TextFormField(
+                    controller: loginController.password,
+                    obscureText: loginController.isObscurePassword.value, // Toggle password visibility based on this boolean
+                    style: const TextStyle(color: Colors.black),
+                    decoration: InputDecoration(
                       hintText: 'Enter your password',
-                      hintStyle: TextStyle(color: Colors.grey),
+                      hintStyle: const TextStyle(color: Colors.grey),
                       border: InputBorder.none,
-                      prefixIcon:
-                          Icon(Icons.lock_outlined, color: Colors.white),
-                      suffixIcon: Icon(Icons.remove_red_eye_outlined,
-                          color: Colors.white)),
+                      prefixIcon: const Icon(Icons.lock_outlined, color: Colors.black54),
+                      suffixIcon: IconButton(
+                        icon: Icon(loginController.isObscurePassword.value ? Icons.visibility_off : Icons.visibility),
+                        color: Colors.black54,
+                        onPressed: () {
+                          loginController.isObscurePassword.value = !loginController.isObscurePassword.value;
+                        },
+                      ),
+                    ),
+                  ),
                 ),
               ),
               Row(
@@ -101,7 +108,7 @@ class LoginView extends StatelessWidget {
                   Text(
                     "Remember Me",
                     style:
-                        widgetConstant.TextStyleInterNormal(Colors.white, 14),
+                        widgetConstant.TextStyleInterNormal(Colors.black, 14),
                   )
                 ],
               ),
@@ -112,6 +119,7 @@ class LoginView extends StatelessWidget {
                     await loginController.loginButtonClicked(context);
                   },
                   style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.deepPurple,
                     elevation: 3, // Elevation shadow
                     shape: RoundedRectangleBorder(
                       borderRadius:
@@ -121,13 +129,13 @@ class LoginView extends StatelessWidget {
                   child: Text(
                     'Submit',
                     style:
-                        widgetConstant.TextStyleInterNormal(Colors.black, 14),
+                        widgetConstant.TextStyleInterNormal(Colors.white, 14),
                   ), // Text displayed on the button
                 ),
               ),
               RichText(
                 text: TextSpan(
-                  style: widgetConstant.TextStyleInterNormal(Colors.white, 14),
+                  style: widgetConstant.TextStyleInterNormal(Colors.black, 14),
                   children: [
                     const TextSpan(
                       text:

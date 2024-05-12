@@ -18,6 +18,7 @@ class LoginController extends GetxController {
   final TextEditingController password = TextEditingController();
   DialogConstant connectionErrorDialog = DialogConstant();
 
+  RxBool isObscurePassword = true.obs;
   RxBool isRememberMe = false.obs;
   RxString errorLoginMessage = ''.obs;
 
