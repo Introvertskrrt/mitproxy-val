@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names, use_build_context_synchronously, constant_identifier_names
+// ignore_for_file: non_constant_identifier_names, use_build_context_synchronously, constant_identifier_names, no_leading_underscores_for_local_identifiers
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -19,7 +19,7 @@ class LoginController extends GetxController {
   DialogConstant connectionErrorDialog = DialogConstant();
 
   RxBool isRememberMe = false.obs;
-  RxString? errorLoginMessage;
+  RxString errorLoginMessage = ''.obs;
 
   final eula = """
   1. We are not saving your credentials or sensitive information, your account will be stored locally in your phone.\n
@@ -137,7 +137,8 @@ class LoginController extends GetxController {
 
         return true;
       } else {
-        errorLoginMessage = response.body.obs;
+        var _response = json.decode(response.body);
+        errorLoginMessage.value = _response['error'];
         return false;
       }
     } on http.ClientException {
