@@ -59,7 +59,7 @@ Sorry, This project is currently on development stage, will be available in near
 - Splash Screen ✅
 - Search Player Stats ✅
 - Smart AI ✅
-- Settings ❌ _on development_
+- Settings ✅
 - Adding App Logo ✅
 
 
