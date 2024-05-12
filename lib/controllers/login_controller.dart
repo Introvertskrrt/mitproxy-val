@@ -47,7 +47,7 @@ class LoginController extends GetxController {
       Get.offAllNamed(AppRoutes.main);
     } else {
       Get.back();
-      dialogConstant.showLoginError(errorLoginMessage!.value);
+      dialogConstant.showLoginError(errorLoginMessage.value);
     }
   }
 
