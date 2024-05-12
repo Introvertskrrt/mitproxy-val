@@ -11,6 +11,7 @@ import 'package:mitproxy_val/views/intro_view.dart';
 import 'package:mitproxy_val/views/live_view.dart';
 import 'package:mitproxy_val/views/login_view.dart';
 import 'package:mitproxy_val/views/search_view.dart';
+import 'package:mitproxy_val/views/settings_view.dart';
 import 'package:mitproxy_val/views/splash_screen.dart';
 
 Future<void> main() async {
@@ -50,6 +51,10 @@ Future<void> main() async {
         GetPage(
           name: AppRoutes.intro,
           page: () => IntroductionView(),
+        ),
+        GetPage(
+          name: AppRoutes.settings,
+          page: () => SettingsView(),
         ),
       ],
       initialRoute: AppRoutes.splash,

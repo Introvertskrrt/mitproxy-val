@@ -72,7 +72,15 @@ class MatchesWidget extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 20),
-
+                Visibility(
+                  visible: liveController.allyPlayerNames.isEmpty,
+                  child: Center(
+                    child: Text(
+                      "Player list will be displayed here",
+                      style: textStyleConstant.TextStyleInterNormal(Colors.black54, 14),
+                    ),
+                  ),
+                ),
                 // ally/team widget
                 Visibility(
                   visible: liveController.allyPlayerNames.isNotEmpty,

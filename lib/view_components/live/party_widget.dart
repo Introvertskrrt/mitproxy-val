@@ -272,228 +272,212 @@ class PartyWidget extends StatelessWidget {
                 padding: const EdgeInsets.all(16.0),
                 child: Container(
                   width: double.infinity,
-                  height: 30,
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
                     color: ColorConstant.pageColor,
+                    borderRadius: BorderRadius.circular(10),
                   ),
-                  child: Row(
+                  child: Column(
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.only(left: 8, right: 8),
-                        child: Text(
-                          "Party Ready",
-                          style: textStyleConstant.TextStyleInterNormal(
-                              Colors.black, 12),
-                        ),
-                      ),
-                      const Spacer(),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 8, right: 8),
-                        child: Obx(
-                          () => Transform.scale(
-                            scale:
-                                0.7, // Adjust the scale factor as needed to change the size
-                            child: Switch(
-                              value: liveController.isPartyReady.value,
-                              onChanged: (value) {
-                                liveController.isPartyReady.value = value;
-                                ValorantClientServices.postPartyReadyState(
-                                    liveController.partyId.value, value);
-                              },
-                              activeColor:
-                                  Colors.green, // Color when the switch is ON
-                              inactiveTrackColor: Colors
-                                  .grey, // Color of the switch track when it's OFF
+                      Row(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(left: 8, right: 8),
+                            child: Text(
+                              "Party Ready",
+                              style: textStyleConstant.TextStyleInterNormal(
+                                  Colors.black, 12),
                             ),
                           ),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Container(
-                  width: double.infinity,
-                  height: 30,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: ColorConstant.pageColor,
-                  ),
-                  child: Row(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(left: 8, right: 8),
-                        child: Text(
-                          "Open Party",
-                          style: textStyleConstant.TextStyleInterNormal(
-                              Colors.black, 12),
-                        ),
+                          const Spacer(),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 8, right: 8),
+                            child: Obx(
+                              () => Transform.scale(
+                                scale:
+                                    0.7, // Adjust the scale factor as needed to change the size
+                                child: Switch(
+                                  value: liveController.isPartyReady.value,
+                                  onChanged: (value) {
+                                    liveController.isPartyReady.value = value;
+                                    ValorantClientServices.postPartyReadyState(
+                                        liveController.partyId.value, value);
+                                  },
+                                  activeColor:
+                                      Colors.green, // Color when the switch is ON
+                                  inactiveTrackColor: Colors
+                                      .grey, // Color of the switch track when it's OFF
+                                ),
+                              ),
+                            ),
+                          )
+                        ],
                       ),
-                      const Spacer(),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 8, right: 8),
-                        child: Obx(
-                          () => Transform.scale(
-                            scale:
-                                0.7, // Adjust the scale factor as needed to change the size
-                            child: Switch(
-                              value: liveController.isPartyOpen.value,
-                              onChanged: (value) {
-                                if (!liveController.isPartyOpen.value) {
-                                  liveController.isPartyOpen.value = value;
-                                  ValorantClientServices.postPartyAccessibility(
-                                      liveController.partyId.value, "OPEN");
-                                } else {
-                                  liveController.isPartyOpen.value = value;
-                                  ValorantClientServices.postPartyAccessibility(
-                                      liveController.partyId.value, "CLOSED");
-                                }
-                              },
-                              activeColor:
-                                  Colors.green, // Color when the switch is ON
-                              inactiveTrackColor: Colors
-                                  .grey, // Color of the switch track when it's OFF
+
+                      Row(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(left: 8, right: 8),
+                            child: Text(
+                              "Open Party",
+                              style: textStyleConstant.TextStyleInterNormal(
+                                  Colors.black, 12),
                             ),
                           ),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Container(
-                  width: double.infinity,
-                  height: 30,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: ColorConstant.pageColor,
-                  ),
-                  child: Row(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(left: 8, right: 8),
-                        child: Text(
-                          "Game Mode",
-                          style: textStyleConstant.TextStyleInterNormal(
-                              Colors.black, 12),
-                        ),
+                          const Spacer(),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 8, right: 8),
+                            child: Obx(
+                              () => Transform.scale(
+                                scale:
+                                    0.7, // Adjust the scale factor as needed to change the size
+                                child: Switch(
+                                  value: liveController.isPartyOpen.value,
+                                  onChanged: (value) {
+                                    if (!liveController.isPartyOpen.value) {
+                                      liveController.isPartyOpen.value = value;
+                                      ValorantClientServices.postPartyAccessibility(
+                                          liveController.partyId.value, "OPEN");
+                                    } else {
+                                      liveController.isPartyOpen.value = value;
+                                      ValorantClientServices.postPartyAccessibility(
+                                          liveController.partyId.value, "CLOSED");
+                                    }
+                                  },
+                                  activeColor:
+                                      Colors.green, // Color when the switch is ON
+                                  inactiveTrackColor: Colors
+                                      .grey, // Color of the switch track when it's OFF
+                                ),
+                              ),
+                            ),
+                          )
+                        ],
                       ),
-                      const Spacer(),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 8, right: 8),
-                        child: GestureDetector(
-                          onTap: () {
-                            showMenu(
-                              context: context,
-                              position:
-                                  const RelativeRect.fromLTRB(100, 100, 0, 0),
-                              items: [
-                                PopupMenuItem(
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      ValorantClientServices.postSetGameMode(
-                                          liveController.partyId.value,
-                                          "unrated");
-                                      liveController.currentGameMode_Text
-                                          .value = 'Unrated';
-                                      Navigator.pop(context);
-                                    },
-                                    child: const Text('Unrated'),
-                                  ),
-                                ),
-                                PopupMenuItem(
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      ValorantClientServices.postSetGameMode(
-                                          liveController.partyId.value,
-                                          "competitive");
-                                      liveController.currentGameMode_Text
-                                          .value = 'Competitive';
-                                      Navigator.pop(context);
-                                    },
-                                    child: const Text('Competitive'),
-                                  ),
-                                ),
-                                PopupMenuItem(
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      ValorantClientServices.postSetGameMode(
-                                          liveController.partyId.value,
-                                          "swiftplay");
-                                      liveController.currentGameMode_Text
-                                          .value = 'Swiftplay';
-                                      Navigator.pop(context);
-                                    },
-                                    child: const Text('Swiftplay'),
-                                  ),
-                                ),
-                                PopupMenuItem(
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      ValorantClientServices.postSetGameMode(
-                                          liveController.partyId.value,
-                                          "spikerush");
-                                      liveController.currentGameMode_Text
-                                          .value = 'Spike Rush';
-                                      Navigator.pop(context);
-                                    },
-                                    child: const Text('Spike Rush'),
-                                  ),
-                                ),
-                                PopupMenuItem(
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      ValorantClientServices.postSetGameMode(
-                                          liveController.partyId.value,
-                                          "deathmatch");
-                                      liveController.currentGameMode_Text
-                                          .value = 'Deathmatch';
-                                      Navigator.pop(context);
-                                    },
-                                    child: const Text('Deathmatch'),
-                                  ),
-                                ),
-                                PopupMenuItem(
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      ValorantClientServices.postSetGameMode(
-                                          liveController.partyId.value,
-                                          "ggteam");
-                                      liveController.currentGameMode_Text
-                                          .value = 'Escalation';
-                                      Navigator.pop(context);
-                                    },
-                                    child: const Text('Escalation'),
-                                  ),
-                                ),
-                                PopupMenuItem(
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      ValorantClientServices.postSetGameMode(
-                                          liveController.partyId.value, "hurm");
-                                      liveController.currentGameMode_Text
-                                          .value = 'Team Deathmatch';
-                                      Navigator.pop(context);
-                                    },
-                                    child: const Text('Team Deathmatch'),
-                                  ),
-                                ),
-                              ],
-                            );
-                          },
-                          child: Obx(
-                            () => Text(
-                                liveController.currentGameMode_Text.value,
-                                style: textStyleConstant.TextStyleInterNormal(
-                                    Colors.blue, 12)),
+                      const SizedBox(height: 12),
+                      Row(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(left: 8, right: 8),
+                            child: Text(
+                              "Game Mode",
+                              style: textStyleConstant.TextStyleInterNormal(
+                                  Colors.black, 12),
+                            ),
                           ),
-                        ),
+                          const Spacer(),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 8, right: 8),
+                            child: GestureDetector(
+                              onTap: () {
+                                showMenu(
+                                  context: context,
+                                  position:
+                                      const RelativeRect.fromLTRB(100, 100, 0, 0),
+                                  items: [
+                                    PopupMenuItem(
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          ValorantClientServices.postSetGameMode(
+                                              liveController.partyId.value,
+                                              "unrated");
+                                          liveController.currentGameMode_Text
+                                              .value = 'Unrated';
+                                          Navigator.pop(context);
+                                        },
+                                        child: const Text('Unrated'),
+                                      ),
+                                    ),
+                                    PopupMenuItem(
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          ValorantClientServices.postSetGameMode(
+                                              liveController.partyId.value,
+                                              "competitive");
+                                          liveController.currentGameMode_Text
+                                              .value = 'Competitive';
+                                          Navigator.pop(context);
+                                        },
+                                        child: const Text('Competitive'),
+                                      ),
+                                    ),
+                                    PopupMenuItem(
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          ValorantClientServices.postSetGameMode(
+                                              liveController.partyId.value,
+                                              "swiftplay");
+                                          liveController.currentGameMode_Text
+                                              .value = 'Swiftplay';
+                                          Navigator.pop(context);
+                                        },
+                                        child: const Text('Swiftplay'),
+                                      ),
+                                    ),
+                                    PopupMenuItem(
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          ValorantClientServices.postSetGameMode(
+                                              liveController.partyId.value,
+                                              "spikerush");
+                                          liveController.currentGameMode_Text
+                                              .value = 'Spike Rush';
+                                          Navigator.pop(context);
+                                        },
+                                        child: const Text('Spike Rush'),
+                                      ),
+                                    ),
+                                    PopupMenuItem(
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          ValorantClientServices.postSetGameMode(
+                                              liveController.partyId.value,
+                                              "deathmatch");
+                                          liveController.currentGameMode_Text
+                                              .value = 'Deathmatch';
+                                          Navigator.pop(context);
+                                        },
+                                        child: const Text('Deathmatch'),
+                                      ),
+                                    ),
+                                    PopupMenuItem(
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          ValorantClientServices.postSetGameMode(
+                                              liveController.partyId.value,
+                                              "ggteam");
+                                          liveController.currentGameMode_Text
+                                              .value = 'Escalation';
+                                          Navigator.pop(context);
+                                        },
+                                        child: const Text('Escalation'),
+                                      ),
+                                    ),
+                                    PopupMenuItem(
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          ValorantClientServices.postSetGameMode(
+                                              liveController.partyId.value, "hurm");
+                                          liveController.currentGameMode_Text
+                                              .value = 'Team Deathmatch';
+                                          Navigator.pop(context);
+                                        },
+                                        child: const Text('Team Deathmatch'),
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              },
+                              child: Obx(
+                                () => Text(
+                                    liveController.currentGameMode_Text.value,
+                                    style: textStyleConstant.TextStyleInterNormal(
+                                        Colors.blue, 12)),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
+                      const SizedBox(height: 12),
                     ],
                   ),
                 ),

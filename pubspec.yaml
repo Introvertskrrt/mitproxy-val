@@ -19,6 +19,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   flutter_dotenv: any
   introduction_screen: ^3.1.14
+  url_launcher: any
 
 dev_dependencies:
   flutter_test:
