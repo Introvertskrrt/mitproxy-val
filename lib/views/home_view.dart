@@ -16,7 +16,7 @@ class HomeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-      if (!homeController.isPageLoading.value) {
+      if (homeController.isPageLoading.value) {
         return Scaffold(
           resizeToAvoidBottomInset: false,
           backgroundColor: ColorConstant.pageColor,
