@@ -49,7 +49,13 @@ class HomeSkeleton extends StatelessWidget {
                 SizedBox(height: 10),
               ],
             ),
-          )
+          ),
+          const SizedBox(height: 20),
+          const Padding(
+            padding: EdgeInsets.all(8.0),
+            child: ShimmerContainer(width: 80, height: 16, radius: 1),
+          ),
+          const ShimmerContainer(width: double.infinity, height: 400, radius: 10)
           
         ],
       ),
