@@ -32,7 +32,7 @@ class HomeServices {
     int kingdomCredits = 0;
     int playerXp = 0;
     int playerLevels = 0;
-    int playerMmr = 0;
+    int playerRankedRating = 0;
     String playerCardId = '';
     String playerTitleId = '';
     List<String> missionNames = [];
@@ -66,7 +66,7 @@ class HomeServices {
     PlayerMMRResponse playerMMRResponse = await ValorantClientServices.getPlayerMMRResponse(Globals.accountToken!.puuid);
     var _currentCompetitiveSeason = playerMMRResponse.latestCompetitiveUpdate.seasonID;
     var rank_tier = playerMMRResponse.queueSkills['competitive']?.seasonalInfoBySeasonID[_currentCompetitiveSeason]?.competitiveTier ?? 0;
-    playerMmr = playerMMRResponse.queueSkills['competitive']?.seasonalInfoBySeasonID[_currentCompetitiveSeason]?.rankedRating ?? 0;
+    playerRankedRating = playerMMRResponse.queueSkills['competitive']?.seasonalInfoBySeasonID[_currentCompetitiveSeason]?.rankedRating ?? 0;
 
     // temp string
     var currentAct; var currentEps; var currentRank; var rankImage; var _rankColor;
@@ -150,7 +150,7 @@ class HomeServices {
       kingdomCredits: kingdomCredits,
       playerXp: playerXp,
       playerLevels: playerLevels,
-      playerMmr: playerMmr,
+      playerMmr: playerRankedRating,
       playerCardId: playerCardId,
       playerTitleId: playerTitleId,
       currentCompetitiveRank: currentCompetitiveRank,
