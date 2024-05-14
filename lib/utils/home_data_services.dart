@@ -11,7 +11,7 @@ import 'package:mitproxy_val/models/assets_api_models/mission_model.dart';
 import 'package:mitproxy_val/models/assets_api_models/playercard_model.dart';
 import 'package:mitproxy_val/models/assets_api_models/season_model.dart';
 import 'package:mitproxy_val/models/assets_api_models/spray_model.dart';
-import 'package:mitproxy_val/models/assets_api_models/weapon_details_model.dart';
+import 'package:mitproxy_val/models/assets_api_models/item_details_model.dart';
 import 'package:mitproxy_val/models/assets_api_models/weapon_skin_level_model.dart';
 import 'package:mitproxy_val/models/assets_api_models/weapon_skin_model.dart';
 import 'package:mitproxy_val/models/personal_models/account_model.dart';

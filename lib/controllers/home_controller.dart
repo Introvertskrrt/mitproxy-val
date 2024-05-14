@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import 'package:http/http.dart';
 import 'package:mitproxy_val/controllers/live_controller.dart';
 import 'package:mitproxy_val/controllers/login_controller.dart';
-import 'package:mitproxy_val/models/assets_api_models/weapon_details_model.dart';
+import 'package:mitproxy_val/models/assets_api_models/item_details_model.dart';
 import 'package:mitproxy_val/utils/globals.dart';
 import 'package:mitproxy_val/utils/exceptions.dart';
 import 'package:mitproxy_val/utils/home_data_services.dart';
