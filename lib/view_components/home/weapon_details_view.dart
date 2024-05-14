@@ -55,16 +55,19 @@ class WeaponDetailsView extends StatelessWidget {
                           Positioned(
                             bottom: 10,
                             left: 10,
-                            child: Image.network(
-                              homeController.itemDetails!.swatch[index],
-                              width: 50,
-                              height: 50,
-                              errorBuilder: (context, error, stackTrace) {
-                                return const Text("");
-                              },
-                            ),
-                          )
-                        ],
+                            child: homeController.itemDetails != null &&
+                                    homeController.itemDetails!.swatch.isNotEmpty &&
+                                    index < homeController.itemDetails!.swatch.length
+                                ? Image.network(
+                                    homeController.itemDetails!.swatch[index],
+                                    width: 50,
+                                    height: 50,
+                                    errorBuilder: (context, error, stackTrace) {
+                                      return const Text("");
+                                    },
+                                  )
+                                : const Text(""),
+                          )]
                       ),
                     );
                   }),

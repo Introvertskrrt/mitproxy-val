@@ -368,21 +368,55 @@ class HomeServices {
     );
   }
 
-  Future<void> getItemDetails(String weaponSkinName) async{
+  Future<void> getItemDetails(String itemName) async{
     List<String> displayName = [];
     List<String> displayIcon = [];
     List<String> swatch = [];
 
+    // weapon
     final WeaponSkinsResponse weaponSkinsResponse = await ValorantAssetServices.getWeaponSkinsData();
     final weaponSkin_list = weaponSkinsResponse.data;
 
+    // gun buddy
+    final BuddiesResponse buddiesResponse = await ValorantAssetServices.getBuddiesData();
+    final buddy_list = buddiesResponse.data;
+
+    // player card
+    final PlayerCardsResponse playerCardsResponse = await ValorantAssetServices.getPlayerCardsData();
+    final playerCard_list = playerCardsResponse.data;
+
+    // sprays
+    final SpraysResponse spraysResponse = await ValorantAssetServices.getSpraysData();
+    final spray_list = spraysResponse.data;
+
     for (var weaponSkin in weaponSkin_list) {
-      if (weaponSkin.displayName.contains(weaponSkinName)) {
+      if (weaponSkin.displayName.contains(itemName)) {
         for (var chromas in weaponSkin.chromas) {
           displayName.add(chromas.displayName);
           displayIcon.add(chromas.displayIcon ?? "");
           swatch.add(chromas.swatch ?? "");
         }
+      }
+    }
+
+    for (var buddy in buddy_list) {
+      if (buddy.displayName.contains(itemName)) {
+        displayName.add(buddy.displayName);
+        displayIcon.add(buddy.displayIcon);
+      }
+    }
+
+    for (var playerCard in playerCard_list) {
+      if (playerCard.displayName.contains(itemName)) {
+        displayName.add(playerCard.displayName);
+        displayIcon.add(playerCard.largeArt);
+      }
+    }
+
+    for (var spray in spray_list) {
+      if (spray.displayName.contains(itemName)) {
+        displayName.add(spray.displayName);
+        displayIcon.add(spray.fullTransparentIcon);
       }
     }
 
