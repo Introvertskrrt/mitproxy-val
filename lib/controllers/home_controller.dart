@@ -13,9 +13,9 @@ import 'package:mitproxy_val/utils/routes.dart';
 
 class HomeController extends GetxController {
   final homeServices = HomeServices();
-  WeaponDetails? weaponDetails;
+  ItemDetails? itemDetails;
   
-  RxBool isWeaponDetailsPageLoading = false.obs;
+  RxBool isItemDetailsPageLoading = false.obs;
   RxBool isHomePageLoading = false.obs;
   RxString bundleRemainingTime = ''.obs;
   RxString dailyOffersRemainingTime = ''.obs;
@@ -24,11 +24,11 @@ class HomeController extends GetxController {
   final loginController = Get.put(LoginController());
   final liveController = Get.put(LiveController());
 
-  Future<void> onWeaponSkinClicked(weaponSkinLevelName) async {
+  Future<void> onItemClicked(weaponSkinLevelName) async {
     Get.toNamed(AppRoutes.weapon_details);
-    isWeaponDetailsPageLoading(true);
-    await homeServices.getWeaponDetails(weaponSkinLevelName);
-    isWeaponDetailsPageLoading(false);
+    isItemDetailsPageLoading(true);
+    await homeServices.getItemDetails(weaponSkinLevelName);
+    isItemDetailsPageLoading(false);
   }
 
   void startCountdownTimer() {

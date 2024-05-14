@@ -368,7 +368,7 @@ class HomeServices {
     );
   }
 
-  Future<void> getWeaponDetails(String weaponSkinName) async{
+  Future<void> getItemDetails(String weaponSkinName) async{
     List<String> displayName = [];
     List<String> displayIcon = [];
     List<String> swatch = [];
@@ -388,7 +388,7 @@ class HomeServices {
 
     final homeController = Get.put(HomeController());
 
-    homeController.weaponDetails = WeaponDetails(
+    homeController.itemDetails = ItemDetails(
       displayName: displayName, 
       displayIcon: displayIcon,
       swatch: swatch,

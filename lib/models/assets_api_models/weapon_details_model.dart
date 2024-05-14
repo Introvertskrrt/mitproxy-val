@@ -1,9 +1,9 @@
-class WeaponDetails {
+class ItemDetails {
   List<String> displayName = [];
   List<String> displayIcon = [];
   List<String> swatch = [];
 
-  WeaponDetails ({
+  ItemDetails ({
     required this.displayName,
     required this.displayIcon,
     required this.swatch,

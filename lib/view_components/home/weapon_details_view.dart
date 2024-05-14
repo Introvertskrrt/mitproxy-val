@@ -16,12 +16,12 @@ class WeaponDetailsView extends StatelessWidget {
       appBar: AppBar(
         automaticallyImplyLeading: true,
         title: Text(
-          "Weapon Details",
+          "Item Details",
           style: textStyleConstant.TextStyleInterBold(Colors.black, 18),
         ),
       ),
       body: Obx(() {
-        if (homeController.isWeaponDetailsPageLoading.value) {
+        if (homeController.isItemDetailsPageLoading.value) {
           return const Center(
             child: CircularProgressIndicator(),
           );
@@ -31,7 +31,7 @@ class WeaponDetailsView extends StatelessWidget {
               padding: const EdgeInsets.all(16.0),
               child: Center(
                 child: Column(
-                  children: List.generate(homeController.weaponDetails!.displayName.length, (index) {
+                  children: List.generate(homeController.itemDetails!.displayName.length, (index) {
                     return Padding(
                       padding: const EdgeInsets.only(bottom: 20),
                       child: Stack(
@@ -42,12 +42,12 @@ class WeaponDetailsView extends StatelessWidget {
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10),
                               color: ColorConstant.pageColor,
-                              image: DecorationImage(image: NetworkImage(homeController.weaponDetails!.displayIcon[index]))
+                              image: DecorationImage(image: NetworkImage(homeController.itemDetails!.displayIcon[index]))
                             ),
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Text(
-                                homeController.weaponDetails!.displayName[index],
+                                homeController.itemDetails!.displayName[index],
                                 style: textStyleConstant.TextStyleInterBold(Colors.black, 18),
                               ),
                             ),
@@ -56,7 +56,7 @@ class WeaponDetailsView extends StatelessWidget {
                             bottom: 10,
                             left: 10,
                             child: Image.network(
-                              homeController.weaponDetails!.swatch[index],
+                              homeController.itemDetails!.swatch[index],
                               width: 50,
                               height: 50,
                               errorBuilder: (context, error, stackTrace) {
