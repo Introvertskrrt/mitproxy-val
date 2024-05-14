@@ -1,22 +1,35 @@
+// ignore_for_file: deprecated_member_use
+
 import 'dart:async';
 import 'package:get/get.dart';
 import 'package:http/http.dart';
 import 'package:mitproxy_val/controllers/live_controller.dart';
 import 'package:mitproxy_val/controllers/login_controller.dart';
+import 'package:mitproxy_val/models/assets_api_models/weapon_details_model.dart';
 import 'package:mitproxy_val/utils/globals.dart';
 import 'package:mitproxy_val/utils/exceptions.dart';
 import 'package:mitproxy_val/utils/home_data_services.dart';
+import 'package:mitproxy_val/utils/routes.dart';
 
 class HomeController extends GetxController {
   final homeServices = HomeServices();
+  WeaponDetails? weaponDetails;
   
-  RxBool isPageLoading = false.obs;
+  RxBool isWeaponDetailsPageLoading = false.obs;
+  RxBool isHomePageLoading = false.obs;
   RxString bundleRemainingTime = ''.obs;
   RxString dailyOffersRemainingTime = ''.obs;
   Timer? countdownTimer;
 
   final loginController = Get.put(LoginController());
   final liveController = Get.put(LiveController());
+
+  Future<void> onWeaponSkinClicked(weaponSkinLevelName) async {
+    Get.toNamed(AppRoutes.weapon_details);
+    isWeaponDetailsPageLoading(true);
+    await homeServices.getWeaponDetails(weaponSkinLevelName);
+    isWeaponDetailsPageLoading(false);
+  }
 
   void startCountdownTimer() {
     if (countdownTimer != null) {
@@ -61,12 +74,12 @@ class HomeController extends GetxController {
   }
 
   Future<void> initPage() async {
-    isPageLoading(true);
+    isHomePageLoading(true);
     await homeServices.getUserProfileData();
     await homeServices.getBundleData();
     await homeServices.getDailyStoreData();
     startCountdownTimer();
-    isPageLoading(false);
+    isHomePageLoading(false);
   }
 
   @override
@@ -76,13 +89,13 @@ class HomeController extends GetxController {
       await initPage();
       await liveController.initializeAgents();
     } on ExceptionTokenExpired {
-      isPageLoading(true);
+      isHomePageLoading(true);
       bool successReauth = await loginController.fetchLogin(Globals.temporarySavedAccount!.username, Globals.temporarySavedAccount!.password);
       if (successReauth) {
         await initPage();
       }
     }on ClientException {
-      isPageLoading(true);
+      isHomePageLoading(true);
     }
   }
 }

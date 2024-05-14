@@ -5,6 +5,7 @@ import 'package:mitproxy_val/constants/color_constant.dart';
 import 'package:mitproxy_val/controllers/main_controller.dart';
 import 'package:mitproxy_val/utils/dependency_injection.dart';
 import 'package:mitproxy_val/utils/routes.dart';
+import 'package:mitproxy_val/view_components/home/weapon_details_view.dart';
 import 'package:mitproxy_val/views/chatbot_view.dart';
 import 'package:mitproxy_val/views/home_view.dart';
 import 'package:mitproxy_val/views/intro_view.dart';
@@ -55,6 +56,10 @@ Future<void> main() async {
         GetPage(
           name: AppRoutes.settings,
           page: () => SettingsView(),
+        ),
+        GetPage(
+          name: AppRoutes.weapon_details,
+          page: () => WeaponDetailsView(),
         ),
       ],
       initialRoute: AppRoutes.splash,

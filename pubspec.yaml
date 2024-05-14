@@ -20,6 +20,7 @@ dependencies:
   flutter_dotenv: any
   introduction_screen: ^3.1.14
   url_launcher: any
+  video_player: ^2.8.6
 
 dev_dependencies:
   flutter_test:

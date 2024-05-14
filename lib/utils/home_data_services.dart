@@ -1,6 +1,8 @@
 // ignore_for_file: constant_identifier_names, non_constant_identifier_names, no_leading_underscores_for_local_identifiers, prefer_typing_uninitialized_variables, unused_local_variable
 
 import 'package:flutter/widgets.dart';
+import 'package:get/get.dart';
+import 'package:mitproxy_val/controllers/home_controller.dart';
 import 'package:mitproxy_val/models/assets_api_models/buddies_model.dart';
 import 'package:mitproxy_val/models/assets_api_models/bundle_model.dart';
 import 'package:mitproxy_val/models/assets_api_models/competitive_tiers_model.dart';
@@ -9,6 +11,7 @@ import 'package:mitproxy_val/models/assets_api_models/mission_model.dart';
 import 'package:mitproxy_val/models/assets_api_models/playercard_model.dart';
 import 'package:mitproxy_val/models/assets_api_models/season_model.dart';
 import 'package:mitproxy_val/models/assets_api_models/spray_model.dart';
+import 'package:mitproxy_val/models/assets_api_models/weapon_details_model.dart';
 import 'package:mitproxy_val/models/assets_api_models/weapon_skin_level_model.dart';
 import 'package:mitproxy_val/models/assets_api_models/weapon_skin_model.dart';
 import 'package:mitproxy_val/models/personal_models/account_model.dart';
@@ -362,6 +365,33 @@ class HomeServices {
       weaponRarityIcon: weaponRarityIcon,
       weaponRarityColor: weaponRarityColor,
       dailyOffersRemainingTime: dailyOffersRemainingTime,
+    );
+  }
+
+  Future<void> getWeaponDetails(String weaponSkinName) async{
+    List<String> displayName = [];
+    List<String> displayIcon = [];
+    List<String> swatch = [];
+
+    final WeaponSkinsResponse weaponSkinsResponse = await ValorantAssetServices.getWeaponSkinsData();
+    final weaponSkin_list = weaponSkinsResponse.data;
+
+    for (var weaponSkin in weaponSkin_list) {
+      if (weaponSkin.displayName.contains(weaponSkinName)) {
+        for (var chromas in weaponSkin.chromas) {
+          displayName.add(chromas.displayName);
+          displayIcon.add(chromas.displayIcon ?? "");
+          swatch.add(chromas.swatch ?? "");
+        }
+      }
+    }
+
+    final homeController = Get.put(HomeController());
+
+    homeController.weaponDetails = WeaponDetails(
+      displayName: displayName, 
+      displayIcon: displayIcon,
+      swatch: swatch,
     );
   }
 }

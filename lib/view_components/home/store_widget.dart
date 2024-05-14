@@ -241,81 +241,86 @@ class StoreWidget extends StatelessWidget {
                   children: List.generate(
                     Globals.dailyOffers!.weaponNames.length,
                     (index) {
-                      return Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Container(
-                          width: 180,
-                          height: 100,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: Globals.dailyOffers!.weaponRarityColor[index],
-                          ),
-                          child: Stack(
-                            children: [
-                              Center(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(16.0),
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                      image: DecorationImage(
-                                        image: NetworkImage(Globals.dailyOffers!.weaponImages[index]),
-                                        alignment: Alignment.center,
+                      return GestureDetector(
+                        onTap: () {
+                          homeController.onWeaponSkinClicked(Globals.dailyOffers!.weaponNames[index]);
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: Container(
+                            width: 180,
+                            height: 100,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Globals.dailyOffers!.weaponRarityColor[index],
+                            ),
+                            child: Stack(
+                              children: [
+                                Center(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(16.0),
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        image: DecorationImage(
+                                          image: NetworkImage(Globals.dailyOffers!.weaponImages[index]),
+                                          alignment: Alignment.center,
+                                        ),
                                       ),
                                     ),
                                   ),
                                 ),
-                              ),
-                              Positioned(
-                                left: 10,
-                                bottom: 10,
-                                child: Text(
-                                  Globals.dailyOffers!.weaponNames[index],
-                                  style: textStyleConstant.TextStyleInterBold(
-                                      Globals.dailyOffers!.weaponRarityColor[index]
-                                          .withOpacity(1),
-                                      12),
+                                Positioned(
+                                  left: 10,
+                                  bottom: 10,
+                                  child: Text(
+                                    Globals.dailyOffers!.weaponNames[index],
+                                    style: textStyleConstant.TextStyleInterBold(
+                                        Globals.dailyOffers!.weaponRarityColor[index]
+                                            .withOpacity(1),
+                                        12),
+                                  ),
                                 ),
-                              ),
-                              Positioned(
-                                left: 30,
-                                top: 10,
-                                child: Text(
-                                  '${Globals.dailyOffers!.weaponPrices[index]}',
-                                  style: textStyleConstant.TextStyleInterBold(
-                                      Globals.dailyOffers!.weaponRarityColor[index]
-                                          .withOpacity(1),
-                                      12),
+                                Positioned(
+                                  left: 30,
+                                  top: 10,
+                                  child: Text(
+                                    '${Globals.dailyOffers!.weaponPrices[index]}',
+                                    style: textStyleConstant.TextStyleInterBold(
+                                        Globals.dailyOffers!.weaponRarityColor[index]
+                                            .withOpacity(1),
+                                        12),
+                                  ),
                                 ),
-                              ),
-                              Positioned(
-                                left: 10,
-                                top: 10,
-                                child: Container(
-                                  width: 18,
-                                  height: 18,
-                                  decoration: const BoxDecoration(
-                                    image: DecorationImage(
-                                      image: NetworkImage(
-                                          "https://media.valorant-api.com/currencies/85ad13f7-3d1b-5128-9eb2-7cd8ee0b5741/displayicon.png"),
+                                Positioned(
+                                  left: 10,
+                                  top: 10,
+                                  child: Container(
+                                    width: 18,
+                                    height: 18,
+                                    decoration: const BoxDecoration(
+                                      image: DecorationImage(
+                                        image: NetworkImage(
+                                            "https://media.valorant-api.com/currencies/85ad13f7-3d1b-5128-9eb2-7cd8ee0b5741/displayicon.png"),
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                              Positioned(
-                                right: 10,
-                                top: 10,
-                                child: Container(
-                                  width: 15,
-                                  height: 15,
-                                  decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                      image: NetworkImage(Globals.dailyOffers!.weaponRarityIcon[index]),
+                                Positioned(
+                                  right: 10,
+                                  top: 10,
+                                  child: Container(
+                                    width: 15,
+                                    height: 15,
+                                    decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                        image: NetworkImage(Globals.dailyOffers!.weaponRarityIcon[index]),
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                       );

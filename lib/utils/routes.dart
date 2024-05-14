@@ -1,3 +1,5 @@
+// ignore_for_file: constant_identifier_names
+
 class AppRoutes {
   static const String login = '/login';
   static const String main = '/main';
@@ -8,4 +10,5 @@ class AppRoutes {
   static const String chatbot = '/chatbot';
   static const String intro = '/introduction';
   static const String settings = '/settings';
+  static const String weapon_details = '/weapon_details';
 }
