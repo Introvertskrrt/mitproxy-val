@@ -112,10 +112,4 @@ class HomeController extends GetxController {
       isHomePageLoading(true);
     }
   }
-
-  @override
-  void dispose() {
-    super.dispose();
-    videoController.dispose();
-  }
 }
