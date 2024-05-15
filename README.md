@@ -70,20 +70,21 @@ Will be included soon
 This application operates solely through API methods and does not interact with the Valorant client process on your Windows/PC. As a result, Vanguard should not detect any suspicious activity since the app operates within the permitted API boundaries.
 ## Screenshots
 
-![App Screenshot 1](https://i.imgur.com/rh7UHDY.png)
-![App Screenshot 2](https://i.imgur.com/ldIBiSn.png)
-![App Screenshot 3](https://i.imgur.com/dauqyAK.png)
-![App Screenshot 4](https://i.imgur.com/rh7UHDY.png)
-![App Screenshot 5](https://i.imgur.com/ePGI1AF.png)
-![App Screenshot 6](https://i.imgur.com/hlvSMBM.png)
-![App Screenshot 7](https://i.imgur.com/YgjOkE5.png)
-![App Screenshot 8](https://i.imgur.com/6UH5cBj.png)
-![App Screenshot 9](https://i.imgur.com/CXNrm8h.png)
-![App Screenshot 10](https://i.imgur.com/Zgim35W.png)
-![App Screenshot 11](https://i.imgur.com/qvaJ7ai.png)
-![App Screenshot 12](https://i.imgur.com/1ebIeIl.png)
-![App Screenshot 13](https://i.imgur.com/zLR0Thl.png)
-![App Screenshot 14](https://i.imgur.com/UCNVCGN.png)
+<img src="https://i.imgur.com/rh7UHDY.png" alt="App Screenshot 1" width="250"/>
+<img src="https://i.imgur.com/ldIBiSn.png" alt="App Screenshot 2" width="250"/>
+<img src="https://i.imgur.com/dauqyAK.png" alt="App Screenshot 3" width="250"/>
+<img src="https://i.imgur.com/rh7UHDY.png" alt="App Screenshot 4" width="250"/>
+<img src="https://i.imgur.com/ePGI1AF.png" alt="App Screenshot 5" width="250"/>
+<img src="https://i.imgur.com/hlvSMBM.png" alt="App Screenshot 6" width="250"/>
+<img src="https://i.imgur.com/YgjOkE5.png" alt="App Screenshot 7" width="250"/>
+<img src="https://i.imgur.com/6UH5cBj.png" alt="App Screenshot 8" width="250"/>
+<img src="https://i.imgur.com/CXNrm8h.png" alt="App Screenshot 9" width="250"/>
+<img src="https://i.imgur.com/Zgim35W.png" alt="App Screenshot 10" width="250"/>
+<img src="https://i.imgur.com/qvaJ7ai.png" alt="App Screenshot 11" width="250"/>
+<img src="https://i.imgur.com/1ebIeIl.png" alt="App Screenshot 12" width="250"/>
+<img src="https://i.imgur.com/zLR0Thl.png" alt="App Screenshot 13" width="250"/>
+<img src="https://i.imgur.com/UCNVCGN.png" alt="App Screenshot 14" width="250"/>
+
 
 
 ## License
