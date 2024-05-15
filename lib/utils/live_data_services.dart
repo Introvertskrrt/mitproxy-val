@@ -129,7 +129,7 @@ class LiveServices {
     if (matchId.isNotEmpty) {
       // if match id is not empty, it means match found
       if (!liveController.isUserNotified.value) {
-        MitproxyNotification.showBigTextNotification(title: "Mitproxy Valorant", body: "Match Found", fln: flutterLocalNotificationsPlugin);
+        MitproxyNotification.sendNotification(title: "Mitproxy Valorant", body: "Match Found", fln: flutterLocalNotificationsPlugin);
         liveController.isUserNotified.value = true;
       }
 

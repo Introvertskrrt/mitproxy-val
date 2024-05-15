@@ -7,7 +7,7 @@ class MitproxyNotification {
     await flutterLocalNotificationsPlugin.initialize(initializationSettings);
   }
 
-  static Future showBigTextNotification({
+  static Future sendNotification({
     var id = 0, 
     required String title, 
     required String body, 
