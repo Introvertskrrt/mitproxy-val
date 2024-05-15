@@ -1,5 +1,5 @@
 
-# Mitproxy Valorant Mobile App (_On Development_)
+# Mitproxy Valorant Tracker Mobile App
 
 Powerful Mobile Valorant Tracker with Instalock Agent Feature
 
@@ -40,7 +40,7 @@ flutter run lib/main.dart
 **RIOT API KEY INSTALLATION**
 
 
-Sorry, This project is currently on development stage, will be available in near future
+Will be included soon
 
 ## API Documentation
 
@@ -63,11 +63,27 @@ Sorry, This project is currently on development stage, will be available in near
 - Adding App Logo ✅
 
 
+**NOTES** 2FA Login is not supported yet
+
+
 ## Vanguard Anti-Cheat Detection ?
 This application operates solely through API methods and does not interact with the Valorant client process on your Windows/PC. As a result, Vanguard should not detect any suspicious activity since the app operates within the permitted API boundaries.
 ## Screenshots
 
-![App Screenshot](https://via.placeholder.com/468x300?text=Coming+Soon)
+![App Screenshot 1](https://i.imgur.com/rh7UHDY.png)
+![App Screenshot 2](https://i.imgur.com/ldIBiSn.png)
+![App Screenshot 3](https://i.imgur.com/dauqyAK.png)
+![App Screenshot 4](https://i.imgur.com/rh7UHDY.png)
+![App Screenshot 5](https://i.imgur.com/ePGI1AF.png)
+![App Screenshot 6](https://i.imgur.com/hlvSMBM.png)
+![App Screenshot 7](https://i.imgur.com/YgjOkE5.png)
+![App Screenshot 8](https://i.imgur.com/6UH5cBj.png)
+![App Screenshot 9](https://i.imgur.com/CXNrm8h.png)
+![App Screenshot 10](https://i.imgur.com/Zgim35W.png)
+![App Screenshot 11](https://i.imgur.com/qvaJ7ai.png)
+![App Screenshot 12](https://i.imgur.com/1ebIeIl.png)
+![App Screenshot 13](https://i.imgur.com/zLR0Thl.png)
+![App Screenshot 14](https://i.imgur.com/UCNVCGN.png)
 
 
 ## License
