@@ -37,4 +37,5 @@ flutter:
     - assets/raze.png
     - assets/vanguard.png
     - assets/kayo_potrait.png
+    - assets/jett_banner.jpeg
     - lib/.env

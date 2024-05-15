@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mitproxy_val/view_components/home/player_loadout_widget.dart';
 import 'package:mitproxy_val/view_components/home/profile_widget.dart';
 import 'package:mitproxy_val/view_components/home/store_widget.dart';
 import 'package:mitproxy_val/view_components/loading_skeletons/home_skeleton.dart';
@@ -51,6 +52,8 @@ class HomeView extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     ProfileWidget(),
+                    const SizedBox(height: 20),
+                    PlayerLoadoutWidget(),
                     const SizedBox(height: 20),
                     StoreWidget(),
                   ],

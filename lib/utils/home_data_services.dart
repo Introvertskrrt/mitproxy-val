@@ -368,7 +368,7 @@ class HomeServices {
     );
   }
 
-  Future<void> getItemDetails(String itemName) async{
+  Future<void> getItemDetails(String itemName) async {
     List<String> displayName = [];
     List<String> displayIcon = [];
     List<String> swatch = [];
@@ -430,5 +430,12 @@ class HomeServices {
       swatch: swatch,
       finisher: finisher,
     );
+  }
+
+  Future<void> getPlayerLoadout() async {
+    PlayerLoadoutResponse playerLoadoutResponse = await ValorantClientServices.getPlayerLoadout();
+
+    final homeController = Get.put(HomeController());
+    homeController.playerLoadout = playerLoadoutResponse;
   }
 }

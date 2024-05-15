@@ -4,9 +4,11 @@ import 'dart:async';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart';
+import 'package:http/http.dart' as http;
 import 'package:mitproxy_val/controllers/live_controller.dart';
 import 'package:mitproxy_val/controllers/login_controller.dart';
 import 'package:mitproxy_val/models/assets_api_models/item_details_model.dart';
+import 'package:mitproxy_val/models/client_api_models/player_loadout_model.dart';
 import 'package:mitproxy_val/utils/globals.dart';
 import 'package:mitproxy_val/utils/exceptions.dart';
 import 'package:mitproxy_val/utils/home_data_services.dart';
@@ -19,6 +21,7 @@ final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterL
 class HomeController extends GetxController {
   final homeServices = HomeServices();
   ItemDetails? itemDetails;
+  PlayerLoadoutResponse? playerLoadout;
   late VideoPlayerController videoController;
   late Future<void> initializeVideoPlayerFuture;
   
@@ -42,6 +45,22 @@ class HomeController extends GetxController {
     );
     initializeVideoPlayerFuture = videoController.initialize();
     isItemDetailsPageLoading(false);
+  }
+
+  Future<String> loadPlayerGunLoadoutImage(String chromaID, String skinID) async {
+    final primaryUrl = "https://media.valorant-api.com/weaponskinchromas/$chromaID/displayicon.png";
+    final fallbackUrl = "https://media.valorant-api.com/weaponskins/$skinID/displayicon.png";
+    
+    try {
+      final response = await http.get(Uri.parse(primaryUrl));
+      if (response.statusCode == 200) {
+        return primaryUrl;
+      } else {
+        return fallbackUrl;
+      }
+    } catch (e) {
+      return fallbackUrl;
+    }
   }
 
   void startCountdownTimer() {
@@ -89,6 +108,7 @@ class HomeController extends GetxController {
   Future<void> initPage() async {
     isHomePageLoading(true);
     await homeServices.getUserProfileData();
+    await homeServices.getPlayerLoadout();
     await homeServices.getBundleData();
     await homeServices.getDailyStoreData();
     startCountdownTimer();
