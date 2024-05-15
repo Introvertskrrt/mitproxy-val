@@ -393,7 +393,7 @@ class HomeServices {
       if (weaponSkin.displayName.contains(itemName)) {
         for (var chromas in weaponSkin.chromas) {
           displayName.add(chromas.displayName);
-          displayIcon.add(chromas.displayIcon ?? "");
+          displayIcon.add(chromas.fullRender);
           swatch.add(chromas.swatch ?? "");
         }
       }
