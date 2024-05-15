@@ -19,7 +19,7 @@ class LiveController extends GetxController {
   Timer? _timer;
   RxInt seconds = 0.obs;
   RxInt minutes = 0.obs;
-
+  RxBool isUserNotified = false.obs;
 
   ///
   /// These variables are for Real-Time Data

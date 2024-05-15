@@ -10,6 +10,7 @@ import 'package:mitproxy_val/models/personal_models/account_model.dart';
 import 'package:mitproxy_val/utils/globals.dart';
 import 'package:mitproxy_val/utils/routes.dart';
 import 'package:mitproxy_val/utils/valorant_endpoints.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginController extends GetxController {
@@ -146,5 +147,19 @@ class LoginController extends GetxController {
       errorLoginMessage = "No Internet Connection, make sure you have internet connection!".obs;
       return false;
     }
+  }
+
+  Future<void> _askNotifPermission() async {
+    await Permission.notification.isDenied.then((value) {
+      if (value) {
+        Permission.notification.request();
+      }
+    });
+  }
+
+  @override
+  void onInit() {
+    super.onInit();
+    _askNotifPermission();
   }
 }

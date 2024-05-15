@@ -2,6 +2,7 @@
 
 import 'dart:async';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:mitproxy_val/controllers/live_controller.dart';
 import 'package:mitproxy_val/models/assets_api_models/agent_model.dart';
@@ -16,11 +17,13 @@ import 'package:mitproxy_val/models/client_api_models/player_mmr_model.dart';
 import 'package:mitproxy_val/models/client_api_models/pregame_match_model.dart';
 import 'package:mitproxy_val/models/client_api_models/pregame_player_model.dart';
 import 'package:mitproxy_val/utils/globals.dart';
+import 'package:mitproxy_val/utils/mitproxy_notification.dart';
 import 'package:mitproxy_val/utils/valorant_asset_services.dart';
 import 'package:mitproxy_val/utils/valorant_client_services.dart';
 
 class LiveServices {
   Timer? periodicTimer;
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
   Future<void> getAgentsData() async {
     final liveController = Get.put(LiveController());
@@ -124,6 +127,12 @@ class LiveServices {
     matchId = preGamePlayerResponse.matchID;
 
     if (matchId.isNotEmpty) {
+      // if match id is not empty, it means match found
+      if (!liveController.isUserNotified.value) {
+        MitproxyNotification.showBigTextNotification(title: "Mitproxy Valorant", body: "Match Found", fln: flutterLocalNotificationsPlugin);
+        liveController.isUserNotified.value = true;
+      }
+
       liveController.isOnMatchmaking.value = false;
       liveController.preMatchId.value = matchId;
 
@@ -240,6 +249,7 @@ class LiveServices {
       liveController.mapName.value = '';
       liveController.mapBanner.value = 'https://media.valorant-api.com/maps/7eaecc1b-4337-bbf6-6ab9-04b8f06b3319/listviewicon.png';
       liveController.gameMode.value = '';
+      liveController.isUserNotified.value = false;
 
       // reset ally players value
       liveController.allyTeamId.value = '';

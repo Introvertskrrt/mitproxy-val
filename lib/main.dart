@@ -59,7 +59,7 @@ Future<void> main() async {
         ),
         GetPage(
           name: AppRoutes.weapon_details,
-          page: () => WeaponDetailsView(),
+          page: () => const WeaponDetailsView(),
         ),
       ],
       initialRoute: AppRoutes.splash,

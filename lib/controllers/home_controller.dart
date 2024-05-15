@@ -1,6 +1,7 @@
 // ignore_for_file: deprecated_member_use
 
 import 'dart:async';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart';
 import 'package:mitproxy_val/controllers/live_controller.dart';
@@ -9,8 +10,11 @@ import 'package:mitproxy_val/models/assets_api_models/item_details_model.dart';
 import 'package:mitproxy_val/utils/globals.dart';
 import 'package:mitproxy_val/utils/exceptions.dart';
 import 'package:mitproxy_val/utils/home_data_services.dart';
+import 'package:mitproxy_val/utils/mitproxy_notification.dart';
 import 'package:mitproxy_val/utils/routes.dart';
 import 'package:video_player/video_player.dart';
+
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
 class HomeController extends GetxController {
   final homeServices = HomeServices();
@@ -94,6 +98,7 @@ class HomeController extends GetxController {
   @override
   void onInit() async {
     super.onInit();
+    MitproxyNotification.initialize(flutterLocalNotificationsPlugin);
     try {
       await initPage();
       await liveController.initializeAgents();
