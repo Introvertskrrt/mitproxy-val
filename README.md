@@ -70,20 +70,33 @@ Will be included soon
 This application operates solely through API methods and does not interact with the Valorant client process on your Windows/PC. As a result, Vanguard should not detect any suspicious activity since the app operates within the permitted API boundaries.
 ## Screenshots
 
-<img src="https://i.imgur.com/rh7UHDY.png" alt="App Screenshot 1" width="250"/>
-<img src="https://i.imgur.com/ldIBiSn.png" alt="App Screenshot 2" width="250"/>
-<img src="https://i.imgur.com/dauqyAK.png" alt="App Screenshot 3" width="250"/>
-<img src="https://i.imgur.com/rh7UHDY.png" alt="App Screenshot 4" width="250"/>
-<img src="https://i.imgur.com/ePGI1AF.png" alt="App Screenshot 5" width="250"/>
-<img src="https://i.imgur.com/hlvSMBM.png" alt="App Screenshot 6" width="250"/>
-<img src="https://i.imgur.com/YgjOkE5.png" alt="App Screenshot 7" width="250"/>
-<img src="https://i.imgur.com/6UH5cBj.png" alt="App Screenshot 8" width="250"/>
-<img src="https://i.imgur.com/CXNrm8h.png" alt="App Screenshot 9" width="250"/>
-<img src="https://i.imgur.com/Zgim35W.png" alt="App Screenshot 10" width="250"/>
-<img src="https://i.imgur.com/qvaJ7ai.png" alt="App Screenshot 11" width="250"/>
-<img src="https://i.imgur.com/1ebIeIl.png" alt="App Screenshot 12" width="250"/>
-<img src="https://i.imgur.com/zLR0Thl.png" alt="App Screenshot 13" width="250"/>
-<img src="https://i.imgur.com/UCNVCGN.png" alt="App Screenshot 14" width="250"/>
+<table>
+  <tr>
+    <td><img src="https://i.imgur.com/rh7UHDY.png" alt="App Screenshot 1" width="250"/></td>
+    <td><img src="https://i.imgur.com/ldIBiSn.png" alt="App Screenshot 2" width="250"/></td>
+    <td><img src="https://i.imgur.com/dauqyAK.png" alt="App Screenshot 3" width="250"/></td>
+  </tr>
+  <tr>
+    <td><img src="https://i.imgur.com/rh7UHDY.png" alt="App Screenshot 4" width="250"/></td>
+    <td><img src="https://i.imgur.com/ePGI1AF.png" alt="App Screenshot 5" width="250"/></td>
+    <td><img src="https://i.imgur.com/hlvSMBM.png" alt="App Screenshot 6" width="250"/></td>
+  </tr>
+  <tr>
+    <td><img src="https://i.imgur.com/YgjOkE5.png" alt="App Screenshot 7" width="250"/></td>
+    <td><img src="https://i.imgur.com/6UH5cBj.png" alt="App Screenshot 8" width="250"/></td>
+    <td><img src="https://i.imgur.com/CXNrm8h.png" alt="App Screenshot 9" width="250"/></td>
+  </tr>
+  <tr>
+    <td><img src="https://i.imgur.com/Zgim35W.png" alt="App Screenshot 10" width="250"/></td>
+    <td><img src="https://i.imgur.com/qvaJ7ai.png" alt="App Screenshot 11" width="250"/></td>
+    <td><img src="https://i.imgur.com/1ebIeIl.png" alt="App Screenshot 12" width="250"/></td>
+  </tr>
+  <tr>
+    <td><img src="https://i.imgur.com/zLR0Thl.png" alt="App Screenshot 13" width="250"/></td>
+    <td><img src="https://i.imgur.com/UCNVCGN.png" alt="App Screenshot 14" width="250"/></td>
+  </tr>
+</table>
+
 
 
 
