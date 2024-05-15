@@ -10,10 +10,13 @@ import 'package:mitproxy_val/utils/globals.dart';
 import 'package:mitproxy_val/utils/exceptions.dart';
 import 'package:mitproxy_val/utils/home_data_services.dart';
 import 'package:mitproxy_val/utils/routes.dart';
+import 'package:video_player/video_player.dart';
 
 class HomeController extends GetxController {
   final homeServices = HomeServices();
   ItemDetails? itemDetails;
+  late VideoPlayerController videoController;
+  late Future<void> initializeVideoPlayerFuture;
   
   RxBool isItemDetailsPageLoading = false.obs;
   RxBool isHomePageLoading = false.obs;
@@ -28,6 +31,12 @@ class HomeController extends GetxController {
     Get.toNamed(AppRoutes.weapon_details);
     isItemDetailsPageLoading(true);
     await homeServices.getItemDetails(weaponSkinLevelName);
+    videoController = VideoPlayerController.networkUrl(
+      Uri.parse(
+        itemDetails?.finisher ?? "",
+      ),
+    );
+    initializeVideoPlayerFuture = videoController.initialize();
     isItemDetailsPageLoading(false);
   }
 
@@ -97,5 +106,11 @@ class HomeController extends GetxController {
     }on ClientException {
       isHomePageLoading(true);
     }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    videoController.dispose();
   }
 }

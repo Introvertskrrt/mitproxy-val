@@ -372,6 +372,7 @@ class HomeServices {
     List<String> displayName = [];
     List<String> displayIcon = [];
     List<String> swatch = [];
+    String finisher = '';
 
     // weapon
     final WeaponSkinsResponse weaponSkinsResponse = await ValorantAssetServices.getWeaponSkinsData();
@@ -396,6 +397,7 @@ class HomeServices {
           displayIcon.add(chromas.fullRender);
           swatch.add(chromas.swatch ?? "");
         }
+        finisher = weaponSkin.levels.last.streamedVideo ?? "";
       }
     }
 
@@ -426,6 +428,7 @@ class HomeServices {
       displayName: displayName, 
       displayIcon: displayIcon,
       swatch: swatch,
+      finisher: finisher,
     );
   }
 }
