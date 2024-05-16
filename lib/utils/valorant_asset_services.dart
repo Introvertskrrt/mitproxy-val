@@ -158,4 +158,16 @@ class ValorantAssetServices {
     }
   }
 
+  static Future<dynamic> getAllWeaponsData() async {
+    final response = await http.get(Uri.parse('https://valorant-api.com/v1/weapons'));
+
+    if (response.statusCode == 200) {
+      dynamic data = json.decode(response.body);
+
+      return data;
+    } else {
+      throw Exception('Failed to load AllWeaponResponse');
+    }
+  }
+
 }

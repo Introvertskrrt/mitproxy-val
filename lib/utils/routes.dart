@@ -11,4 +11,6 @@ class AppRoutes {
   static const String intro = '/introduction';
   static const String settings = '/settings';
   static const String weapon_details = '/weapon_details';
+  static const String weapon_list_view = '/weapon_list_view';
+  static const String weapon_equip_view = '/weapon_equip_view';
 }

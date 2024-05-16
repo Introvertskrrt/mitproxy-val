@@ -43,7 +43,7 @@ class PlayerLoadoutWidget extends StatelessWidget {
                 ),
                 child: Center(
                   child: Text(
-                    "CLICK A WEAPON TO EQUIP YOUR DESIRED SKIN",
+                    "YOU CAN EQUIP ANY WEAPONS BY CLICKING A WEAPON IN YOUR LOADOUT TO EQUIP YOUR DESIRED SKIN",
                     style: textStyleConstant.TextStyleInterBold(Colors.white, 18),
                     textAlign: TextAlign.center,
                   ),
@@ -89,22 +89,28 @@ class PlayerLoadoutWidget extends StatelessWidget {
                         builder: (context, snapshot) {
                           if (snapshot.connectionState == ConnectionState.waiting) {
                             return Container(
-                              width: 120,
-                              height: 70,
-                              color: const Color.fromRGBO(147, 139, 144, 1).withOpacity(0.3),
+                              width: 180,
+                              height: 100,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: const Color.fromRGBO(147, 139, 144, 1).withOpacity(0.3),
+                              ),
                               child: const Center(child: CircularProgressIndicator()),
                             );
-                          } else if (snapshot.hasError || !snapshot.hasData) {
+                          } else if (snapshot.hasError || snapshot.data == null) {
                             return Container(
-                              width: 120,
-                              height: 70,
-                              color: const Color.fromRGBO(147, 139, 144, 1).withOpacity(0.3),
+                              width: 180,
+                              height: 100,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: const Color.fromRGBO(147, 139, 144, 1).withOpacity(0.3),
+                              ),
                               child: const Center(child: Icon(Icons.error)),
                             );
                           } else {
                             return GestureDetector(
                               onTap: () {
-                                String gunTypeId = gun.id;
+                                homeController.onWeaponLoadoutClicked(gun.id, index);
                               },
                               child: Container(
                                 width: 180,
@@ -141,7 +147,7 @@ class PlayerLoadoutWidget extends StatelessWidget {
                                         ),
                                       ),
                                     )
-                                  ] 
+                                  ],
                                 ),
                               ),
                             );

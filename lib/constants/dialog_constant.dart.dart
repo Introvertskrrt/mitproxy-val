@@ -44,6 +44,13 @@ class DialogConstant {
     );
   }
 
+  void showEquipWeaponSuccess() {
+    Get.defaultDialog(
+      title: "Success",
+      middleText: 'Skin equipped successfully through the app. Please restart the game to apply changes.'
+    );
+  }
+
   void showEula(BuildContext context, String title, String message) {
     showDialog(
       context: context, 
