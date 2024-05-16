@@ -62,14 +62,14 @@ class HomeController extends GetxController {
     await homeServices.getItemDetails(weaponSkinLevelName);
 
     if (itemDetails!.finisher.isNotEmpty || itemDetails!.finisher != "") {
-      isWeaponPreviewAvailable.value = true;
+      isWeaponPreviewAvailable(true);
       videoController = VideoPlayerController.networkUrl(
         Uri.parse(
           itemDetails?.finisher ?? "",
         ),
       );
     } else {
-      isWeaponPreviewAvailable.value = false;
+      isWeaponPreviewAvailable(false);
       videoController = VideoPlayerController.networkUrl(
         Uri.parse(
           // dummy video to handle error (not gonna be used)
