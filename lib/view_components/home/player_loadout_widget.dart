@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:mitproxy_val/constants/color_constant.dart';
 import 'package:mitproxy_val/constants/textstyle_constant.dart';
 import 'package:mitproxy_val/controllers/home_controller.dart';
+import 'package:mitproxy_val/utils/routes.dart';
 
 class PlayerLoadoutWidget extends StatelessWidget {
   PlayerLoadoutWidget({super.key});
@@ -43,7 +44,7 @@ class PlayerLoadoutWidget extends StatelessWidget {
                 ),
                 child: Center(
                   child: Text(
-                    "YOU CAN EQUIP ANY WEAPONS BY CLICKING A WEAPON IN YOUR LOADOUT TO EQUIP YOUR DESIRED SKIN",
+                    "TO EQUIP YOUR DESIRED WEAPON SKIN, CLICK ON THE WEAPON IN YOUR LOADOUT",
                     style: textStyleConstant.TextStyleInterBold(Colors.white, 18),
                     textAlign: TextAlign.center,
                   ),
@@ -110,7 +111,9 @@ class PlayerLoadoutWidget extends StatelessWidget {
                           } else {
                             return GestureDetector(
                               onTap: () {
-                                homeController.onWeaponLoadoutClicked(gun.id, index);
+                                homeController.selectedLoadoutGunId.value = gun.id;
+                                homeController.selectedWeaponLoadoutIndex.value = index;
+                                Get.toNamed(AppRoutes.weapon_list_view);
                               },
                               child: Container(
                                 width: 180,

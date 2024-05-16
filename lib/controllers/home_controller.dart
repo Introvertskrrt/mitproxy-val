@@ -44,6 +44,7 @@ class HomeController extends GetxController {
 
   // item details page
   RxBool isItemDetailsPageLoading = false.obs;
+  RxBool isWeaponPreviewAvailable = false.obs;
 
   RxInt selectedWeaponLoadoutIndex = 0.obs;
 
@@ -59,28 +60,27 @@ class HomeController extends GetxController {
     Get.toNamed(AppRoutes.weapon_details);
     isItemDetailsPageLoading(true);
     await homeServices.getItemDetails(weaponSkinLevelName);
-    videoController = VideoPlayerController.networkUrl(
-      Uri.parse(
-        itemDetails?.finisher ?? "",
-      ),
-    );
+
+    if (itemDetails!.finisher.isNotEmpty || itemDetails!.finisher != "") {
+      isWeaponPreviewAvailable.value = true;
+      videoController = VideoPlayerController.networkUrl(
+        Uri.parse(
+          itemDetails?.finisher ?? "",
+        ),
+      );
+    } else {
+      isWeaponPreviewAvailable.value = false;
+      videoController = VideoPlayerController.networkUrl(
+        Uri.parse(
+          // dummy video to handle error (not gonna be used)
+          "https://valorant.dyn.riotcdn.net/x/videos/release-08.09/32f7797f-4491-e21f-e40b-cfb639df3c97_default_universal.mp4",
+        ),
+      );
+    }
+
+    
     initializeVideoPlayerFuture = videoController.initialize();
     isItemDetailsPageLoading(false);
-  }
-
-  Future<void> onWeaponLoadoutClicked(String skinId, int index) async {
-    selectedLoadoutGunId.value = skinId;
-    selectedWeaponLoadoutIndex.value = index;
-    Get.toNamed(AppRoutes.weapon_list_view);
-  }
-
-  // in choose weapon skin page (weapon list view)
-  Future<void> onWeaponSkinClicked(String skinId, String displayName, String levelId) async {
-    skinUuid.value = skinId;
-    weaponName.value = displayName;
-    levelUuid.value = levelId;
-
-    Get.toNamed(AppRoutes.weapon_equip_view);
   }
 
   // in weapon equip page (weapon equip view)

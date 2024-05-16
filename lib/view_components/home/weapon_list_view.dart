@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mitproxy_val/constants/textstyle_constant.dart';
 import 'package:mitproxy_val/controllers/home_controller.dart';
+import 'package:mitproxy_val/utils/routes.dart';
 import 'package:mitproxy_val/utils/valorant_asset_services.dart';
 
 class WeaponListView extends StatefulWidget {
@@ -77,7 +78,10 @@ class _WeaponListViewState extends State<WeaponListView> {
                   children: List.generate(displayName.length, (index) {
                     return GestureDetector(
                       onTap: () {
-                        homeController.onWeaponSkinClicked(skinUuid[index], displayName[index], levelUuid[index]);
+                        homeController.skinUuid.value = skinUuid[index];
+                        homeController.weaponName.value = displayName[index];
+                        homeController.levelUuid.value = levelUuid[index];
+                        Get.toNamed(AppRoutes.weapon_equip_view);
                       },
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),

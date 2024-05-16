@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mitproxy_val/constants/color_constant.dart';
@@ -45,55 +46,62 @@ class _WeaponDetailsViewState extends State<WeaponDetailsView> {
               child: Center(
                 child: Column(
                   children: [
-                    // video preview
-                    Padding(
-                      padding: const EdgeInsets.only(left: 8, right: 8),
-                      child: Container(
-                        width: double.infinity,
-                        height: 30,
-                        decoration: BoxDecoration(
-                          borderRadius: const BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10)),
-                          color: ColorConstant.pageColor
-                        ),
-                        child: Text(
-                          "Preview",
-                          style: textStyleConstant.TextStyleInterBold(Colors.black, 18),
-                        ),
-                      ),
-                    ),
+                    Obx(() {
+                      if (homeController.isWeaponPreviewAvailable.value) {
+                        return Column(
+                          children: [
+                            // video preview
+                            Padding(
+                              padding: const EdgeInsets.only(left: 8, right: 8),
+                              child: Container(
+                                width: double.infinity,
+                                height: 30,
+                                decoration: BoxDecoration(
+                                  borderRadius: const BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10)),
+                                  color: ColorConstant.pageColor
+                                ),
+                                child: Text(
+                                  "Preview",
+                                  style: textStyleConstant.TextStyleInterBold(Colors.black, 18),
+                                ),
+                              ),
+                            ),
 
-                    Visibility(
-                      visible: homeController.itemDetails!.finisher.isNotEmpty && homeController.itemDetails!.finisher != "",
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 8, right: 8, bottom: 16),
-                        child: Container(
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                            color: ColorConstant.pageColor
-                          ),
-                          child: FutureBuilder(
-                            future: homeController.initializeVideoPlayerFuture,
-                            builder: (context, snapshot) {
-                              if (snapshot.connectionState == ConnectionState.done) {
-                                homeController.videoController.setLooping(true);
-                                homeController.videoController.play();
-                                return AspectRatio(
-                                  aspectRatio: homeController.videoController.value.aspectRatio,
-                                  // Use the VideoPlayer widget to display the video.
-                                  child: VideoPlayer(homeController.videoController),
-                                );
-                              } else {
-                                // If the VideoPlayerController is still initializing, show a
-                                // loading spinner.
-                                return const Center(
-                                  child: CircularProgressIndicator(),
-                                );
-                              }
-                            },
-                          ),
-                        ),
-                      ),
-                    ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 8, right: 8, bottom: 16),
+                              child: Container(
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                  color: ColorConstant.pageColor
+                                ),
+                                child: FutureBuilder(
+                                  future: homeController.initializeVideoPlayerFuture,
+                                  builder: (context, snapshot) {
+                                    if (snapshot.connectionState == ConnectionState.done) {
+                                      homeController.videoController.setLooping(true);
+                                      homeController.videoController.play();
+                                      return AspectRatio(
+                                        aspectRatio: homeController.videoController.value.aspectRatio,
+                                        // Use the VideoPlayer widget to display the video.
+                                        child: VideoPlayer(homeController.videoController),
+                                      );
+                                    } else {
+                                      // If the VideoPlayerController is still initializing, show a
+                                      // loading spinner.
+                                      return const Center(
+                                        child: CircularProgressIndicator(),
+                                      );
+                                    }
+                                  },
+                                ),
+                              ),
+                            ),
+                          ],
+                        );
+                      } else {
+                        return Container();
+                      }
+                    }),
                     
                     // item list
                     Column(
